@@ -1,0 +1,27 @@
+:root {
+  /* Starway Bank — Modern Tech Blue */
+  --sb-bg-0: #081B36;
+  --sb-bg-1: #0B2D5B;
+  --sb-bg-2: #263D5C;
+  --sb-blue-500: #1F6FEB;
+  --sb-blue-400: #2D9CFF;
+  --sb-cyan-500: #00C6FF;
+  --sb-ice-100: #BFE8FF;
+  --sb-white: #F5F8FF;
+  --sb-steel-500: #526B8D;
+  --sb-gold-500: #FFC857;
+  --sb-green-500: #35C978;
+  --sb-red-500: #E74C3C;
+  --sb-violet-500: #9B8CFF;
+
+  --sb-radius-sm: 6px;
+  --sb-radius-md: 10px;
+  --sb-radius-lg: 14px;
+  --sb-border: 1px solid rgba(120, 190, 255, .48);
+  --sb-shadow-panel: 0 8px 24px rgba(0, 8, 24, .38);
+  --sb-glow-focus: 0 0 0 2px rgba(0, 198, 255, .30),
+                   0 0 16px rgba(0, 198, 255, .22);
+
+  --sb-font-ui: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif;
+  --sb-font-numeric: "Bahnschrift", "Arial", sans-serif;
+}

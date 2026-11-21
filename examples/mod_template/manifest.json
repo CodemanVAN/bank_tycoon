@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "id": "com.example.extra_departments",
+  "name_key": "com.example.extra_departments:MOD_NAME",
+  "version": "1.0.0",
+  "game_version_min": "0.1.0",
+  "game_version_max": "0.x",
+  "author": "Example Author",
+  "description_key": "com.example.extra_departments:MOD_DESCRIPTION",
+  "dependencies": [],
+  "conflicts": [],
+  "load_after": [],
+  "content": {
+    "departments": "content/departments.json",
+    "policies": "content/policies.json",
+    "events": "content/events.json"
+  },
+  "localization_dir": "localization",
+  "asset_dir": "assets"
+}

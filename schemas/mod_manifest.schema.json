@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bank-tycoon.example/schemas/mod_manifest.schema.json",
+  "title": "Bank Tycoon Mod Manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "name_key", "version", "author"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {"type": "string", "pattern": "^[a-z0-9]+(\\.[a-z0-9_-]+)+$"},
+    "name_key": {"type": "string", "minLength": 1},
+    "version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "game_version_min": {"type": "string"},
+    "game_version_max": {"type": "string"},
+    "author": {"type": "string", "minLength": 1},
+    "description_key": {"type": "string"},
+    "dependencies": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "conflicts": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "load_after": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "content": {"type": "object", "additionalProperties": {"type": "string"}},
+    "localization_dir": {"type": "string"},
+    "asset_dir": {"type": "string"}
+  }
+}

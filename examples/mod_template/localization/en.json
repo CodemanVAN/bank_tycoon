@@ -1,0 +1,12 @@
+{
+  "com.example.extra_departments:MOD_NAME": "Extra Departments Example",
+  "com.example.extra_departments:MOD_DESCRIPTION": "Demonstrates adding departments, policies, events and translations with JSON.",
+  "com.example.extra_departments:DEPT_RESEARCH_NAME": "Process Research",
+  "com.example.extra_departments:DEPT_RESEARCH_DESC": "Studies bank workflows and proposes operational improvements.",
+  "com.example.extra_departments:POLICY_PROCESS_RESEARCH_NAME": "Continuous Process Improvement",
+  "com.example.extra_departments:POLICY_PROCESS_RESEARCH_DESC": "Reduces average teller service time.",
+  "com.example.extra_departments:EVENT_WORKFLOW_TITLE": "Workflow Review",
+  "com.example.extra_departments:EVENT_WORKFLOW_DESC": "The Process Research team has found a workflow that could be improved.",
+  "com.example.extra_departments:EVENT_WORKFLOW_INVESTIGATE": "Fund an investigation",
+  "com.example.extra_departments:EVENT_WORKFLOW_DEFER": "Defer for now"
+}

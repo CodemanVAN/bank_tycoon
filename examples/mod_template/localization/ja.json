@@ -1,0 +1,12 @@
+{
+  "com.example.extra_departments:MOD_NAME": "追加部門サンプル",
+  "com.example.extra_departments:MOD_DESCRIPTION": "JSONで部門、政策、イベント、翻訳を追加する例です。",
+  "com.example.extra_departments:DEPT_RESEARCH_NAME": "業務研究部",
+  "com.example.extra_departments:DEPT_RESEARCH_DESC": "銀行業務の流れを研究し、運営効率の改善を提案します。",
+  "com.example.extra_departments:POLICY_PROCESS_RESEARCH_NAME": "継続的な業務改善",
+  "com.example.extra_departments:POLICY_PROCESS_RESEARCH_DESC": "窓口の平均処理時間を短縮します。",
+  "com.example.extra_departments:EVENT_WORKFLOW_TITLE": "業務フローの見直し",
+  "com.example.extra_departments:EVENT_WORKFLOW_DESC": "業務研究部が改善可能な手順を発見しました。",
+  "com.example.extra_departments:EVENT_WORKFLOW_INVESTIGATE": "調査に投資する",
+  "com.example.extra_departments:EVENT_WORKFLOW_DEFER": "今は見送る"
+}

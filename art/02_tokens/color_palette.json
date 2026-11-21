@@ -1,0 +1,73 @@
+{
+  "brand": [
+    {
+      "name": "Deep Space Navy",
+      "hex": "#081B36",
+      "role": "全局底色、主导航底板"
+    },
+    {
+      "name": "Night Panel",
+      "hex": "#0B2D5B",
+      "role": "主面板、侧栏、弹窗"
+    },
+    {
+      "name": "Tech Blue",
+      "hex": "#1F6FEB",
+      "role": "主按钮、选中态、关键交互"
+    },
+    {
+      "name": "Electric Blue",
+      "hex": "#2D9CFF",
+      "role": "描边、焦点、交互高亮"
+    },
+    {
+      "name": "Cyan Glow",
+      "hex": "#00C6FF",
+      "role": "发光强调、科技装饰、选中图标"
+    }
+  ],
+  "support": [
+    {
+      "name": "Ice Blue",
+      "hex": "#BFE8FF",
+      "role": "浅色文字、图表辅助线"
+    },
+    {
+      "name": "Cloud White",
+      "hex": "#F5F8FF",
+      "role": "高对比文字、浅色卡片"
+    },
+    {
+      "name": "Steel Blue",
+      "hex": "#526B8D",
+      "role": "禁用态、次级信息"
+    },
+    {
+      "name": "Slate",
+      "hex": "#263D5C",
+      "role": "分隔区、次级容器"
+    }
+  ],
+  "semantic": [
+    {
+      "name": "Finance Gold",
+      "hex": "#FFC857",
+      "role": "资金、收益、奖励、重要资产"
+    },
+    {
+      "name": "Growth Green",
+      "hex": "#35C978",
+      "role": "正向增长、通过、健康经营"
+    },
+    {
+      "name": "Alert Coral",
+      "hex": "#E74C3C",
+      "role": "风险、亏损、紧急告警"
+    },
+    {
+      "name": "Info Violet",
+      "hex": "#9B8CFF",
+      "role": "特殊事件、科技/研究类标识"
+    }
+  ]
+}

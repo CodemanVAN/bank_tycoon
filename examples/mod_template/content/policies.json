@@ -1,0 +1,18 @@
+[
+  {
+    "id": "com.example.extra_departments:policy.process_research",
+    "name_key": "com.example.extra_departments:POLICY_PROCESS_RESEARCH_NAME",
+    "description_key": "com.example.extra_departments:POLICY_PROCESS_RESEARCH_DESC",
+    "cost_strategy_points": 4,
+    "exclusive_group": "operations_innovation",
+    "prerequisites": [],
+    "effects": [
+      {
+        "target": "service.teller_duration_bps",
+        "operation": "add",
+        "value": -300,
+        "scope": "global"
+      }
+    ]
+  }
+]

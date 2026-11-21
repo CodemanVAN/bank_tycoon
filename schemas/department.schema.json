@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bank-tycoon.example/schemas/department.schema.json",
+  "title": "Department Definition",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "name_key",
+    "description_key",
+    "initial_cost_minor",
+    "daily_cost_minor",
+    "max_level",
+    "effects"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_.-]+:[a-z0-9_.-]+$"
+    },
+    "name_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "initial_cost_minor": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000000000000
+    },
+    "daily_cost_minor": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000000000
+    },
+    "max_level": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "unlock_conditions": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "effects": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/effect"
+      }
+    }
+  },
+  "$defs": {
+    "effect": {
+      "title": "Safe Mod Effect",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "target",
+        "operation",
+        "value"
+      ],
+      "properties": {
+        "target": {
+          "type": "string",
+          "enum": [
+            "staff.productivity_bps",
+            "service.teller_duration_bps",
+            "customer.deposit_growth_bps",
+            "bank.reputation_points",
+            "loan.default_risk_bps",
+            "liquidity.required_buffer_bps"
+          ]
+        },
+        "operation": {
+          "type": "string",
+          "enum": [
+            "add",
+            "multiply",
+            "set",
+            "unlock",
+            "modify_chance"
+          ]
+        },
+        "value": {
+          "type": [
+            "integer",
+            "string",
+            "boolean"
+          ]
+        },
+        "scope": {
+          "type": "string",
+          "enum": [
+            "global",
+            "department",
+            "service",
+            "customer_group"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,27 @@
+[
+  {
+    "id": "com.example.extra_departments:event.workflow_audit",
+    "title_key": "com.example.extra_departments:EVENT_WORKFLOW_TITLE",
+    "description_key": "com.example.extra_departments:EVENT_WORKFLOW_DESC",
+    "weight": 10,
+    "cooldown_days": 20,
+    "conditions": [
+      {"type": "day_at_least", "value": 5},
+      {"type": "department_exists", "value": "com.example.extra_departments:department.research_support"}
+    ],
+    "options": [
+      {
+        "id": "investigate",
+        "label_key": "com.example.extra_departments:EVENT_WORKFLOW_INVESTIGATE",
+        "effects": [
+          {"target": "bank.reputation_points", "operation": "add", "value": 2, "scope": "global"}
+        ]
+      },
+      {
+        "id": "defer",
+        "label_key": "com.example.extra_departments:EVENT_WORKFLOW_DEFER",
+        "effects": []
+      }
+    ]
+  }
+]

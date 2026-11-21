@@ -1,0 +1,12 @@
+{
+  "com.example.extra_departments:MOD_NAME": "额外部门示例",
+  "com.example.extra_departments:MOD_DESCRIPTION": "演示如何使用 JSON 添加部门、政策、事件和翻译。",
+  "com.example.extra_departments:DEPT_RESEARCH_NAME": "流程研究部",
+  "com.example.extra_departments:DEPT_RESEARCH_DESC": "研究银行流程并提出运营效率改进。",
+  "com.example.extra_departments:POLICY_PROCESS_RESEARCH_NAME": "流程持续改进",
+  "com.example.extra_departments:POLICY_PROCESS_RESEARCH_DESC": "降低柜台平均处理时长。",
+  "com.example.extra_departments:EVENT_WORKFLOW_TITLE": "流程审查",
+  "com.example.extra_departments:EVENT_WORKFLOW_DESC": "流程研究部发现一处可以改进的运营步骤。",
+  "com.example.extra_departments:EVENT_WORKFLOW_INVESTIGATE": "投入资源调查",
+  "com.example.extra_departments:EVENT_WORKFLOW_DEFER": "暂缓处理"
+}

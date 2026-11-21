@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bank-tycoon.example/schemas/policy.schema.json",
+  "title": "Policy Definition",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "name_key",
+    "description_key",
+    "cost_strategy_points",
+    "effects"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_.-]+:[a-z0-9_.-]+$"
+    },
+    "name_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "cost_strategy_points": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10000
+    },
+    "exclusive_group": {
+      "type": "string"
+    },
+    "prerequisites": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "effects": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/effect"
+      }
+    }
+  },
+  "$defs": {
+    "effect": {
+      "title": "Safe Mod Effect",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "target",
+        "operation",
+        "value"
+      ],
+      "properties": {
+        "target": {
+          "type": "string",
+          "enum": [
+            "staff.productivity_bps",
+            "service.teller_duration_bps",
+            "customer.deposit_growth_bps",
+            "bank.reputation_points",
+            "loan.default_risk_bps",
+            "liquidity.required_buffer_bps"
+          ]
+        },
+        "operation": {
+          "type": "string",
+          "enum": [
+            "add",
+            "multiply",
+            "set",
+            "unlock",
+            "modify_chance"
+          ]
+        },
+        "value": {
+          "type": [
+            "integer",
+            "string",
+            "boolean"
+          ]
+        },
+        "scope": {
+          "type": "string",
+          "enum": [
+            "global",
+            "department",
+            "service",
+            "customer_group"
+          ]
+        }
+      }
+    }
+  }
+}

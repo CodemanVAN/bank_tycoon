@@ -1,0 +1,36 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="Starway Bank - Bank Tycoon"
+config/description="A 2D isometric pixel-art bank management simulation (Starway Bank vertical slice)."
+run/main_scene="res://scenes/menus/main_menu.tscn"
+config/features=PackedStringArray("4.7", "GL Compatibility")
+
+[autoload]
+
+LocalizationService="*res://scripts/autoload/localization_service.gd"
+ContentRegistry="*res://scripts/autoload/content_registry.gd"
+AudioService="*res://scripts/autoload/audio_service.gd"
+SaveService="*res://scripts/autoload/save_service.gd"
+GameSession="*res://scripts/autoload/game_session.gd"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
