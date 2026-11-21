@@ -315,6 +315,8 @@
   "ERR_DEPT_LOCKED": "尚未满足该部门的设立前置条件",
   "ERR_DEPT_NOT_CREATED": "该部门尚未设立，无法升级",
   "ERR_DEPT_MAX_LEVEL": "该部门已达到最高等级 Lv.{max_level}",
+  "ERR_DEPT_PLOT_OCCUPIED": "该位置已被柜台或其它部门占用",
+  "ERR_DEPT_PLOT_INVALID": "无效的部门位置",
   "ERR_POLICY_NOT_FOUND": "未找到指定政策定义：{policy_id}",
   "ERR_POLICY_ALREADY_ADOPTED": "该项战略政策已采纳",
   "ERR_POLICY_PREREQUISITE_MISSING": "需先采纳前置政策：{missing_prerequisite}",

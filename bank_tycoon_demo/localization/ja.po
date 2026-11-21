@@ -955,6 +955,12 @@ msgstr "アップグレード前に対象部門を設立してください"
 msgid "ERR_DEPT_MAX_LEVEL"
 msgstr "この部門は最大レベル Lv.{max_level} に達しています"
 
+msgid "ERR_DEPT_PLOT_OCCUPIED"
+msgstr "その場所は窓口または他の部門が使用しています"
+
+msgid "ERR_DEPT_PLOT_INVALID"
+msgstr "無効な部門設置場所です"
+
 msgid "ERR_POLICY_NOT_FOUND"
 msgstr "政策定義が見つかりません：{policy_id}"
 
@@ -1137,6 +1143,9 @@ msgstr "リスク"
 
 msgid "WORLD_DEPT_LEVEL_BADGE"
 msgstr "Lv.{level}"
+
+msgid "WORLD_DEPT_PLACE_GHOST"
+msgstr "{name} を配置"
 
 msgid "WORLD_FX_SERVICE_DONE"
 msgstr "{amount}"
@@ -1578,6 +1587,15 @@ msgstr "日次運営コスト：{cost}"
 
 msgid "UI_DEPT_BTN_CREATE"
 msgstr "部門を設立 ({cost})"
+
+msgid "UI_DEPT_BTN_CHOOSE_PLOT"
+msgstr "設置場所を選んで設立 ({cost})"
+
+msgid "UI_DEPT_PLACE_PROMPT"
+msgstr "ロビーの空きマスをクリックして部門を配置します。右クリックまたは Esc でキャンセル。"
+
+msgid "UI_DEPT_PLACE_CANCELLED"
+msgstr "部門の配置をキャンセルしました"
 
 msgid "UI_DEPT_BTN_UPGRADE"
 msgstr "Lv.{next} へ強化 ({cost})"

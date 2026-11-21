@@ -954,6 +954,12 @@ msgstr ""
 msgid "ERR_DEPT_MAX_LEVEL"
 msgstr ""
 
+msgid "ERR_DEPT_PLOT_OCCUPIED"
+msgstr ""
+
+msgid "ERR_DEPT_PLOT_INVALID"
+msgstr ""
+
 msgid "ERR_POLICY_NOT_FOUND"
 msgstr ""
 
@@ -1135,6 +1141,9 @@ msgid "WORLD_DEPT_RISK_SHORT"
 msgstr ""
 
 msgid "WORLD_DEPT_LEVEL_BADGE"
+msgstr ""
+
+msgid "WORLD_DEPT_PLACE_GHOST"
 msgstr ""
 
 msgid "WORLD_FX_SERVICE_DONE"
@@ -1576,6 +1585,15 @@ msgid "UI_DEPT_DAILY_COST"
 msgstr ""
 
 msgid "UI_DEPT_BTN_CREATE"
+msgstr ""
+
+msgid "UI_DEPT_BTN_CHOOSE_PLOT"
+msgstr ""
+
+msgid "UI_DEPT_PLACE_PROMPT"
+msgstr ""
+
+msgid "UI_DEPT_PLACE_CANCELLED"
 msgstr ""
 
 msgid "UI_DEPT_BTN_UPGRADE"

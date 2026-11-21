@@ -955,6 +955,12 @@ msgstr "Department must be created before upgrading"
 msgid "ERR_DEPT_MAX_LEVEL"
 msgstr "Department has reached maximum level Lv.{max_level}"
 
+msgid "ERR_DEPT_PLOT_OCCUPIED"
+msgstr "That plot is already taken by a counter or another department"
+
+msgid "ERR_DEPT_PLOT_INVALID"
+msgstr "Invalid department plot"
+
 msgid "ERR_POLICY_NOT_FOUND"
 msgstr "Policy definition not found: {policy_id}"
 
@@ -1137,6 +1143,9 @@ msgstr "RISK"
 
 msgid "WORLD_DEPT_LEVEL_BADGE"
 msgstr "Lv.{level}"
+
+msgid "WORLD_DEPT_PLACE_GHOST"
+msgstr "Place {name}"
 
 msgid "WORLD_FX_SERVICE_DONE"
 msgstr "{amount}"
@@ -1578,6 +1587,15 @@ msgstr "Daily Operating Cost: {cost}"
 
 msgid "UI_DEPT_BTN_CREATE"
 msgstr "Establish Dept ({cost})"
+
+msgid "UI_DEPT_BTN_CHOOSE_PLOT"
+msgstr "Choose a Plot ({cost})"
+
+msgid "UI_DEPT_PLACE_PROMPT"
+msgstr "Click an empty lobby tile to place the department. Right-click or Esc to cancel."
+
+msgid "UI_DEPT_PLACE_CANCELLED"
+msgstr "Department placement cancelled"
 
 msgid "UI_DEPT_BTN_UPGRADE"
 msgstr "Upgrade to Lv.{next} ({cost})"

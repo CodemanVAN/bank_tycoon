@@ -8,6 +8,7 @@
 	"WORLD_DEPT_CREDIT_SHORT": "与信",
 	"WORLD_DEPT_RISK_SHORT": "リスク",
 	"WORLD_DEPT_LEVEL_BADGE": "Lv.{level}",
+	"WORLD_DEPT_PLACE_GHOST": "{name} を配置",
 	"WORLD_FX_SERVICE_DONE": "{amount}",
 	"WORLD_FX_SATISFACTION_UP": "対応完了",
 	"WORLD_FX_CUSTOMER_LEFT": "時間切れ離脱",

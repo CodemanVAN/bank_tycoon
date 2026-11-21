@@ -315,6 +315,8 @@
   "ERR_DEPT_LOCKED": "部門設立の解放条件を満たしていません",
   "ERR_DEPT_NOT_CREATED": "アップグレード前に対象部門を設立してください",
   "ERR_DEPT_MAX_LEVEL": "この部門は最大レベル Lv.{max_level} に達しています",
+  "ERR_DEPT_PLOT_OCCUPIED": "その場所は窓口または他の部門が使用しています",
+  "ERR_DEPT_PLOT_INVALID": "無効な部門設置場所です",
   "ERR_POLICY_NOT_FOUND": "政策定義が見つかりません：{policy_id}",
   "ERR_POLICY_ALREADY_ADOPTED": "この政策は既に採択されています",
   "ERR_POLICY_PREREQUISITE_MISSING": "前提となる政策が未採択です：{missing_prerequisite}",

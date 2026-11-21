@@ -4,11 +4,20 @@ extends Node2D
 ## 2.5D Isometric Bank Lobby World presentation root (18x12 IsoGrid, Y-Sorted props/stations/actors, PixelCamera2D).
 
 signal entity_selected(entity_type: StringName, entity_id: String)
+signal department_placement_confirmed(dept_id: String, cell: Vector2i)
+signal department_placement_cancelled()
 
 const FOUNTAIN_CELL: Vector2i = Vector2i(9, 7)
 const ENTRANCE_CELL: Vector2i = Vector2i(8, 11)
 const BREAK_CELL: Vector2i = Vector2i(3, 8)
 const FOUNTAIN_FPS: float = 5.0
+
+## Extra cells (besides ENTRANCE_CELL / QUEUE_WAIT_CELLS) that must stay walkable.
+const PLACEMENT_EXTRA_RESERVED_CELLS: Array[Vector2i] = [
+	Vector2i(8, 10),
+	Vector2i(7, 10),
+	Vector2i(9, 10),
+]
 
 const DEPT_ZONES: Dictionary = {
 	"core:department.operations": {
@@ -43,10 +52,6 @@ const STATIC_SOLID_CELLS: Array[Vector2i] = [
 	Vector2i(16, 10),
 	Vector2i(1, 5),
 	Vector2i(1, 7),
-	Vector2i(2, 2),
-	Vector2i(5, 2),
-	Vector2i(12, 2),
-	Vector2i(15, 2),
 ]
 
 const QUEUE_WAIT_CELLS: Array[Vector2i] = [
@@ -81,6 +86,16 @@ var _fountain_sprite: Sprite2D = null
 var _fountain_timer: float = 0.0
 var _fountain_frame: int = 0
 var _static_built: bool = false
+
+# Department placement mode
+var _placement_dept_id: String = ""
+var _placement_short_key: String = ""
+var _placement_cell: Vector2i = Vector2i(-1, -1)
+var _placement_valid: bool = false
+var _placement_ghost: Node2D = null
+var _ghost_fill: Polygon2D = null
+var _ghost_border: Line2D = null
+var _ghost_label: Label = null
 
 var _station_views: Dictionary = {}
 var _employee_views: Dictionary = {}
@@ -278,6 +293,148 @@ func refresh_world() -> void:
 	_sync_employees(bs_obj)
 	_sync_customers(bs_obj)
 	_update_selection_highlights()
+
+
+# ---------------------------------------------------------------------------
+# Department placement (player picks the plot in the lobby)
+# ---------------------------------------------------------------------------
+
+func is_department_placement_active() -> bool:
+	return not _placement_dept_id.is_empty()
+
+
+func get_placement_cell() -> Vector2i:
+	return _placement_cell
+
+
+func begin_department_placement(dept_id: String) -> bool:
+	if dept_id.is_empty():
+		return false
+	_ensure_scene_hierarchy()
+	_build_static_environment()
+	_ensure_placement_ghost()
+	if _placement_ghost == null:
+		return false
+	_placement_dept_id = dept_id
+	var cfg: Dictionary = DEPT_ZONES.get(dept_id, {}) as Dictionary
+	_placement_short_key = str(cfg.get("short_key", dept_id))
+	_placement_cell = Vector2i(-1, -1)
+	_placement_valid = false
+	_placement_ghost.visible = false
+	return true
+
+
+func cancel_department_placement() -> void:
+	if _placement_dept_id.is_empty():
+		return
+	_end_department_placement()
+	department_placement_cancelled.emit()
+
+
+func is_valid_department_plot(cell: Vector2i, dept_id: String = "") -> bool:
+	if iso_grid == null:
+		return false
+	if not iso_grid.is_in_bounds(cell):
+		return false
+	if cell == ENTRANCE_CELL:
+		return false
+	if QUEUE_WAIT_CELLS.has(cell) or PLACEMENT_EXTRA_RESERVED_CELLS.has(cell):
+		return false
+	if iso_grid.is_solid(cell):
+		return false
+	var bs: Variant = _get_bank_state()
+	if bs is Object:
+		if not DepartmentService.is_plot_free(bs as BankState, cell, dept_id):
+			return false
+	return true
+
+
+func _end_department_placement() -> void:
+	_placement_dept_id = ""
+	_placement_short_key = ""
+	_placement_cell = Vector2i(-1, -1)
+	_placement_valid = false
+	if _placement_ghost != null and is_instance_valid(_placement_ghost):
+		_placement_ghost.visible = false
+
+
+func _confirm_department_placement(cell: Vector2i) -> void:
+	var dept_id: String = _placement_dept_id
+	_end_department_placement()
+	department_placement_confirmed.emit(dept_id, cell)
+
+
+func _ensure_placement_ghost() -> void:
+	if _placement_ghost != null and is_instance_valid(_placement_ghost):
+		return
+	if _ysort_layer == null:
+		return
+	_placement_ghost = Node2D.new()
+	_placement_ghost.name = "DepartmentPlacementGhost"
+	_placement_ghost.z_index = 100
+	_placement_ghost.visible = false
+	_ysort_layer.add_child(_placement_ghost)
+
+	_ghost_fill = Polygon2D.new()
+	_ghost_fill.name = "GhostFill"
+	_ghost_fill.polygon = PackedVector2Array([
+		Vector2(0.0, -8.0), Vector2(16.0, 0.0), Vector2(0.0, 8.0), Vector2(-16.0, 0.0),
+	])
+	_ghost_fill.color = Color(0.21, 0.79, 0.47, 0.30)
+	_placement_ghost.add_child(_ghost_fill)
+
+	_ghost_border = Line2D.new()
+	_ghost_border.name = "GhostBorder"
+	_ghost_border.points = PackedVector2Array([
+		Vector2(0.0, -8.0), Vector2(16.0, 0.0), Vector2(0.0, 8.0), Vector2(-16.0, 0.0), Vector2(0.0, -8.0),
+	])
+	_ghost_border.width = 1.5
+	_ghost_border.default_color = Color(0.21, 0.79, 0.47, 0.95)
+	_placement_ghost.add_child(_ghost_border)
+
+	_ghost_label = Label.new()
+	_ghost_label.name = "GhostLabel"
+	_ghost_label.position = Vector2(-44.0, -36.0)
+	_ghost_label.size = Vector2(88.0, 16.0)
+	_ghost_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_ghost_label.add_theme_font_size_override("font_size", 11)
+	_ghost_label.add_theme_color_override("font_color", Color("#FFFFFF"))
+	_ghost_label.add_theme_color_override("font_outline_color", Color("#0A1420"))
+	_ghost_label.add_theme_constant_override("outline_size", 3)
+	_placement_ghost.add_child(_ghost_label)
+
+
+func _update_placement_preview(cell: Vector2i) -> void:
+	if _placement_dept_id.is_empty():
+		return
+	if _placement_ghost == null or not is_instance_valid(_placement_ghost):
+		return
+	if iso_grid == null:
+		return
+	if not iso_grid.is_in_bounds(cell):
+		_placement_ghost.visible = false
+		return
+	var valid: bool = is_valid_department_plot(cell, _placement_dept_id)
+	if cell != _placement_cell or valid != _placement_valid:
+		_placement_cell = cell
+		_placement_valid = valid
+		_placement_ghost.position = iso_grid.grid_to_screen(cell).round()
+		var col: Color = Color("#35C978") if valid else Color("#E74C3C")
+		if _ghost_fill != null:
+			_ghost_fill.color = Color(col.r, col.g, col.b, 0.30)
+		if _ghost_border != null:
+			_ghost_border.default_color = Color(col.r, col.g, col.b, 0.95)
+		if _ghost_label != null:
+			_ghost_label.text = _tr("WORLD_DEPT_PLACE_GHOST", {"name": _tr(_placement_short_key)})
+	_placement_ghost.visible = true
+
+
+## Converts a viewport-space input position to a logical grid cell (camera-aware).
+func cell_from_screen_position(screen_pos: Vector2) -> Vector2i:
+	if iso_grid == null:
+		return Vector2i(-1, -1)
+	var local_pos: Vector2 = get_global_transform_with_canvas().affine_inverse() * screen_pos
+	return iso_grid.screen_to_grid(local_pos)
 
 
 func _get_bank_state() -> Variant:
@@ -499,8 +656,8 @@ func _build_static_environment() -> void:
 	for acell in [Vector2i(1, 5), Vector2i(1, 7)]:
 		_add_prop_sprite("res://assets/environment/prop_atm.png", acell, Vector2(0.0, -14.0))
 
-	# 4. Build 4 Department Visual Zones
-	_build_department_zones()
+	# 4. Department rooms are spawned from BankState by _sync_departments() at the plot
+	# the player chose (no fixed zones any more).
 	queue_redraw()
 
 
@@ -515,55 +672,72 @@ func _add_prop_sprite(tex_path: String, cell: Vector2i, offset_px: Vector2) -> S
 	return spr
 
 
-func _build_department_zones() -> void:
-	_dept_nodes.clear()
-	var tex_desk: Texture2D = _load_tex("res://assets/environment/prop_desk_office.png")
-	var tex_banner: Texture2D = _load_tex("res://assets/environment/prop_dept_banner.png")
+func _create_department_node(dept_id: String, cell: Vector2i) -> void:
+	var cfg: Dictionary = DEPT_ZONES.get(dept_id, {}) as Dictionary
+	var accent: Color = cfg.get("accent", Color("#00C6FF")) as Color
+	var short_key: String = str(cfg.get("short_key", dept_id))
 
-	for dept_id: String in DEPT_ZONES.keys():
-		var cfg: Dictionary = DEPT_ZONES[dept_id] as Dictionary
-		var cell: Vector2i = cfg["cell"] as Vector2i
-		var root := Node2D.new()
-		root.name = "DeptZone_" + dept_id.replace("core:department.", "")
-		root.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		root.position = iso_grid.grid_to_screen(cell).round()
+	var root := Node2D.new()
+	root.name = "DeptRoom_" + dept_id.replace("core:department.", "").replace(":", "_")
+	root.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	root.position = iso_grid.grid_to_screen(cell).round()
 
-		var desk := Sprite2D.new()
-		desk.name = "OfficeDesk"
-		desk.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		desk.texture = tex_desk
-		desk.centered = true
-		desk.offset = Vector2(0.0, -9.0)
-		root.add_child(desk)
+	# Floor mat marks the chosen plot (2:1 diamond).
+	var mat := Polygon2D.new()
+	mat.name = "FloorMat"
+	mat.polygon = PackedVector2Array([
+		Vector2(0.0, -8.0), Vector2(16.0, 0.0), Vector2(0.0, 8.0), Vector2(-16.0, 0.0),
+	])
+	mat.color = Color(accent.r, accent.g, accent.b, 0.16)
+	root.add_child(mat)
 
-		var banner := Sprite2D.new()
-		banner.name = "DeptBanner"
-		banner.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		banner.texture = tex_banner
-		banner.centered = true
-		banner.offset = Vector2(15.0, -15.0)
-		root.add_child(banner)
+	var border := Line2D.new()
+	border.name = "FloorBorder"
+	border.points = PackedVector2Array([
+		Vector2(0.0, -8.0), Vector2(16.0, 0.0), Vector2(0.0, 8.0), Vector2(-16.0, 0.0), Vector2(0.0, -8.0),
+	])
+	border.width = 1.0
+	border.default_color = Color(accent.r, accent.g, accent.b, 0.55)
+	root.add_child(border)
 
-		var badge := Label.new()
-		badge.name = "LevelBadge"
-		badge.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		badge.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		badge.position = Vector2(-24.0, -34.0)
-		badge.size = Vector2(64.0, 14.0)
-		badge.scale = Vector2(0.75, 0.75)
-		badge.add_theme_font_size_override("font_size", 11)
-		badge.add_theme_color_override("font_color", cfg["accent"] as Color)
-		root.add_child(badge)
+	var desk := Sprite2D.new()
+	desk.name = "OfficeDesk"
+	desk.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	desk.texture = _load_tex("res://assets/environment/prop_desk_office.png")
+	desk.centered = true
+	desk.offset = Vector2(0.0, -9.0)
+	root.add_child(desk)
 
-		_departments_container.add_child(root)
-		_dept_nodes[dept_id] = {
-			"root": root,
-			"desk": desk,
-			"banner": banner,
-			"badge": badge,
-			"short_key": str(cfg["short_key"]),
-			"level": 0,
-		}
+	var banner := Sprite2D.new()
+	banner.name = "DeptBanner"
+	banner.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	banner.texture = _load_tex("res://assets/environment/prop_dept_banner.png")
+	banner.centered = true
+	banner.offset = Vector2(15.0, -15.0)
+	root.add_child(banner)
+
+	var badge := Label.new()
+	badge.name = "LevelBadge"
+	badge.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	badge.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	badge.position = Vector2(-24.0, -34.0)
+	badge.size = Vector2(64.0, 14.0)
+	badge.scale = Vector2(0.75, 0.75)
+	badge.add_theme_font_size_override("font_size", 11)
+	badge.add_theme_color_override("font_color", accent)
+	root.add_child(badge)
+
+	_departments_container.add_child(root)
+	_dept_nodes[dept_id] = {
+		"root": root,
+		"desk": desk,
+		"banner": banner,
+		"badge": badge,
+		"short_key": short_key,
+		"accent": accent,
+		"cell": cell,
+		"level": 0,
+	}
 
 
 func _sync_navigation_solids(bs_obj: Object) -> void:
@@ -579,39 +753,100 @@ func _sync_navigation_solids(bs_obj: Object) -> void:
 				var gp: Variant = (st as Dictionary).get("grid_pos", Vector2i.ZERO)
 				if gp is Vector2i:
 					iso_grid.set_solid(gp as Vector2i, true)
+	var raw_depts: Variant = bs_obj.get("departments")
+	if raw_depts is Dictionary:
+		for did: Variant in (raw_depts as Dictionary).keys():
+			var d_entry: Variant = (raw_depts as Dictionary)[did]
+			var d_cell: Vector2i = _read_dept_cell(d_entry)
+			if d_cell.x < 0 or d_cell.y < 0:
+				d_cell = _fallback_dept_cell(str(did))
+			iso_grid.set_solid(d_cell, true)
+
+
+func _read_dept_cell(entry: Variant) -> Vector2i:
+	if entry is Object:
+		var raw_o: Variant = (entry as Object).get("grid_pos")
+		if raw_o is Vector2i:
+			return raw_o as Vector2i
+		return Vector2i(-1, -1)
+	if entry is Dictionary:
+		var raw: Variant = (entry as Dictionary).get("grid_pos", null)
+		if raw is Vector2i:
+			return raw as Vector2i
+		if raw is Array and (raw as Array).size() >= 2:
+			var arr: Array = raw as Array
+			return Vector2i(int(arr[0]), int(arr[1]))
+		if raw is Dictionary:
+			var d: Dictionary = raw as Dictionary
+			return Vector2i(int(d.get("x", -1)), int(d.get("y", -1)))
+	return Vector2i(-1, -1)
+
+
+func _read_dept_level(entry: Variant) -> int:
+	if entry is Object:
+		return maxi(1, int((entry as Object).get("level")))
+	if entry is Dictionary:
+		return maxi(1, int((entry as Dictionary).get("level", 1)))
+	return 1
+
+
+func _fallback_dept_cell(dept_id: String) -> Vector2i:
+	var cfg: Dictionary = DEPT_ZONES.get(dept_id, {}) as Dictionary
+	var raw: Variant = cfg.get("cell", Vector2i(2, 2))
+	return raw as Vector2i if raw is Vector2i else Vector2i(2, 2)
 
 
 func _sync_departments(bs_obj: Object) -> void:
 	var raw_depts: Variant = bs_obj.get("departments")
 	var depts_dict: Dictionary = raw_depts as Dictionary if raw_depts is Dictionary else {}
 
-	for dept_id: String in _dept_nodes.keys():
-		var info: Dictionary = _dept_nodes[dept_id] as Dictionary
+	# Drop rooms whose department no longer exists (new game / state reload).
+	for dept_id: String in _dept_nodes.keys().duplicate():
+		if not depts_dict.has(dept_id):
+			var stale: Dictionary = _dept_nodes[dept_id] as Dictionary
+			var stale_root: Node = stale.get("root") as Node
+			if stale_root != null and is_instance_valid(stale_root):
+				stale_root.queue_free()
+			_dept_nodes.erase(dept_id)
+
+	for dept_id_v: Variant in depts_dict.keys():
+		var dept_id: String = str(dept_id_v)
+		var entry: Variant = depts_dict[dept_id]
+		var lvl: int = _read_dept_level(entry)
+		var cell: Vector2i = _read_dept_cell(entry)
+		if cell.x < 0 or cell.y < 0:
+			cell = _fallback_dept_cell(dept_id)
+
+		var info: Dictionary = {}
+		if _dept_nodes.has(dept_id):
+			var existing: Dictionary = _dept_nodes[dept_id] as Dictionary
+			var existing_cell: Vector2i = existing.get("cell", Vector2i(-1, -1)) as Vector2i
+			if existing_cell == cell:
+				info = existing
+			else:
+				# The saved plot differs from the rendered one: rebuild that room.
+				var old_root: Node = existing.get("root") as Node
+				if old_root != null and is_instance_valid(old_root):
+					old_root.queue_free()
+				_dept_nodes.erase(dept_id)
+		if info.is_empty():
+			_create_department_node(dept_id, cell)
+			info = _dept_nodes[dept_id] as Dictionary
+
+		info["level"] = lvl
 		var desk: Sprite2D = info["desk"] as Sprite2D
 		var banner: Sprite2D = info["banner"] as Sprite2D
 		var badge: Label = info["badge"] as Label
 		var short_key: String = str(info["short_key"])
+		var accent: Color = info.get("accent", Color("#00C6FF")) as Color
 
-		var lvl: int = 0
-		if depts_dict.has(dept_id):
-			var d_entry: Variant = depts_dict[dept_id]
-			if d_entry is Dictionary:
-				lvl = maxi(1, int((d_entry as Dictionary).get("level", 1)))
-			elif d_entry is Object:
-				lvl = maxi(1, int((d_entry as Object).get("level")))
-
-		info["level"] = lvl
-		if lvl > 0:
-			desk.modulate = Color(1.0, 1.0, 1.0, 1.0)
-			banner.visible = true
-			badge.visible = true
-			var dept_name: String = _tr(short_key)
-			var lvl_str: String = _tr("WORLD_DEPT_LEVEL_BADGE", {"level": lvl})
-			badge.text = "%s %s" % [dept_name, lvl_str]
-		else:
-			desk.modulate = Color(0.52, 0.6, 0.72, 0.42)
-			banner.visible = false
-			badge.visible = false
+		desk.modulate = Color(1.0, 1.0, 1.0, 1.0)
+		banner.visible = true
+		badge.visible = true
+		badge.add_theme_color_override("font_color", accent)
+		var dept_name: String = _tr(short_key)
+		var lvl_str: String = _tr("WORLD_DEPT_LEVEL_BADGE", {"level": lvl})
+		badge.text = "%s %s" % [dept_name, lvl_str]
 
 
 func _sync_stations(bs_obj: Object) -> void:
@@ -880,9 +1115,17 @@ func _on_domain_event(event_type: StringName, payload: Dictionary) -> void:
 		"department_created", "department_upgraded":
 			var did: String = str(payload.get("department_id", ""))
 			var lvl: int = maxi(1, int(payload.get("level", 1)))
-			if allow_fx and DEPT_ZONES.has(did):
-				var cell: Vector2i = (DEPT_ZONES[did] as Dictionary)["cell"] as Vector2i
-				var pos: Vector2 = iso_grid.grid_to_screen(cell)
+			if allow_fx:
+				var pos: Vector2 = Vector2.ZERO
+				var has_pos: bool = false
+				if _dept_nodes.has(did):
+					var info: Dictionary = _dept_nodes[did] as Dictionary
+					var dept_root: Node2D = info.get("root") as Node2D
+					if dept_root != null and is_instance_valid(dept_root):
+						pos = dept_root.position
+						has_pos = true
+				if not has_pos:
+					pos = iso_grid.grid_to_screen(_fallback_dept_cell(did))
 				var txt: String = _tr("WORLD_FX_DEPT_UPGRADED", {"level": lvl})
 				_spawn_floating_text(pos + Vector2(0.0, -32.0), txt, Color("#00C6FF"))
 			if cur_frame != _last_auto_world_frame:
@@ -951,14 +1194,54 @@ func _process(delta: float) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if is_department_placement_active():
+		if _handle_placement_input(event):
+			return
 	if event is InputEventMouseButton:
 		var mb: InputEventMouseButton = event as InputEventMouseButton
 		if mb.button_index == MOUSE_BUTTON_LEFT and mb.pressed:
-			var click_world: Vector2 = get_global_mouse_position()
+			# Use the event position (camera-aware) instead of polling the global mouse:
+			# it is the authoritative position for this click and is deterministic in tests.
+			var click_world: Vector2 = get_global_transform_with_canvas().affine_inverse() * mb.position
 			if _try_pick_entity_at(click_world):
 				var vp: Viewport = get_viewport()
 				if vp != null:
 					vp.set_input_as_handled()
+
+
+## Returns true when the event was consumed by placement mode.
+func _handle_placement_input(event: InputEvent) -> bool:
+	if event.is_action_pressed("ui_cancel"):
+		cancel_department_placement()
+		_consume_input()
+		return true
+	if event is InputEventMouseMotion:
+		var mm: InputEventMouseMotion = event as InputEventMouseMotion
+		_update_placement_preview(cell_from_screen_position(mm.position))
+		return false
+	if event is InputEventMouseButton:
+		var mb: InputEventMouseButton = event as InputEventMouseButton
+		if not mb.pressed:
+			return false
+		if mb.button_index == MOUSE_BUTTON_RIGHT:
+			cancel_department_placement()
+			_consume_input()
+			return true
+		if mb.button_index == MOUSE_BUTTON_LEFT:
+			var cell: Vector2i = cell_from_screen_position(mb.position)
+			if is_valid_department_plot(cell, _placement_dept_id):
+				_confirm_department_placement(cell)
+			else:
+				_placement_cell = Vector2i(-1, -1)  # force the ghost to refresh its colour
+			_consume_input()
+			return true
+	return false
+
+
+func _consume_input() -> void:
+	var vp: Viewport = get_viewport()
+	if vp != null:
+		vp.set_input_as_handled()
 
 
 func _try_pick_entity_at(world_pos: Vector2) -> bool:

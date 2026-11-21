@@ -315,6 +315,8 @@
   "ERR_DEPT_LOCKED": "Department unlock conditions not met",
   "ERR_DEPT_NOT_CREATED": "Department must be created before upgrading",
   "ERR_DEPT_MAX_LEVEL": "Department has reached maximum level Lv.{max_level}",
+  "ERR_DEPT_PLOT_OCCUPIED": "That plot is already taken by a counter or another department",
+  "ERR_DEPT_PLOT_INVALID": "Invalid department plot",
   "ERR_POLICY_NOT_FOUND": "Policy definition not found: {policy_id}",
   "ERR_POLICY_ALREADY_ADOPTED": "Policy has already been adopted",
   "ERR_POLICY_PREREQUISITE_MISSING": "Missing prerequisite policy: {missing_prerequisite}",

@@ -99,6 +99,9 @@ func run_suite_async(harness: RefCounted, on_complete: Callable) -> void:
 	await _case_07_interceptor_guard()
 	await _case_08_structural_transparency_guard()
 	await _case_09_dynamic_list_single_click()
+	await _case_10_department_placement()
+	await _case_11_world_click_reaches_entity()
+	await _case_12_world_wheel_zoom()
 
 	await _teardown()
 	on_complete.call(_results)
@@ -908,6 +911,235 @@ func _department_level(dept_id: String) -> int:
 	if entry is Object:
 		return int((entry as Object).get("level"))
 	return int((entry as Dictionary).get("level", 0))
+
+
+# ---------------------------------------------------------------------------
+# E2E_T5_10 — a department is really built where the player clicks in the lobby.
+# Flow: drawer "choose plot" -> drawer closes -> world placement mode -> click a free
+# tile -> department exists at that grid_pos and a room node is rendered.
+# Cancel path: right click leaves no department behind.
+# ---------------------------------------------------------------------------
+
+func _case_10_department_placement() -> void:
+	_begin_case("E2E_T5_10")
+	await _reset_ui_state()
+
+	var world: Node = _game.get("_bank_world") as Node
+	if not _h.assert_not_null(world, "GameRoot 未持有 BankWorld"):
+		_end_case()
+		return
+	var bs: Variant = _bank_state()
+	if not _h.assert_not_null(bs, "GameRoot 未能绑定 BankState"):
+		_end_case()
+		return
+
+	# --- 10a. choose a plot, then confirm it with a real lobby click ---
+	var nav_btn: Button = _nav_button(&"departments")
+	if not _h.assert_not_null(nav_btn, "LeftNavigation 缺少 departments 按钮"):
+		_end_case()
+		return
+	await _click(nav_btn)
+	var drawer: Control = _drawer_node("DepartmentsDrawer")
+	if not _h.assert_true(drawer != null and drawer.visible, "点击导航后部门抽屉应打开"):
+		_end_case()
+		return
+
+	var place_dept: String = "core:department.hr"
+	var choose_btn: Button = _find_dept_card_button(drawer, place_dept, "UI_DEPT_BTN_CHOOSE_PLOT")
+	if not _h.assert_not_null(choose_btn, "部门抽屉缺少“选择位置成立”按钮"):
+		_end_case()
+		return
+	await _click(choose_btn)
+	_h.assert_false(drawer.visible, "进入放置模式后抽屉应关闭，露出大厅")
+	_h.assert_true(bool(world.call("is_department_placement_active")), "点击“选择位置成立”后应进入部门放置模式")
+
+	var target_cell: Vector2i = _find_valid_plot(world, place_dept)
+	if not _h.assert_true(target_cell.x >= 0, "找不到可用于放置部门的合法空地（放置校验过严？）"):
+		_end_case()
+		return
+	var screen_pos: Vector2 = _cell_to_screen(world, target_cell)
+	_move_mouse(screen_pos)
+	await _settle()
+	_last_hovered = _hovered()
+	_press_release(screen_pos)
+	await _settle(3)
+
+	var dept_id: String = place_dept
+	_h.assert_false(bool(world.call("is_department_placement_active")), "确认放置后应退出放置模式")
+	_h.assert_true((bs as Object).get("departments").has(dept_id), "确认后应真正成立部门")
+	if (bs as Object).get("departments").has(dept_id):
+		_h.assert_eq(
+			DepartmentService.get_department_grid_pos(bs as BankState, dept_id),
+			target_cell,
+			"部门必须记录玩家点击的格子坐标"
+		)
+	var dept_nodes: Dictionary = world.get("_dept_nodes") as Dictionary
+	_h.assert_true(dept_nodes.has(dept_id), "世界层应为新部门生成房间节点")
+
+	# --- 10b. right click cancels without building ---
+	await _click(nav_btn)
+	await _settle(2)
+	var cancel_dept: String = "core:department.credit"
+	var cancel_btn: Button = _find_dept_card_button(drawer, cancel_dept, "UI_DEPT_BTN_CHOOSE_PLOT")
+	if cancel_btn != null:
+		await _click(cancel_btn)
+		_h.assert_true(bool(world.call("is_department_placement_active")), "前置状态：应再次进入放置模式")
+		var cancel_pos: Vector2 = _cell_to_screen(world, _find_valid_plot(world, cancel_dept))
+		var right_click := InputEventMouseButton.new()
+		right_click.button_index = MOUSE_BUTTON_RIGHT
+		right_click.pressed = true
+		right_click.position = cancel_pos
+		right_click.global_position = cancel_pos
+		_root.push_input(right_click, true)
+		await _settle(2)
+		_h.assert_false(bool(world.call("is_department_placement_active")), "右键应取消部门放置")
+		_h.assert_false((bs as Object).get("departments").has(cancel_dept), "取消放置不得成立部门")
+	else:
+		_h.fail_test("信贷部应仍可进入放置模式")
+
+	_game.call("close_drawer")
+	await _settle()
+	_end_case()
+
+
+func _find_dept_card_button(drawer: Control, dept_id: String, key: String) -> Button:
+	var grid: Node = drawer.get("_dept_grid") as Node
+	if grid == null:
+		return null
+	var defs: Dictionary = UiI18n.get_effective_content_defs(_sim_host)
+	var name_key: String = ""
+	for raw: Variant in (defs.get("departments", []) as Array):
+		if raw is Dictionary and str((raw as Dictionary).get("id", "")) == dept_id:
+			name_key = str((raw as Dictionary).get("name_key", ""))
+			break
+	var want_name: String = UiI18n.tr_key(name_key) if name_key != "" else ""
+	for card: Node in grid.get_children():
+		var card_has_name: bool = false
+		for lbl: Node in card.find_children("*", "Label", true, false):
+			if (lbl as Label).text == want_name:
+				card_has_name = true
+				break
+		if card_has_name:
+			return _find_button_by_key_prefix(card, key)
+	return null
+
+
+func _find_valid_plot(world: Node, dept_id: String) -> Vector2i:
+	var candidates: Array[Vector2i] = [
+		Vector2i(2, 5), Vector2i(3, 3), Vector2i(12, 6), Vector2i(15, 5),
+		Vector2i(2, 9), Vector2i(16, 3), Vector2i(4, 2), Vector2i(13, 2),
+	]
+	for cell: Vector2i in candidates:
+		if bool(world.call("is_valid_department_plot", cell, dept_id)):
+			var pos: Vector2 = _cell_to_screen(world, cell)
+			if pos.x > 100.0 and pos.x < 940.0 and pos.y > 90.0 and pos.y < 1150.0:
+				return cell
+	return Vector2i(-1, -1)
+
+
+func _cell_to_screen(world: Node, cell: Vector2i) -> Vector2:
+	var world_obj: Object = world as Object
+	var iso: Variant = world_obj.get("iso_grid")
+	if iso == null or not (iso is Object):
+		return Vector2.ZERO
+	var world_pos: Variant = (iso as Object).call("grid_to_screen", cell)
+	var canvas_item: CanvasItem = world as CanvasItem
+	if canvas_item == null:
+		return world_pos as Vector2
+	return canvas_item.get_global_transform_with_canvas() * (world_pos as Vector2)
+
+
+# ---------------------------------------------------------------------------
+# E2E_T5_11 / T5_12 — the world layer still receives unhandled input.
+# Tier 5 up to here proves GUI picking only; these two prove that a click and a wheel
+# event that no Control consumed actually arrive at BankWorld / PixelCamera2D.
+# ---------------------------------------------------------------------------
+
+func _case_11_world_click_reaches_entity() -> void:
+	_begin_case("E2E_T5_11")
+	await _reset_ui_state()
+
+	var world: Node = _game.get("_bank_world") as Node
+	if not _h.assert_not_null(world, "GameRoot 未持有 BankWorld"):
+		_end_case()
+		return
+	var views: Dictionary = world.get("_station_views") as Dictionary
+	if not _h.assert_true(not views.is_empty(), "大厅应至少有一个柜台视图"):
+		_end_case()
+		return
+
+	var sid: String = "teller_1"
+	if not views.has(sid):
+		var keys: Array = views.keys()
+		keys.sort()
+		sid = str(keys[0])
+	var view: Node2D = views[sid] as Node2D
+	if not _h.assert_not_null(view, "柜台视图 %s 缺失" % sid):
+		_end_case()
+		return
+	var hit: Rect2 = view.call("get_hit_rect") as Rect2
+	var screen_pos: Vector2 = (view as CanvasItem).get_global_transform_with_canvas() * hit.get_center()
+	var picked: Array[Dictionary] = []
+	var on_pick := func(etype: StringName, eid: String) -> void:
+		picked.append({"type": etype, "id": eid})
+	world.connect("entity_selected", on_pick)
+
+	_move_mouse(screen_pos)
+	await _settle()
+	_press_release(screen_pos)
+	await _settle(2)
+
+	if world.is_connected("entity_selected", on_pick):
+		world.disconnect("entity_selected", on_pick)
+
+	_h.assert_ge(picked.size(), 1, "点击柜台必须到达世界层并发出 entity_selected（unhandled_input 通道）")
+	if not picked.is_empty():
+		_h.assert_eq(picked[0]["type"], &"station", "命中的实体类型应为 station")
+		_h.assert_eq(str(picked[0]["id"]), sid, "命中的实体 id 应为 %s" % sid)
+	_end_case()
+
+
+func _case_12_world_wheel_zoom() -> void:
+	_begin_case("E2E_T5_12")
+	await _reset_ui_state()
+
+	var world: Node = _game.get("_bank_world") as Node
+	if not _h.assert_not_null(world, "GameRoot 未持有 BankWorld"):
+		_end_case()
+		return
+	var cam: Node = world.get("_camera") as Node
+	if not _h.assert_not_null(cam, "PixelCamera2D 缺失"):
+		_end_case()
+		return
+	if not _h.require_method(cam, "get_zoom_step", "PixelCamera2D"):
+		_end_case()
+		return
+
+	world.call("set_camera_zoom_step", 1)
+	await _settle()
+	_h.assert_eq(int(cam.call("get_zoom_step")), 1, "前置状态：相机缩放应为 1x")
+
+	var probe: Vector2 = _cell_to_screen(world, Vector2i(2, 5))
+	_move_mouse(probe)
+	await _settle()
+	var wheel_up := InputEventMouseButton.new()
+	wheel_up.button_index = MOUSE_BUTTON_WHEEL_UP
+	wheel_up.pressed = true
+	wheel_up.position = probe
+	wheel_up.global_position = probe
+	_root.push_input(wheel_up, true)
+	await _settle(2)
+	_h.assert_eq(int(cam.call("get_zoom_step")), 2, "滚轮向上必须到达 PixelCamera2D 并提升缩放（unhandled_input 通道）")
+
+	var wheel_down := InputEventMouseButton.new()
+	wheel_down.button_index = MOUSE_BUTTON_WHEEL_DOWN
+	wheel_down.pressed = true
+	wheel_down.position = probe
+	wheel_down.global_position = probe
+	_root.push_input(wheel_down, true)
+	await _settle(2)
+	_h.assert_eq(int(cam.call("get_zoom_step")), 1, "滚轮向下必须降低缩放")
+	_end_case()
 
 
 # ---------------------------------------------------------------------------

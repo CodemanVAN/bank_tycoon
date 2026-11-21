@@ -33,16 +33,6 @@ func _enter_tree() -> void:
 		_bank_world = wc.get_node_or_null("BankWorld")
 
 
-func _exit_tree() -> void:
-	if _sim_host != null:
-		var cmd: Variant = _sim_host.get("command_service")
-		if cmd is Object and (cmd as Object).get("on_state_mutated") != null:
-			(cmd as Object).set("on_state_mutated", Callable())
-		_sim_host.set("command_service", null)
-		_sim_host.set("simulation", null)
-		_sim_host.set("event_bus", null)
-
-
 func _ready() -> void:
 	var shared_theme: Theme = StarwayTheme.build()
 	theme = shared_theme
@@ -84,10 +74,13 @@ func _collect_drawers_and_modals() -> void:
 func _bind_runtime_session() -> void:
 	var sess: Node = get_node_or_null("/root/GameSession")
 	var bs: Variant = sess.get("bank_state") if sess != null else null
+	if bs == null and sess != null and sess.has_method("start_new_game"):
+		# Start a real session (sets is_active, emits session_started) instead of silently
+		# fabricating a half-started bank state that could still be written to a save slot.
+		bs = sess.call("start_new_game", "Starway Bank", 20261121)
 	if bs == null:
-		bs = BankState.create_starter_branch("Starway Bank", 20261121)
-		if sess != null:
-			sess.set("bank_state", bs)
+		push_error("[GameRoot] No bank_state available and GameSession.start_new_game failed; HUD stays unbound.")
+		return
 
 	var defs: Dictionary = UiI18n.get_effective_content_defs(_sim_host)
 	if _sim_host != null and _sim_host.has_method("bind_session"):
@@ -134,6 +127,15 @@ func _wire_signals() -> void:
 		if not _bank_world.is_connected("entity_selected", cb_sel):
 			_bank_world.connect("entity_selected", cb_sel)
 
+	if _bank_world != null and _bank_world.has_signal("department_placement_confirmed"):
+		var cb_place := Callable(self, &"_on_department_placement_confirmed")
+		if not _bank_world.is_connected("department_placement_confirmed", cb_place):
+			_bank_world.connect("department_placement_confirmed", cb_place)
+	if _bank_world != null and _bank_world.has_signal("department_placement_cancelled"):
+		var cb_cancel := Callable(self, &"_on_department_placement_cancelled")
+		if not _bank_world.is_connected("department_placement_cancelled", cb_cancel):
+			_bank_world.connect("department_placement_cancelled", cb_cancel)
+
 	if _top_bar != null:
 		_top_bar.connect("command_executed", _on_command_executed)
 		_top_bar.connect("save_settings_requested", open_pause_modal)
@@ -163,6 +165,8 @@ func _wire_signals() -> void:
 			dnode.connect("command_executed", _on_command_executed)
 		if dnode.has_signal("navigate_requested"):
 			dnode.connect("navigate_requested", open_drawer)
+		if dnode.has_signal("placement_requested"):
+			dnode.connect("placement_requested", _on_department_placement_requested)
 
 	if _loan_modal != null and _loan_modal.has_signal("command_executed"):
 		_loan_modal.connect("command_executed", _on_command_executed)
@@ -183,7 +187,7 @@ func _wire_signals() -> void:
 	# ModalShield blocks clicks outside an open modal. Hook visibility_changed (not
 	# just the `closed` signal) so every close path - close button, open_pause_modal
 	# toggle, or a direct visible = false - re-opens mouse picking for the HUD.
-	for modal_node in [_loan_modal, _event_modal, _pause_modal]:
+	for modal_node in [_loan_modal, _event_modal, _pause_modal, _daily_report_overlay]:
 		var mctl: Control = modal_node as Control
 		if mctl == null:
 			continue
@@ -193,7 +197,7 @@ func _wire_signals() -> void:
 
 
 func _any_modal_open() -> bool:
-	for modal_node in [_loan_modal, _event_modal, _pause_modal]:
+	for modal_node in [_loan_modal, _event_modal, _pause_modal, _daily_report_overlay]:
 		if not is_instance_valid(modal_node):
 			continue
 		var mctl: Control = modal_node as Control
@@ -209,6 +213,7 @@ func _sync_modal_shield() -> void:
 
 
 func open_drawer(drawer_id: StringName) -> void:
+	_cancel_placement_if_active()
 	_active_drawer_id = drawer_id
 	for did: StringName in _drawers.keys():
 		var dnode: Control = _drawers[did] as Control
@@ -271,20 +276,76 @@ func _open_latest_daily_report() -> void:
 
 
 func _on_next_day_requested() -> void:
+	var advance_res: Variant = null
 	if _sim_host != null:
 		var cmd: Variant = _sim_host.get("command_service")
 		if cmd != null and (cmd as Object).has_method("advance_to_next_day"):
-			(cmd as Object).call("advance_to_next_day")
+			advance_res = (cmd as Object).call("advance_to_next_day")
+	if advance_res is Result and not (advance_res as Result).ok:
+		var adv_err: Result = advance_res as Result
+		show_toast(_result_error_key(adv_err), adv_err.error_params, Enums.EventSeverity.CRITICAL)
+		refresh_all()
+		return
+
+	var save_res: Variant = null
 	var sess: Node = get_node_or_null("/root/GameSession")
 	if sess != null and sess.has_method("save_to_slot"):
-		sess.call("save_to_slot", "autosave")
-	show_toast("UI_TOAST_AUTOSAVE_OK", {}, Enums.EventSeverity.INFO)
+		save_res = sess.call("save_to_slot", "autosave")
+	if save_res is Result and not (save_res as Result).ok:
+		var save_err: Result = save_res as Result
+		show_toast(_result_error_key(save_err), save_err.error_params, Enums.EventSeverity.CRITICAL)
+	else:
+		show_toast("UI_TOAST_AUTOSAVE_OK", {}, Enums.EventSeverity.INFO)
 	refresh_all()
+
+
+func _result_error_key(res: Result) -> String:
+	if res == null:
+		return "ERR_SAVE_WRITE_FAILED"
+	if not res.error_key.is_empty():
+		return res.error_key
+	if not res.error_code.is_empty():
+		return "ERR_" + String(res.error_code)
+	return "ERR_SAVE_WRITE_FAILED"
 
 
 func _on_world_entity_selected(entity_type: StringName, entity_id: String) -> void:
 	if _right_inspector != null and _right_inspector.has_method("show_entity"):
 		_right_inspector.call("show_entity", entity_type, entity_id)
+
+
+func _cancel_placement_if_active() -> void:
+	if _bank_world == null or not _bank_world.has_method("is_department_placement_active"):
+		return
+	if bool(_bank_world.call("is_department_placement_active")):
+		_bank_world.call("cancel_department_placement")
+
+
+func _on_department_placement_requested(dept_id: String) -> void:
+	if _bank_world == null or not _bank_world.has_method("begin_department_placement"):
+		return
+	# Reveal the lobby so the player can pick the plot.
+	close_drawer()
+	if bool(_bank_world.call("begin_department_placement", dept_id)):
+		show_toast("UI_DEPT_PLACE_PROMPT", {}, Enums.EventSeverity.INFO)
+	else:
+		show_toast("ERR_DEPT_PLOT_INVALID", {}, Enums.EventSeverity.WARNING)
+
+
+func _on_department_placement_confirmed(dept_id: String, cell: Vector2i) -> void:
+	if _sim_host == null:
+		return
+	var cmd: Variant = _sim_host.get("command_service")
+	if cmd == null or not (cmd as Object).has_method("create_department"):
+		return
+	var res: Variant = (cmd as Object).call("create_department", dept_id, cell)
+	if _toast_bar != null and _toast_bar.has_method("show_command_result"):
+		_toast_bar.call("show_command_result", res, "UI_NAV_DEPARTMENTS")
+	refresh_all()
+
+
+func _on_department_placement_cancelled() -> void:
+	show_toast("UI_DEPT_PLACE_CANCELLED", {}, Enums.EventSeverity.INFO)
 
 
 func _on_zoom_step_requested(step: int) -> void:

@@ -955,6 +955,12 @@ msgstr "该部门尚未设立，无法升级"
 msgid "ERR_DEPT_MAX_LEVEL"
 msgstr "该部门已达到最高等级 Lv.{max_level}"
 
+msgid "ERR_DEPT_PLOT_OCCUPIED"
+msgstr "该位置已被柜台或其它部门占用"
+
+msgid "ERR_DEPT_PLOT_INVALID"
+msgstr "无效的部门位置"
+
 msgid "ERR_POLICY_NOT_FOUND"
 msgstr "未找到指定政策定义：{policy_id}"
 
@@ -1137,6 +1143,9 @@ msgstr "风控部"
 
 msgid "WORLD_DEPT_LEVEL_BADGE"
 msgstr "Lv.{level}"
+
+msgid "WORLD_DEPT_PLACE_GHOST"
+msgstr "放置 {name}"
 
 msgid "WORLD_FX_SERVICE_DONE"
 msgstr "{amount}"
@@ -1578,6 +1587,15 @@ msgstr "每日运营成本：{cost}"
 
 msgid "UI_DEPT_BTN_CREATE"
 msgstr "成立部门 ({cost})"
+
+msgid "UI_DEPT_BTN_CHOOSE_PLOT"
+msgstr "选择位置成立 ({cost})"
+
+msgid "UI_DEPT_PLACE_PROMPT"
+msgstr "点击大厅中的空地放置部门；右键或 Esc 取消"
+
+msgid "UI_DEPT_PLACE_CANCELLED"
+msgstr "已取消部门放置"
 
 msgid "UI_DEPT_BTN_UPGRADE"
 msgstr "升级至 Lv.{next} ({cost})"

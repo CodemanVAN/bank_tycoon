@@ -200,10 +200,11 @@ func refresh() -> void:
 		var btn := Button.new()
 		if cur_lvl <= 0:
 			btn.theme_type_variation = &"ButtonPrimary"
-			btn.text = UiI18n.tr_key("UI_DEPT_BTN_CREATE", {"cost": FormatService.format_money(init_cost, ccy, false, lc)})
+			btn.text = UiI18n.tr_key("UI_DEPT_BTN_CHOOSE_PLOT", {"cost": FormatService.format_money(init_cost, ccy, false, lc)})
 			btn.pressed.connect(func() -> void:
 				UiI18n.play_sfx("sfx_ui_click")
-				_exec_cmd("create_department", [dept_id], "UI_DEPT_BTN_CREATE")
+				# Real construction: the player picks the plot in the lobby first.
+				placement_requested.emit(dept_id)
 			)
 		elif cur_lvl < max_lvl:
 			btn.theme_type_variation = &"ButtonGold"
