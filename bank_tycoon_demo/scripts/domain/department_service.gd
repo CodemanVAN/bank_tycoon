@@ -9,6 +9,8 @@ class DepartmentInstance extends RefCounted:
 	var created_day: int = 1
 	var daily_cost_minor: int = 0
 	var staff_ids: Array[String] = []
+	## Logical lobby cell chosen by the player. (-1, -1) = legacy/unplaced department.
+	var grid_pos: Vector2i = Vector2i(-1, -1)
 
 	func to_dict() -> Dictionary:
 		var staff_copy: Array[String] = []
@@ -20,6 +22,7 @@ class DepartmentInstance extends RefCounted:
 			"created_day": created_day,
 			"daily_cost_minor": daily_cost_minor,
 			"staff_ids": staff_copy,
+			"grid_pos": [grid_pos.x, grid_pos.y],
 		}
 
 	static func from_dict(data: Dictionary) -> DepartmentInstance:
@@ -28,12 +31,25 @@ class DepartmentInstance extends RefCounted:
 		inst.level = maxi(1, int(data.get("level", 1)))
 		inst.created_day = maxi(1, int(data.get("created_day", 1)))
 		inst.daily_cost_minor = maxi(0, int(data.get("daily_cost_minor", 0)))
+		inst.grid_pos = _parse_grid_pos(data.get("grid_pos", null))
 		inst.staff_ids = []
 		var raw_staff: Variant = data.get("staff_ids", [])
 		if raw_staff is Array:
 			for sid in (raw_staff as Array):
 				inst.staff_ids.append(str(sid))
 		return inst
+
+	static func _parse_grid_pos(raw: Variant) -> Vector2i:
+		if raw is Vector2i:
+			return raw as Vector2i
+		if raw is Array:
+			var arr: Array = raw as Array
+			if arr.size() >= 2:
+				return Vector2i(int(arr[0]), int(arr[1]))
+		if raw is Dictionary:
+			var d: Dictionary = raw as Dictionary
+			return Vector2i(int(d.get("x", -1)), int(d.get("y", -1)))
+		return Vector2i(-1, -1)
 
 
 static func _find_dept_def(dept_id: String, content_defs: Dictionary) -> Dictionary:
@@ -115,7 +131,8 @@ func create_department(
 	bank_state: BankState,
 	dept_id: String,
 	content_defs: Dictionary,
-	finance_engine: FinanceEngine = null
+	finance_engine: FinanceEngine = null,
+	grid_pos: Vector2i = Vector2i(-1, -1)
 ) -> Result:
 	if bank_state == null or bank_state.ledger == null:
 		return Result.fail(&"INVALID_BANK_STATE", "ERR_INVALID_BANK_STATE", {})
@@ -126,6 +143,14 @@ func create_department(
 		return Result.fail(&"DEPT_NOT_FOUND", "ERR_DEPT_NOT_FOUND", {"department_id": dept_id})
 	if bank_state.departments.has(dept_id):
 		return Result.fail(&"DEPT_ALREADY_EXISTS", "ERR_DEPT_ALREADY_EXISTS", {"department_id": dept_id})
+
+	# Plot is optional for backward compatibility (tests / auto placement), but a partially
+	# negative cell is a bug at the call site and is rejected instead of silently ignored.
+	var has_plot: bool = grid_pos.x >= 0 and grid_pos.y >= 0
+	if (grid_pos.x >= 0) != (grid_pos.y >= 0):
+		return Result.fail(&"DEPT_PLOT_INVALID", "ERR_DEPT_PLOT_INVALID", {"x": grid_pos.x, "y": grid_pos.y})
+	if has_plot and not is_plot_free(bank_state, grid_pos, dept_id):
+		return Result.fail(&"DEPT_PLOT_OCCUPIED", "ERR_DEPT_PLOT_OCCUPIED", {"x": grid_pos.x, "y": grid_pos.y})
 
 	if not _check_unlock_conditions(dept_def.get("unlock_conditions", []), bank_state):
 		return Result.fail(&"DEPT_LOCKED", "ERR_DEPT_LOCKED", {"department_id": dept_id})
@@ -152,13 +177,53 @@ func create_department(
 	inst.level = 1
 	inst.created_day = bank_state.current_day
 	inst.daily_cost_minor = maxi(0, int(dept_def.get("daily_cost_minor", 0)))
+	inst.grid_pos = grid_pos if has_plot else Vector2i(-1, -1)
 	bank_state.departments[dept_id] = inst
 
 	return Result.succeed({
 		"department_id": dept_id,
 		"level": 1,
 		"cost_minor": cost,
+		"grid_pos": [inst.grid_pos.x, inst.grid_pos.y],
 	})
+
+
+## Returns the stored lobby cell or (-1, -1) when the department is unplaced / unknown.
+static func get_department_grid_pos(bank_state: BankState, dept_id: String) -> Vector2i:
+	if bank_state == null:
+		return Vector2i(-1, -1)
+	if not bank_state.departments.has(dept_id):
+		return Vector2i(-1, -1)
+	return _entry_grid_pos(bank_state.departments[dept_id])
+
+
+## True when no station and no other department occupies `cell`.
+static func is_plot_free(bank_state: BankState, cell: Vector2i, ignore_dept_id: String = "") -> bool:
+	if bank_state == null:
+		return false
+	for sid: Variant in bank_state.stations.keys():
+		var st: Variant = bank_state.stations[sid]
+		if st is Dictionary:
+			var gp: Variant = (st as Dictionary).get("grid_pos", null)
+			if gp is Vector2i and (gp as Vector2i) == cell:
+				return false
+	for did: Variant in bank_state.departments.keys():
+		if str(did) == ignore_dept_id:
+			continue
+		if _entry_grid_pos(bank_state.departments[did]) == cell:
+			return false
+	return true
+
+
+static func _entry_grid_pos(entry: Variant) -> Vector2i:
+	if entry is Object:
+		var raw: Variant = (entry as Object).get("grid_pos")
+		if raw is Vector2i:
+			return raw as Vector2i
+		return DepartmentInstance._parse_grid_pos(raw)
+	if entry is Dictionary:
+		return DepartmentInstance._parse_grid_pos((entry as Dictionary).get("grid_pos", null))
+	return Vector2i(-1, -1)
 
 
 func upgrade_department(

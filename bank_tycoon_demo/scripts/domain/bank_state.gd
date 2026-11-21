@@ -239,7 +239,12 @@ func to_dict() -> Dictionary:
 		if dv is Object and (dv as Object).has_method("to_dict"):
 			ser_depts[str(did)] = (dv as Object).call("to_dict")
 		elif dv is Dictionary:
-			ser_depts[str(did)] = (dv as Dictionary).duplicate(true)
+			var dept_copy: Dictionary = (dv as Dictionary).duplicate(true)
+			var gp: Variant = dept_copy.get("grid_pos", null)
+			if gp is Vector2i:
+				var gp_cell: Vector2i = gp as Vector2i
+				dept_copy["grid_pos"] = [gp_cell.x, gp_cell.y]
+			ser_depts[str(did)] = dept_copy
 
 	var ser_stations: Dictionary = {}
 	for sid: Variant in stations.keys():
@@ -315,7 +320,7 @@ static func _coerce_json_numbers(val: Variant) -> Variant:
 	return val
 
 
-static func _parse_vec2i(raw: Variant) -> Vector2i:
+static func _parse_vec2i(raw: Variant, default_value: Vector2i = Vector2i.ZERO) -> Vector2i:
 	if raw is Vector2i:
 		return raw as Vector2i
 	if raw is Array and (raw as Array).size() >= 2:
@@ -323,8 +328,10 @@ static func _parse_vec2i(raw: Variant) -> Vector2i:
 		return Vector2i(int(arr[0]), int(arr[1]))
 	if raw is Dictionary:
 		var d: Dictionary = raw as Dictionary
+		if not d.has("x") or not d.has("y"):
+			return default_value
 		return Vector2i(int(d.get("x", 0)), int(d.get("y", 0)))
-	return Vector2i.ZERO
+	return default_value
 
 
 static func from_dict(data: Dictionary) -> Result:
@@ -432,6 +439,7 @@ static func from_dict(data: Dictionary) -> Result:
 					"created_day": maxi(1, int(dd.get("created_day", 1))),
 					"daily_cost_minor": maxi(0, int(dd.get("daily_cost_minor", 0))),
 					"staff_ids": staff_arr,
+					"grid_pos": _parse_vec2i(dd.get("grid_pos", null), Vector2i(-1, -1)),
 				}
 
 	state.adopted_policies = []

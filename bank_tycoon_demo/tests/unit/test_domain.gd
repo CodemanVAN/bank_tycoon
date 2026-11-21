@@ -430,6 +430,31 @@ static func _test_department_and_policy() -> void:
 	bs.departments["core:department.credit"] = {"id": "core:department.credit", "level": 1}
 	_check(ds.has_department(bs, "core:department.credit", 1), "Supports Dictionary department entry")
 
+	# Player-chosen plot (grid_pos): stored, unique, enforced against stations, save-safe
+	var bs_plot := BankState.create_starter_branch("DeptPlot", 203)
+	var chosen_cell := Vector2i(4, 3)
+	var plotted: Result = ds.create_department(bs_plot, "core:department.risk", defs, null, chosen_cell)
+	_check(plotted.ok, "Create department on a player-chosen plot")
+	_check_eq(DepartmentService.get_department_grid_pos(bs_plot, "core:department.risk"), chosen_cell, "Department stores the chosen grid_pos")
+	_check(not ds.create_department(bs_plot, "core:department.hr", defs, null, chosen_cell).ok, "Reject a plot already taken by another department")
+	_check(not ds.create_department(bs_plot, "core:department.hr", defs, null, Vector2i(4, 4)).ok, "Reject a plot taken by a service station")
+	_check(not ds.create_department(bs_plot, "core:department.hr", defs, null, Vector2i(2, -1)).ok, "Reject a partially negative plot")
+
+	var bs_legacy := BankState.create_starter_branch("DeptLegacy", 204)
+	_check(ds.create_department(bs_legacy, "core:department.hr", defs).ok, "Unplaced legacy call (no grid_pos) still allowed")
+	_check_eq(DepartmentService.get_department_grid_pos(bs_legacy, "core:department.hr"), Vector2i(-1, -1), "Unplaced department keeps (-1, -1)")
+
+	var plot_json: Variant = JSON.parse_string(JSON.stringify(bs_plot.to_dict()))
+	var plot_rt: Result = BankState.from_dict(plot_json as Dictionary)
+	_check(plot_rt.ok, "Plot save round-trip parsed")
+	if plot_rt.ok:
+		var bs_plot_rt: BankState = plot_rt.data as BankState
+		_check_eq(
+			DepartmentService.get_department_grid_pos(bs_plot_rt, "core:department.risk"),
+			chosen_cell,
+			"grid_pos survives JSON save/load"
+		)
+
 	# Policy chain & exclusion
 	bs.strategy_points = 20
 	_check(not ps.adopt_policy(bs, "core:policy.liquidity_first", defs).ok, "Reject missing prerequisite")
