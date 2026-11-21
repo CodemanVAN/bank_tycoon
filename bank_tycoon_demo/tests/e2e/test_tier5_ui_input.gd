@@ -988,8 +988,15 @@ func _case_10_department_placement() -> void:
 	if _h.assert_true(dept_nodes.has(dept_id), "世界层应为新部门生成房间节点"):
 		var info: Dictionary = dept_nodes[dept_id] as Dictionary
 		var room_root: Node = info.get("root") as Node
-		_h.assert_true(room_root != null and room_root.get_node_or_null("Wall_18_3") != null, "房间应有外墙")
 		_h.assert_true(room_root != null and room_root.get_node_or_null("RoomSign") != null and room_root.get_node_or_null("DoorFrame") != null, "房间应有部门招牌与自动门")
+		# Walls are no longer per-room sprites; the continuous exterior-wall system
+		# renders one panel per built cell edge that faces empty land. The new room's
+		# exposed north edge (18,3) must get a panel, while the shared lobby edge
+		# (west, x=18) must stay open so the auto-generated door remains walkable.
+		var ext_walls: Node = world.get("_exterior_walls") as Node
+		if _h.assert_true(ext_walls != null, "世界层应有连续外墙容器"):
+			_h.assert_true(ext_walls.get_node_or_null("ExtWallN_18_3") != null, "房间外缘 (18,3) 应由连续外墙系统生成墙段")
+			_h.assert_false(ext_walls.get_node_or_null("ExtWallW_18_4") != null, "与大厅相接的边不得砌墙，须留给自动门")
 	var iso: Variant = world.get("iso_grid")
 	_h.assert_true(iso != null and not bool((iso as Object).call("is_solid", Vector2i(18, 4))), "房间正面开口必须保持可通行")
 	_h.assert_true(iso != null and bool((iso as Object).call("is_solid", Vector2i(18, 3))), "房间北墙应阻挡寻路")

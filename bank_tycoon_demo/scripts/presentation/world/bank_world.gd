@@ -70,6 +70,10 @@ var _floor_layer: Node2D = null
 var _wall_layer: Node2D = null
 var _ysort_layer: Node2D = null
 var _props_container: Node2D = null
+var _exterior_walls: Node2D = null
+var _exterior_wall_signature: String = ""
+var _hovered_dept_id: String = ""
+var _hovered_station_id: String = ""
 var _departments_container: Node2D = null
 var _stations_container: Node2D = null
 var _actors_container: Node2D = null
@@ -83,6 +87,7 @@ var _static_built: bool = false
 
 # Department room construction (drag a rectangle along the hall perimeter)
 const MIN_ROOM_SIZE: Vector2i = Vector2i(3, 3)
+const DEFAULT_ROOM_SIZE: Vector2i = Vector2i(4, 4)
 const MAX_ROOM_SIZE: Vector2i = Vector2i(5, 4)
 
 var _placement_dept_id: String = ""
@@ -286,6 +291,7 @@ func refresh_world() -> void:
 		return
 	var bs_obj: Object = bs as Object
 	_sync_navigation_solids(bs_obj)
+	_sync_exterior_walls(bs_obj)
 	_sync_departments(bs_obj)
 	_sync_stations(bs_obj)
 	_sync_employees(bs_obj)
@@ -325,7 +331,11 @@ func begin_department_placement(dept_id: String) -> bool:
 	_placement_valid = false
 	_placement_dragging = false
 	_clear_ghost_tiles()
-	_placement_ghost.visible = false
+	var default_room: Rect2i = _find_default_room()
+	if default_room.size.x > 0:
+		_update_placement_preview(default_room)
+	else:
+		_placement_ghost.visible = false
 	return true
 
 
@@ -494,12 +504,27 @@ func _normalize_room_rect(a: Vector2i, b: Vector2i) -> Rect2i:
 
 ## A single click still builds the minimum room, centred on the clicked cell.
 func _default_room_at(cell: Vector2i) -> Rect2i:
-	var size: Vector2i = MIN_ROOM_SIZE
+	var size: Vector2i = DEFAULT_ROOM_SIZE
 	var origin := Vector2i(
 		clampi(cell.x - size.x / 2, IsoGrid.SITE_REGION.position.x, IsoGrid.SITE_REGION.end.x - size.x),
 		clampi(cell.y - size.y / 2, IsoGrid.SITE_REGION.position.y, IsoGrid.SITE_REGION.end.y - size.y)
 	)
 	return Rect2i(origin, size)
+
+
+## First valid 4x4 spot around the lobby, so the player sees a real room immediately.
+func _find_default_room() -> Rect2i:
+	var candidates: Array[Vector2i] = [
+		Vector2i(18, 2), Vector2i(18, 6), Vector2i(18, 10),
+		Vector2i(-4, 2), Vector2i(-4, 6), Vector2i(-4, 10),
+		Vector2i(2, -4), Vector2i(8, -4), Vector2i(12, -4),
+		Vector2i(2, 12), Vector2i(8, 12), Vector2i(12, 12),
+	]
+	for cell: Vector2i in candidates:
+		var r := Rect2i(cell, DEFAULT_ROOM_SIZE)
+		if is_valid_department_room(r, _placement_dept_id):
+			return r
+	return Rect2i()
 
 
 func _ensure_placement_ghost() -> void:
@@ -565,6 +590,10 @@ func _rebuild_ghost_tiles(rect: Rect2i, valid: bool) -> void:
 	_clear_ghost_tiles()
 	var col: Color = Color("#35C978") if valid else Color("#E74C3C")
 	var door_cell: Vector2i = room_door_cell(rect)
+	var tex_wall: Texture2D = _load_tex("res://assets/environment/wall_section_back.png")
+	var tex_desk: Texture2D = _load_tex("res://assets/environment/prop_desk_office.png")
+	var tint: Color = Color(col.r, col.g, col.b, 0.55)
+
 	for y in range(rect.position.y, rect.position.y + rect.size.y):
 		for x in range(rect.position.x, rect.position.x + rect.size.x):
 			var cell := Vector2i(x, y)
@@ -592,6 +621,45 @@ func _rebuild_ghost_tiles(rect: Rect2i, valid: bool) -> void:
 				opening_tile.color = Color("#FFC857") if valid else Color(col.r, col.g, col.b, 0.55)
 				opening_tile.position = tile.position
 				_ghost_tiles.add_child(opening_tile)
+
+	# Preview the actual room shell (walls on the visible back edges + a desk inside),
+	# so the player sees the result before committing.
+	for x in range(rect.position.x, rect.position.x + rect.size.x):
+		var cell_n := Vector2i(x, rect.position.y)
+		if cell_n != door_cell:
+			var wall := Sprite2D.new()
+			wall.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			wall.texture = tex_wall
+			wall.centered = true
+			wall.offset = Vector2(0.0, -32.0)
+			wall.modulate = tint
+			wall.position = iso_grid.grid_to_screen(cell_n).round()
+			_ghost_tiles.add_child(wall)
+	for y in range(rect.position.y, rect.position.y + rect.size.y):
+		var cell_w := Vector2i(rect.position.x, y)
+		if cell_w != door_cell:
+			var wall_w := Sprite2D.new()
+			wall_w.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			wall_w.texture = tex_wall
+			wall_w.centered = true
+			wall_w.flip_h = true
+			wall_w.offset = Vector2(0.0, -32.0)
+			wall_w.modulate = tint
+			wall_w.position = iso_grid.grid_to_screen(cell_w).round()
+			_ghost_tiles.add_child(wall_w)
+
+	var desk := Sprite2D.new()
+	desk.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	desk.texture = tex_desk
+	desk.centered = true
+	desk.offset = Vector2(0.0, -9.0)
+	desk.modulate = Color(1.0, 1.0, 1.0, 0.72)
+	var desk_cell := Vector2i(
+		rect.position.x + rect.size.x / 2,
+		rect.position.y + rect.size.y / 2
+	)
+	desk.position = iso_grid.grid_to_screen(desk_cell).round()
+	_ghost_tiles.add_child(desk)
 
 
 ## Converts a viewport-space input position to a logical grid cell (camera-aware).
@@ -660,6 +728,14 @@ func _ensure_scene_hierarchy() -> void:
 		_ysort_layer.add_child(_props_container)
 	_props_container.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_props_container.y_sort_enabled = true
+
+	_exterior_walls = _ysort_layer.get_node_or_null("ExteriorWalls") as Node2D
+	if _exterior_walls == null:
+		_exterior_walls = Node2D.new()
+		_exterior_walls.name = "ExteriorWalls"
+		_ysort_layer.add_child(_exterior_walls)
+	_exterior_walls.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	_exterior_walls.y_sort_enabled = true
 
 	_departments_container = _ysort_layer.get_node_or_null("DepartmentsContainer") as Node2D
 	if _departments_container == null:
@@ -740,62 +816,27 @@ func _build_static_environment() -> void:
 				spr.texture = tex_ivory
 			_floor_layer.add_child(spr)
 
-	# 2. Build North & West Architectural Cutaway Walls + Logo Backdrop + Glass Facade
-	var tex_wall_back: Texture2D = _load_tex("res://assets/environment/wall_section_back.png")
+	# 2. Logo backdrop / vault door sit on the dynamically generated exterior wall.
 	var tex_wall_logo: Texture2D = _load_tex("res://assets/environment/wall_logo_backdrop.png")
-	var tex_wall_glass: Texture2D = _load_tex("res://assets/environment/wall_glass_facade.png")
 	var tex_vault: Texture2D = _load_tex("res://assets/environment/prop_vault_door.png")
 
-	for x in range(0, IsoGrid.GRID_WIDTH, 2):
-		if x == 8 or x == 14:
-			continue
-		var w_spr := Sprite2D.new()
-		w_spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		w_spr.texture = tex_wall_back
-		w_spr.centered = true
-		w_spr.offset = Vector2(0.0, -22.0)
-		w_spr.position = iso_grid.grid_to_screen(Vector2i(x, 0)).round()
-		_wall_layer.add_child(w_spr)
-
-	for y in range(2, IsoGrid.GRID_HEIGHT, 2):
-		var w_spr := Sprite2D.new()
-		w_spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		w_spr.texture = tex_wall_back
-		w_spr.centered = true
-		w_spr.offset = Vector2(0.0, -22.0)
-		w_spr.position = iso_grid.grid_to_screen(Vector2i(0, y)).round()
-		_wall_layer.add_child(w_spr)
-
-	# Central Starway emblem backdrop on north wall
 	var logo_spr := Sprite2D.new()
 	logo_spr.name = "StarwayLogoBackdrop"
 	logo_spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	logo_spr.texture = tex_wall_logo
 	logo_spr.centered = true
-	logo_spr.offset = Vector2(0.0, -24.0)
+	logo_spr.offset = Vector2(0.0, -30.0)
 	logo_spr.position = iso_grid.grid_to_screen(Vector2i(8, 0)).round()
 	_wall_layer.add_child(logo_spr)
 
-	# Vault door in north-east high-security wing
 	var vault_spr := Sprite2D.new()
 	vault_spr.name = "VaultDoorProp"
 	vault_spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	vault_spr.texture = tex_vault
 	vault_spr.centered = true
-	vault_spr.offset = Vector2(0.0, -22.0)
+	vault_spr.offset = Vector2(0.0, -28.0)
 	vault_spr.position = iso_grid.grid_to_screen(Vector2i(14, 0)).round()
 	_wall_layer.add_child(vault_spr)
-
-	# South entrance glass facade segments
-	for gx in [2, 5, 12, 15]:
-		var g_spr := Sprite2D.new()
-		g_spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		g_spr.texture = tex_wall_glass
-		g_spr.centered = true
-		g_spr.offset = Vector2(0.0, -18.0)
-		g_spr.modulate = Color(1.0, 1.0, 1.0, 0.55)
-		g_spr.position = iso_grid.grid_to_screen(Vector2i(gx, 11)).round()
-		_wall_layer.add_child(g_spr)
 
 	# 3. Build Y-Sorted Lobby Props (Animated Fountain, Sofas, Queue Posts, Plants, ATMs)
 	_fountain_sprite = Sprite2D.new()
@@ -844,7 +885,6 @@ func _create_department_room(dept_id: String, rect: Rect2i) -> void:
 	var tex_desk: Texture2D = _load_tex("res://assets/environment/prop_desk_office.png")
 	var tex_banner: Texture2D = _load_tex("res://assets/environment/prop_dept_banner.png")
 	var tex_floor: Texture2D = _load_tex("res://assets/environment/tile_floor_carpet_blue.png")
-	var tex_wall: Texture2D = _load_tex("res://assets/environment/wall_section_back.png")
 
 	var front_center := Vector2i(
 		rect.position.x + rect.size.x / 2,
@@ -855,10 +895,6 @@ func _create_department_room(dept_id: String, rect: Rect2i) -> void:
 	root.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	root.position = iso_grid.grid_to_screen(front_center).round()
 
-	var walls: Array[Vector2i] = room_wall_cells(rect)
-	var wall_set: Dictionary = {}
-	for wc: Vector2i in walls:
-		wall_set[wc] = true
 	var door_cell: Vector2i = room_door_cell(rect)
 	for y in range(rect.position.y, rect.position.y + rect.size.y):
 		for x in range(rect.position.x, rect.position.x + rect.size.x):
@@ -871,16 +907,6 @@ func _create_department_room(dept_id: String, rect: Rect2i) -> void:
 			tile.modulate = Color(1.0, 1.0, 1.0, 1.0) if cell != door_cell else Color(1.15, 1.1, 0.85, 1.0)
 			tile.position = iso_grid.grid_to_screen(cell).round() - root.position
 			root.add_child(tile)
-
-			if wall_set.has(cell):
-				var wall := Sprite2D.new()
-				wall.name = "Wall_%d_%d" % [x, y]
-				wall.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-				wall.texture = tex_wall
-				wall.centered = true
-				wall.offset = Vector2(0.0, -22.0)
-				wall.position = tile.position
-				root.add_child(wall)
 
 	# Auto-generated door at the connection with the existing building.
 	if door_cell.x >= 0:
@@ -920,7 +946,9 @@ func _create_department_room(dept_id: String, rect: Rect2i) -> void:
 	sign_label.position = sign_pos
 	sign_label.add_theme_font_size_override("font_size", 11)
 	sign_label.add_theme_color_override("font_color", accent)
+	sign_label.visible = false
 	root.add_child(sign_label)
+	sign_bg.visible = false
 
 	var desk_cell := Vector2i(
 		rect.position.x + rect.size.x / 2,
@@ -953,6 +981,7 @@ func _create_department_room(dept_id: String, rect: Rect2i) -> void:
 	badge.add_theme_font_size_override("font_size", 11)
 	badge.add_theme_color_override("font_color", accent)
 	badge.position = iso_grid.grid_to_screen(Vector2i(rect.position.x, rect.position.y)).round() - root.position + Vector2(-48.0, -34.0)
+	badge.visible = false
 	root.add_child(badge)
 
 	_departments_container.add_child(root)
@@ -966,6 +995,8 @@ func _create_department_room(dept_id: String, rect: Rect2i) -> void:
 		"cell": rect.position,
 		"rect": rect,
 		"level": 0,
+		"sign_bg": sign_bg,
+		"sign_label": sign_label,
 	}
 
 
@@ -1025,6 +1056,64 @@ func _create_legacy_department_node(dept_id: String, cell: Vector2i) -> void:
 		"rect": Rect2i(cell, Vector2i.ONE),
 		"level": 0,
 	}
+
+
+## Continuous cutaway walls: one 32x48 panel per built cell edge that faces empty land.
+## This replaces the old "every 2nd cell" wall loop, which left gaps and floated 10px too low.
+func _sync_exterior_walls(bs_obj: Object) -> void:
+	if _exterior_walls == null:
+		return
+	var built: Dictionary = {}
+	for y in range(LOBBY_RECT.position.y, LOBBY_RECT.end.y):
+		for x in range(LOBBY_RECT.position.x, LOBBY_RECT.end.x):
+			built[Vector2i(x, y)] = true
+	var raw_depts: Variant = bs_obj.get("departments")
+	if raw_depts is Dictionary:
+		for did: Variant in (raw_depts as Dictionary).keys():
+			var r: Rect2i = _read_dept_rect((raw_depts as Dictionary)[did])
+			if r.size.x <= 0:
+				continue
+			for y in range(r.position.y, r.position.y + r.size.y):
+				for x in range(r.position.x, r.position.x + r.size.x):
+					built[Vector2i(x, y)] = true
+
+	var key_list: Array[String] = []
+	for c: Vector2i in built.keys():
+		key_list.append("%d,%d" % [c.x, c.y])
+	key_list.sort()
+	var sig: String = "|".join(key_list)
+	if sig == _exterior_wall_signature:
+		return
+	_exterior_wall_signature = sig
+
+	for child in _exterior_walls.get_children():
+		_exterior_walls.remove_child(child)
+		child.queue_free()
+
+	var tex_wall: Texture2D = _load_tex("res://assets/environment/wall_section_back.png")
+	for c: Vector2i in built.keys():
+		# North-facing wall segment when the cell above is empty land.
+		if not built.has(Vector2i(c.x, c.y - 1)):
+			var wall := Sprite2D.new()
+			wall.name = "ExtWallN_%d_%d" % [c.x, c.y]
+			wall.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			wall.texture = tex_wall
+			wall.centered = true
+			# Base of the 48px panel sits on the tile's top vertex (0,-8).
+			wall.offset = Vector2(0.0, -32.0)
+			wall.position = iso_grid.grid_to_screen(c).round()
+			_exterior_walls.add_child(wall)
+		# West-facing wall segment (mirrored) when the cell to the left is empty land.
+		if not built.has(Vector2i(c.x - 1, c.y)):
+			var wall_w := Sprite2D.new()
+			wall_w.name = "ExtWallW_%d_%d" % [c.x, c.y]
+			wall_w.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			wall_w.texture = tex_wall
+			wall_w.centered = true
+			wall_w.flip_h = true
+			wall_w.offset = Vector2(0.0, -32.0)
+			wall_w.position = iso_grid.grid_to_screen(c).round()
+			_exterior_walls.add_child(wall_w)
 
 
 func _sync_navigation_solids(bs_obj: Object) -> void:
@@ -1177,11 +1266,11 @@ func _sync_departments(bs_obj: Object) -> void:
 
 		desk.modulate = Color(1.0, 1.0, 1.0, 1.0)
 		banner.visible = true
-		badge.visible = true
 		badge.add_theme_color_override("font_color", accent)
 		var dept_name: String = _tr(short_key)
 		var lvl_str: String = _tr("WORLD_DEPT_LEVEL_BADGE", {"level": lvl})
 		badge.text = "%s %s" % [dept_name, lvl_str]
+	_apply_entity_labels()
 
 
 func _sync_stations(bs_obj: Object) -> void:
@@ -1380,6 +1469,53 @@ func _resolve_customer_cell(cust_obj: Object, st_dict: Dictionary, wait_idx: int
 	return QUEUE_WAIT_CELLS[wait_idx % QUEUE_WAIT_CELLS.size()]
 
 
+## Department signs and counter tags stay hidden until the pointer is over them.
+func _apply_entity_labels() -> void:
+	for dept_id: String in _dept_nodes.keys():
+		var info: Dictionary = _dept_nodes[dept_id] as Dictionary
+		var show: bool = dept_id == _hovered_dept_id
+		var sign_bg: Control = info.get("sign_bg") as Control
+		var sign_label: Control = info.get("sign_label") as Control
+		var badge: Control = info.get("badge") as Control
+		if sign_bg != null:
+			sign_bg.visible = show
+		if sign_label != null:
+			sign_label.visible = show
+		if badge != null:
+			badge.visible = show
+	for sid: String in _station_views.keys():
+		var view: ServiceStationView = _station_views[sid] as ServiceStationView
+		if view != null:
+			view.set_hovered(sid == _hovered_station_id)
+
+
+func update_hover(screen_pos: Vector2) -> void:
+	var dept_id: String = ""
+	var station_id: String = ""
+	if not is_department_placement_active() and iso_grid != null:
+		var world_pos: Vector2 = get_global_transform_with_canvas().affine_inverse() * screen_pos
+		var cell: Vector2i = iso_grid.screen_to_grid(world_pos)
+		for did: String in _dept_nodes.keys():
+			var info: Dictionary = _dept_nodes[did] as Dictionary
+			var rect: Rect2i = info.get("rect", Rect2i()) as Rect2i
+			if rect.size.x > 0 and rect.has_point(cell):
+				dept_id = did
+				break
+		for sid: String in _station_views.keys():
+			var view: ServiceStationView = _station_views[sid] as ServiceStationView
+			if view == null:
+				continue
+			var local: Vector2 = world_pos - view.position
+			if view.get_hit_rect().has_point(local):
+				station_id = sid
+				break
+	if dept_id == _hovered_dept_id and station_id == _hovered_station_id:
+		return
+	_hovered_dept_id = dept_id
+	_hovered_station_id = station_id
+	_apply_entity_labels()
+
+
 func _update_selection_highlights() -> void:
 	for sid: String in _station_views.keys():
 		var sv: ServiceStationView = _station_views[sid] as ServiceStationView
@@ -1532,6 +1668,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	if is_department_placement_active():
 		if _handle_placement_input(event):
 			return
+	if event is InputEventMouseMotion:
+		update_hover((event as InputEventMouseMotion).position)
 	if event is InputEventMouseButton:
 		var mb: InputEventMouseButton = event as InputEventMouseButton
 		if mb.button_index == MOUSE_BUTTON_LEFT and mb.pressed:
@@ -1552,8 +1690,12 @@ func _handle_placement_input(event: InputEvent) -> bool:
 		return true
 	if event is InputEventMouseMotion:
 		var mm: InputEventMouseMotion = event as InputEventMouseMotion
+		var cursor_cell: Vector2i = cell_from_screen_position(mm.position)
 		if _placement_dragging:
-			_update_placement_preview(_normalize_room_rect(_placement_anchor, cell_from_screen_position(mm.position)))
+			_update_placement_preview(_normalize_room_rect(_placement_anchor, cursor_cell))
+		elif iso_grid != null and iso_grid.is_in_bounds(cursor_cell):
+			# Live preview of a default 4x4 room before the player starts dragging.
+			_update_placement_preview(_default_room_at(cursor_cell))
 		return false
 	if event is InputEventMouseButton:
 		var mb: InputEventMouseButton = event as InputEventMouseButton

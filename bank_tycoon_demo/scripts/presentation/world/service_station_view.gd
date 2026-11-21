@@ -21,6 +21,7 @@ var is_open: bool = true
 var assigned_employee_id: String = ""
 var grid_pos: Vector2i = Vector2i.ZERO
 var is_selected: bool = false
+var is_hovered: bool = false
 var station_index: int = 1
 
 var _sprite: Sprite2D = null
@@ -103,7 +104,21 @@ func configure(station_data: Dictionary, screen_pos: Vector2, p_index: int = 1) 
 func set_selected(selected: bool) -> void:
 	if is_selected != selected:
 		is_selected = selected
+		_apply_label_visibility()
 		queue_redraw()
+
+
+func set_hovered(hovered: bool) -> void:
+	if is_hovered != hovered:
+		is_hovered = hovered
+		_apply_label_visibility()
+		queue_redraw()
+
+
+## Counter tags are hidden until the player hovers the station (or selects it).
+func _apply_label_visibility() -> void:
+	if _tag_label != null:
+		_tag_label.visible = is_hovered or is_selected
 
 
 func get_hit_rect() -> Rect2:
@@ -129,6 +144,7 @@ func _ensure_nodes() -> void:
 		_tag_label.scale = Vector2(0.75, 0.75)
 		_tag_label.add_theme_font_size_override("font_size", 11)
 		_tag_label.add_theme_color_override("font_color", Color("#F5F8FF"))
+		_tag_label.visible = false
 		add_child(_tag_label)
 
 
@@ -191,22 +207,21 @@ func _draw() -> void:
 		draw_colored_polygon(sel_fill, Color(0.0, 0.776, 1.0, 0.22))
 		draw_polyline(sel_outer, COLOR_CYAN_GLOW, 1.5, false)
 
-	# Overhead status badge pill
-	var pill_rect := Rect2(-18.0, -34.0, 36.0, 10.0)
-	draw_rect(pill_rect, COLOR_BADGE_BG, true)
-	var border_col: Color = COLOR_CYAN_GLOW if is_selected else COLOR_BADGE_BORDER
-	draw_rect(pill_rect, border_col, false, 1.0)
+	# Overhead status badge + tag are hover-only so room walls never clip them at rest.
+	if is_hovered or is_selected:
+		var pill_rect := Rect2(-18.0, -34.0, 36.0, 10.0)
+		draw_rect(pill_rect, COLOR_BADGE_BG, true)
+		var border_col: Color = COLOR_CYAN_GLOW if is_selected else COLOR_BADGE_BORDER
+		draw_rect(pill_rect, border_col, false, 1.0)
 
-	# Open / Closed status indicator lamp
-	var led_pos := Vector2(-13.0, -29.0)
-	draw_circle(led_pos, 3.0, COLOR_OUTLINE_DARK)
-	var led_col: Color = COLOR_OPEN_GREEN if is_open else COLOR_CLOSED_GREY
-	draw_circle(led_pos, 2.0, led_col)
-	if is_open:
-		draw_rect(Rect2(led_pos.x - 1.0, led_pos.y - 1.0, 1.0, 1.0), COLOR_OPEN_HIGHLIGHT, true)
+		var led_pos := Vector2(-13.0, -29.0)
+		draw_circle(led_pos, 3.0, COLOR_OUTLINE_DARK)
+		var led_col: Color = COLOR_OPEN_GREEN if is_open else COLOR_CLOSED_GREY
+		draw_circle(led_pos, 2.0, led_col)
+		if is_open:
+			draw_rect(Rect2(led_pos.x - 1.0, led_pos.y - 1.0, 1.0, 1.0), COLOR_OPEN_HIGHLIGHT, true)
 
-	# Staffed indicator dot on right side of badge
-	if not assigned_employee_id.is_empty():
-		var staff_pos := Vector2(14.0, -29.0)
-		draw_circle(staff_pos, 2.2, COLOR_OUTLINE_DARK)
-		draw_circle(staff_pos, 1.4, COLOR_STAFFED_GOLD)
+		if not assigned_employee_id.is_empty():
+			var staff_pos := Vector2(14.0, -29.0)
+			draw_circle(staff_pos, 2.2, COLOR_OUTLINE_DARK)
+			draw_circle(staff_pos, 1.4, COLOR_STAFFED_GOLD)
