@@ -1,6 +1,10 @@
 [
   {
     "id": "core:event.real_estate_boom",
+    "chain_id": "real_estate_cycle",
+    "timeout_minutes": 180,
+    "abandon_next_event_id": "core:event.real_estate_cooling",
+    "abandon_next_delay_days": 0,
     "title_key": "EVENT_REAL_ESTATE_BOOM_TITLE",
     "description_key": "EVENT_REAL_ESTATE_BOOM_DESC",
     "weight": 25,
@@ -29,6 +33,37 @@
             "value": 1200,
             "scope": "global"
           }
+        ],
+        "outcomes": [
+          {
+            "id": "boom_windfall",
+            "weight": 60,
+            "sentiment": "positive",
+            "label_key": "EVENT_OUTCOME_RE_BOOM_WINDFALL",
+            "domain_impacts": {
+              "cash_delta_minor": 1800000,
+              "satisfaction_delta": 3,
+              "strategy_points_delta": 2
+            }
+          },
+          {
+            "id": "boom_overheat",
+            "weight": 40,
+            "sentiment": "negative",
+            "label_key": "EVENT_OUTCOME_RE_BOOM_OVERHEAT",
+            "effects": [
+              {
+                "target": "loan.default_risk_bps",
+                "operation": "add",
+                "value": 500,
+                "scope": "global"
+              }
+            ],
+            "domain_impacts": {
+              "cash_delta_minor": -500000,
+              "satisfaction_delta": -2
+            }
+          }
         ]
       },
       {
@@ -48,12 +83,43 @@
             "value": 2,
             "scope": "global"
           }
+        ],
+        "outcomes": [
+          {
+            "id": "prudent_praised",
+            "weight": 75,
+            "sentiment": "positive",
+            "label_key": "EVENT_OUTCOME_RE_PRUDENT_PRAISED",
+            "domain_impacts": {
+              "cash_delta_minor": 600000,
+              "satisfaction_delta": 2,
+              "strategy_points_delta": 2
+            }
+          },
+          {
+            "id": "prudent_missed_share",
+            "weight": 25,
+            "sentiment": "negative",
+            "label_key": "EVENT_OUTCOME_RE_PRUDENT_MISSED",
+            "effects": [
+              {
+                "target": "customer.deposit_growth_bps",
+                "operation": "add",
+                "value": -400,
+                "scope": "global"
+              }
+            ],
+            "domain_impacts": {
+              "satisfaction_delta": -1
+            }
+          }
         ]
       }
     ]
   },
   {
     "id": "core:event.real_estate_cooling",
+    "chain_id": "real_estate_cycle",
     "title_key": "EVENT_REAL_ESTATE_COOLING_TITLE",
     "description_key": "EVENT_REAL_ESTATE_COOLING_DESC",
     "weight": 0,
@@ -76,6 +142,34 @@
             "value": -800,
             "scope": "global"
           }
+        ],
+        "outcomes": [
+          {
+            "id": "soft_landing",
+            "weight": 70,
+            "sentiment": "positive",
+            "label_key": "EVENT_OUTCOME_RE_COOL_SOFT",
+            "effects": [
+              {
+                "target": "bank.reputation_points",
+                "operation": "add",
+                "value": 2,
+                "scope": "global"
+              }
+            ],
+            "domain_impacts": {
+              "strategy_points_delta": 2
+            }
+          },
+          {
+            "id": "borrower_pushback",
+            "weight": 30,
+            "sentiment": "negative",
+            "label_key": "EVENT_OUTCOME_RE_COOL_PUSHBACK",
+            "domain_impacts": {
+              "satisfaction_delta": -3
+            }
+          }
         ]
       },
       {
@@ -89,12 +183,35 @@
             "value": 600,
             "scope": "global"
           }
+        ],
+        "outcomes": [
+          {
+            "id": "yield_capture",
+            "weight": 45,
+            "sentiment": "positive",
+            "label_key": "EVENT_OUTCOME_RE_HOLD_YIELD",
+            "domain_impacts": {
+              "cash_delta_minor": 1400000,
+              "satisfaction_delta": 2
+            }
+          },
+          {
+            "id": "delinquency_spike",
+            "weight": 55,
+            "sentiment": "negative",
+            "label_key": "EVENT_OUTCOME_RE_HOLD_SPIKE",
+            "domain_impacts": {
+              "cash_delta_minor": -700000,
+              "satisfaction_delta": -2
+            }
+          }
         ]
       }
     ]
   },
   {
     "id": "core:event.real_estate_credit_stress",
+    "chain_id": "real_estate_cycle",
     "title_key": "EVENT_REAL_ESTATE_CREDIT_STRESS_TITLE",
     "description_key": "EVENT_REAL_ESTATE_CREDIT_STRESS_DESC",
     "weight": 0,
@@ -116,6 +233,34 @@
             "value": -500,
             "scope": "global"
           }
+        ],
+        "outcomes": [
+          {
+            "id": "contained_impact",
+            "weight": 65,
+            "sentiment": "positive",
+            "label_key": "EVENT_OUTCOME_STRESS_CONTAINED",
+            "effects": [
+              {
+                "target": "bank.reputation_points",
+                "operation": "add",
+                "value": 2,
+                "scope": "global"
+              }
+            ],
+            "domain_impacts": {
+              "strategy_points_delta": 2
+            }
+          },
+          {
+            "id": "panic_rumors",
+            "weight": 35,
+            "sentiment": "negative",
+            "label_key": "EVENT_OUTCOME_STRESS_RUMORS",
+            "domain_impacts": {
+              "satisfaction_delta": -4
+            }
+          }
         ]
       },
       {
@@ -134,12 +279,34 @@
             "value": -1000,
             "scope": "global"
           }
+        ],
+        "outcomes": [
+          {
+            "id": "clean_recovery",
+            "weight": 75,
+            "sentiment": "positive",
+            "label_key": "EVENT_OUTCOME_RESTRUCTURE_CLEAN",
+            "domain_impacts": {
+              "cash_delta_minor": 900000,
+              "satisfaction_delta": 3
+            }
+          },
+          {
+            "id": "costly_workout",
+            "weight": 25,
+            "sentiment": "negative",
+            "label_key": "EVENT_OUTCOME_RESTRUCTURE_COSTLY",
+            "domain_impacts": {
+              "cash_delta_minor": -600000
+            }
+          }
         ]
       }
     ]
   },
   {
     "id": "core:event.vip_deposit_visit",
+    "chain_id": "vip_syndicate_arc",
     "title_key": "EVENT_VIP_DEPOSIT_VISIT_TITLE",
     "description_key": "EVENT_VIP_DEPOSIT_VISIT_DESC",
     "weight": 20,
@@ -154,6 +321,7 @@
       {
         "id": "dedicated_concierge",
         "label_key": "EVENT_VIP_VISIT_OPT_CONCIERGE",
+        "next_event_id": "core:event.vip_syndicate_offer",
         "effects": [
           {
             "target": "customer.deposit_growth_bps",
@@ -167,6 +335,28 @@
             "value": 2,
             "scope": "global"
           }
+        ],
+        "outcomes": [
+          {
+            "id": "vip_delighted",
+            "weight": 70,
+            "sentiment": "positive",
+            "label_key": "EVENT_OUTCOME_VIP_DELIGHTED",
+            "domain_impacts": {
+              "cash_delta_minor": 1200000,
+              "satisfaction_delta": 3
+            }
+          },
+          {
+            "id": "vip_overbudget",
+            "weight": 30,
+            "sentiment": "negative",
+            "label_key": "EVENT_OUTCOME_VIP_OVERBUDGET",
+            "domain_impacts": {
+              "cash_delta_minor": -400000,
+              "satisfaction_delta": -1
+            }
+          }
         ]
       },
       {
@@ -178,6 +368,131 @@
             "operation": "add",
             "value": 400,
             "scope": "global"
+          }
+        ],
+        "outcomes": [
+          {
+            "id": "vip_steady",
+            "weight": 80,
+            "sentiment": "positive",
+            "label_key": "EVENT_OUTCOME_VIP_STEADY",
+            "domain_impacts": {
+              "cash_delta_minor": 350000
+            }
+          },
+          {
+            "id": "vip_cold",
+            "weight": 20,
+            "sentiment": "negative",
+            "label_key": "EVENT_OUTCOME_VIP_COLD",
+            "effects": [
+              {
+                "target": "bank.reputation_points",
+                "operation": "add",
+                "value": -1,
+                "scope": "global"
+              }
+            ],
+            "domain_impacts": {
+              "satisfaction_delta": -2
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "core:event.vip_syndicate_offer",
+    "chain_id": "vip_syndicate_arc",
+    "title_key": "EVENT_VIP_SYNDICATE_TITLE",
+    "description_key": "EVENT_VIP_SYNDICATE_DESC",
+    "weight": 0,
+    "cooldown_days": 14,
+    "conditions": [
+      {
+        "type": "day_at_least",
+        "value": 2
+      }
+    ],
+    "options": [
+      {
+        "id": "lead_syndicate",
+        "label_key": "EVENT_VIP_SYNDICATE_OPT_LEAD",
+        "outcomes": [
+          {
+            "id": "syndicate_jackpot",
+            "weight": 65,
+            "sentiment": "positive",
+            "label_key": "EVENT_OUTCOME_SYNDICATE_WIN",
+            "effects": [
+              {
+                "target": "bank.reputation_points",
+                "operation": "add",
+                "value": 4,
+                "scope": "global"
+              },
+              {
+                "target": "customer.deposit_growth_bps",
+                "operation": "add",
+                "value": 1500,
+                "scope": "global"
+              }
+            ],
+            "domain_impacts": {
+              "cash_delta_minor": 2800000,
+              "strategy_points_delta": 3
+            }
+          },
+          {
+            "id": "syndicate_covenant_breach",
+            "weight": 35,
+            "sentiment": "negative",
+            "label_key": "EVENT_OUTCOME_SYNDICATE_RISK",
+            "effects": [
+              {
+                "target": "loan.default_risk_bps",
+                "operation": "add",
+                "value": 800,
+                "scope": "global"
+              }
+            ],
+            "domain_impacts": {
+              "cash_delta_minor": -900000,
+              "satisfaction_delta": -3
+            }
+          }
+        ]
+      },
+      {
+        "id": "advisory_only",
+        "label_key": "EVENT_VIP_SYNDICATE_OPT_ADVISE",
+        "outcomes": [
+          {
+            "id": "advisory_fee_earned",
+            "weight": 85,
+            "sentiment": "positive",
+            "label_key": "EVENT_OUTCOME_SYNDICATE_FEE",
+            "effects": [
+              {
+                "target": "bank.reputation_points",
+                "operation": "add",
+                "value": 2,
+                "scope": "global"
+              }
+            ],
+            "domain_impacts": {
+              "cash_delta_minor": 1000000,
+              "strategy_points_delta": 1
+            }
+          },
+          {
+            "id": "advisory_declined",
+            "weight": 15,
+            "sentiment": "negative",
+            "label_key": "EVENT_OUTCOME_SYNDICATE_DECLINE",
+            "domain_impacts": {
+              "satisfaction_delta": -1
+            }
           }
         ]
       }
@@ -206,6 +521,36 @@
             "value": -400,
             "scope": "global"
           }
+        ],
+        "outcomes": [
+          {
+            "id": "hotfix_smooth",
+            "weight": 70,
+            "sentiment": "positive",
+            "label_key": "EVENT_OUTCOME_HOTFIX_SMOOTH",
+            "domain_impacts": {
+              "cash_delta_minor": -300000,
+              "satisfaction_delta": 3
+            }
+          },
+          {
+            "id": "hotfix_rollback",
+            "weight": 30,
+            "sentiment": "negative",
+            "label_key": "EVENT_OUTCOME_HOTFIX_ROLLBACK",
+            "effects": [
+              {
+                "target": "service.teller_duration_bps",
+                "operation": "add",
+                "value": 700,
+                "scope": "global"
+              }
+            ],
+            "domain_impacts": {
+              "cash_delta_minor": -500000,
+              "satisfaction_delta": -3
+            }
+          }
         ]
       },
       {
@@ -223,6 +568,26 @@
             "operation": "add",
             "value": -500,
             "scope": "global"
+          }
+        ],
+        "outcomes": [
+          {
+            "id": "manual_stable",
+            "weight": 65,
+            "sentiment": "positive",
+            "label_key": "EVENT_OUTCOME_MANUAL_STABLE",
+            "domain_impacts": {
+              "strategy_points_delta": 1
+            }
+          },
+          {
+            "id": "manual_queue_jam",
+            "weight": 35,
+            "sentiment": "negative",
+            "label_key": "EVENT_OUTCOME_MANUAL_JAM",
+            "domain_impacts": {
+              "satisfaction_delta": -4
+            }
           }
         ]
       }
@@ -257,6 +622,27 @@
             "value": 1,
             "scope": "global"
           }
+        ],
+        "outcomes": [
+          {
+            "id": "morale_surge",
+            "weight": 75,
+            "sentiment": "positive",
+            "label_key": "EVENT_OUTCOME_POACH_SURGE",
+            "domain_impacts": {
+              "cash_delta_minor": -400000,
+              "satisfaction_delta": 3
+            }
+          },
+          {
+            "id": "bonus_overspend",
+            "weight": 25,
+            "sentiment": "negative",
+            "label_key": "EVENT_OUTCOME_POACH_COST",
+            "domain_impacts": {
+              "cash_delta_minor": -800000
+            }
+          }
         ]
       },
       {
@@ -269,12 +655,33 @@
             "value": -400,
             "scope": "global"
           }
+        ],
+        "outcomes": [
+          {
+            "id": "loyalty_holds",
+            "weight": 50,
+            "sentiment": "positive",
+            "label_key": "EVENT_OUTCOME_POACH_LOYAL",
+            "domain_impacts": {
+              "strategy_points_delta": 2
+            }
+          },
+          {
+            "id": "morale_dip",
+            "weight": 50,
+            "sentiment": "negative",
+            "label_key": "EVENT_OUTCOME_POACH_DIP",
+            "domain_impacts": {
+              "satisfaction_delta": -3
+            }
+          }
         ]
       }
     ]
   },
   {
     "id": "core:event.community_sponsorship",
+    "chain_id": "community_brand_arc",
     "title_key": "EVENT_COMMUNITY_SPONSORSHIP_TITLE",
     "description_key": "EVENT_COMMUNITY_SPONSORSHIP_DESC",
     "weight": 22,
@@ -289,6 +696,7 @@
       {
         "id": "sponsor_festival",
         "label_key": "EVENT_COMMUNITY_OPT_SPONSOR",
+        "next_event_id": "core:event.community_loyal_wave",
         "effects": [
           {
             "target": "bank.reputation_points",
@@ -302,12 +710,134 @@
             "value": 800,
             "scope": "global"
           }
+        ],
+        "outcomes": [
+          {
+            "id": "festival_hit",
+            "weight": 75,
+            "sentiment": "positive",
+            "label_key": "EVENT_OUTCOME_COMM_HIT",
+            "domain_impacts": {
+              "cash_delta_minor": 800000,
+              "satisfaction_delta": 4
+            }
+          },
+          {
+            "id": "festival_rainout",
+            "weight": 25,
+            "sentiment": "negative",
+            "label_key": "EVENT_OUTCOME_COMM_RAIN",
+            "domain_impacts": {
+              "cash_delta_minor": -350000
+            }
+          }
         ]
       },
       {
         "id": "decline_politely",
         "label_key": "EVENT_COMMUNITY_OPT_DECLINE",
-        "effects": []
+        "effects": [],
+        "outcomes": [
+          {
+            "id": "saved_budget",
+            "weight": 70,
+            "sentiment": "positive",
+            "label_key": "EVENT_OUTCOME_COMM_SAVED",
+            "domain_impacts": {
+              "strategy_points_delta": 1
+            }
+          },
+          {
+            "id": "missed_goodwill",
+            "weight": 30,
+            "sentiment": "negative",
+            "label_key": "EVENT_OUTCOME_COMM_COLD",
+            "domain_impacts": {
+              "satisfaction_delta": -2
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "core:event.community_loyal_wave",
+    "chain_id": "community_brand_arc",
+    "title_key": "EVENT_COMMUNITY_WAVE_TITLE",
+    "description_key": "EVENT_COMMUNITY_WAVE_DESC",
+    "weight": 0,
+    "cooldown_days": 14,
+    "conditions": [
+      {
+        "type": "day_at_least",
+        "value": 2
+      }
+    ],
+    "options": [
+      {
+        "id": "launch_savings_club",
+        "label_key": "EVENT_COMMUNITY_WAVE_OPT_CLUB",
+        "outcomes": [
+          {
+            "id": "club_booming",
+            "weight": 75,
+            "sentiment": "positive",
+            "label_key": "EVENT_OUTCOME_WAVE_BOOM",
+            "effects": [
+              {
+                "target": "customer.deposit_growth_bps",
+                "operation": "add",
+                "value": 1600,
+                "scope": "global"
+              },
+              {
+                "target": "bank.reputation_points",
+                "operation": "add",
+                "value": 3,
+                "scope": "global"
+              }
+            ],
+            "domain_impacts": {
+              "cash_delta_minor": 1600000,
+              "satisfaction_delta": 4
+            }
+          },
+          {
+            "id": "club_crowded",
+            "weight": 25,
+            "sentiment": "negative",
+            "label_key": "EVENT_OUTCOME_WAVE_CROWD",
+            "domain_impacts": {
+              "cash_delta_minor": -300000,
+              "satisfaction_delta": -2
+            }
+          }
+        ]
+      },
+      {
+        "id": "organic_retention",
+        "label_key": "EVENT_COMMUNITY_WAVE_OPT_ORGANIC",
+        "outcomes": [
+          {
+            "id": "steady_word_of_mouth",
+            "weight": 85,
+            "sentiment": "positive",
+            "label_key": "EVENT_OUTCOME_WAVE_STEADY",
+            "domain_impacts": {
+              "cash_delta_minor": 600000,
+              "satisfaction_delta": 2
+            }
+          },
+          {
+            "id": "rival_poaches_wave",
+            "weight": 15,
+            "sentiment": "negative",
+            "label_key": "EVENT_OUTCOME_WAVE_RIVAL",
+            "domain_impacts": {
+              "satisfaction_delta": -2
+            }
+          }
+        ]
       }
     ]
   },
@@ -340,6 +870,27 @@
             "value": 2,
             "scope": "global"
           }
+        ],
+        "outcomes": [
+          {
+            "id": "audit_commendation",
+            "weight": 80,
+            "sentiment": "positive",
+            "label_key": "EVENT_OUTCOME_AUDIT_PASS",
+            "domain_impacts": {
+              "cash_delta_minor": 900000,
+              "strategy_points_delta": 3
+            }
+          },
+          {
+            "id": "audit_minor_fine",
+            "weight": 20,
+            "sentiment": "negative",
+            "label_key": "EVENT_OUTCOME_AUDIT_MINOR",
+            "domain_impacts": {
+              "cash_delta_minor": -400000
+            }
+          }
         ]
       },
       {
@@ -352,12 +903,42 @@
             "value": 600,
             "scope": "global"
           }
+        ],
+        "outcomes": [
+          {
+            "id": "audit_closed_fast",
+            "weight": 45,
+            "sentiment": "positive",
+            "label_key": "EVENT_OUTCOME_AUDIT_FAST",
+            "domain_impacts": {
+              "strategy_points_delta": 1
+            }
+          },
+          {
+            "id": "audit_penalty",
+            "weight": 55,
+            "sentiment": "negative",
+            "label_key": "EVENT_OUTCOME_AUDIT_FINE",
+            "effects": [
+              {
+                "target": "bank.reputation_points",
+                "operation": "add",
+                "value": -3,
+                "scope": "global"
+              }
+            ],
+            "domain_impacts": {
+              "cash_delta_minor": -1000000,
+              "satisfaction_delta": -3
+            }
+          }
         ]
       }
     ]
   },
   {
     "id": "core:event.fintech_partnership",
+    "chain_id": "fintech_upgrade_arc",
     "title_key": "EVENT_FINTECH_PARTNERSHIP_TITLE",
     "description_key": "EVENT_FINTECH_PARTNERSHIP_DESC",
     "weight": 18,
@@ -372,6 +953,7 @@
       {
         "id": "integrate_api",
         "label_key": "EVENT_FINTECH_OPT_INTEGRATE",
+        "next_event_id": "core:event.fintech_cyber_test",
         "effects": [
           {
             "target": "service.teller_duration_bps",
@@ -385,6 +967,28 @@
             "value": 700,
             "scope": "global"
           }
+        ],
+        "outcomes": [
+          {
+            "id": "api_breakthrough",
+            "weight": 70,
+            "sentiment": "positive",
+            "label_key": "EVENT_OUTCOME_FINTECH_WIN",
+            "domain_impacts": {
+              "cash_delta_minor": 1200000,
+              "strategy_points_delta": 2
+            }
+          },
+          {
+            "id": "api_integration_cost",
+            "weight": 30,
+            "sentiment": "negative",
+            "label_key": "EVENT_OUTCOME_FINTECH_BUG",
+            "domain_impacts": {
+              "cash_delta_minor": -500000,
+              "satisfaction_delta": -2
+            }
+          }
         ]
       },
       {
@@ -396,6 +1000,115 @@
             "operation": "add",
             "value": -300,
             "scope": "global"
+          }
+        ],
+        "outcomes": [
+          {
+            "id": "legacy_rock_solid",
+            "weight": 80,
+            "sentiment": "positive",
+            "label_key": "EVENT_OUTCOME_LEGACY_SOLID",
+            "domain_impacts": {
+              "satisfaction_delta": 1
+            }
+          },
+          {
+            "id": "legacy_dated",
+            "weight": 20,
+            "sentiment": "negative",
+            "label_key": "EVENT_OUTCOME_LEGACY_SLOW",
+            "domain_impacts": {
+              "satisfaction_delta": -2
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "core:event.fintech_cyber_test",
+    "chain_id": "fintech_upgrade_arc",
+    "title_key": "EVENT_FINTECH_CYBER_TITLE",
+    "description_key": "EVENT_FINTECH_CYBER_DESC",
+    "weight": 0,
+    "cooldown_days": 14,
+    "conditions": [
+      {
+        "type": "day_at_least",
+        "value": 4
+      }
+    ],
+    "options": [
+      {
+        "id": "upgrade_firewall",
+        "label_key": "EVENT_FINTECH_CYBER_OPT_UPGRADE",
+        "outcomes": [
+          {
+            "id": "cyber_certified",
+            "weight": 75,
+            "sentiment": "positive",
+            "label_key": "EVENT_OUTCOME_CYBER_PASS",
+            "effects": [
+              {
+                "target": "bank.reputation_points",
+                "operation": "add",
+                "value": 4,
+                "scope": "global"
+              },
+              {
+                "target": "staff.productivity_bps",
+                "operation": "add",
+                "value": 800,
+                "scope": "global"
+              }
+            ],
+            "domain_impacts": {
+              "cash_delta_minor": 1800000,
+              "strategy_points_delta": 3
+            }
+          },
+          {
+            "id": "cyber_downtime",
+            "weight": 25,
+            "sentiment": "negative",
+            "label_key": "EVENT_OUTCOME_CYBER_COST",
+            "domain_impacts": {
+              "cash_delta_minor": -600000,
+              "satisfaction_delta": -2
+            }
+          }
+        ]
+      },
+      {
+        "id": "basic_patch",
+        "label_key": "EVENT_FINTECH_CYBER_OPT_BASIC",
+        "outcomes": [
+          {
+            "id": "patch_holds",
+            "weight": 55,
+            "sentiment": "positive",
+            "label_key": "EVENT_OUTCOME_CYBER_OK",
+            "domain_impacts": {
+              "cash_delta_minor": 400000
+            }
+          },
+          {
+            "id": "patch_breach",
+            "weight": 45,
+            "sentiment": "negative",
+            "label_key": "EVENT_OUTCOME_CYBER_BREACH",
+            "effects": [
+              {
+                "target": "bank.reputation_points",
+                "operation": "add",
+                "value": -3,
+                "scope": "global"
+              }
+            ],
+            "domain_impacts": {
+              "cash_delta_minor": -1100000,
+              "satisfaction_delta": -4
+            }
           }
         ]
       }
@@ -424,6 +1137,27 @@
             "value": -800,
             "scope": "global"
           }
+        ],
+        "outcomes": [
+          {
+            "id": "hedged_perfectly",
+            "weight": 75,
+            "sentiment": "positive",
+            "label_key": "EVENT_OUTCOME_RATE_HEDGED",
+            "domain_impacts": {
+              "cash_delta_minor": 900000,
+              "strategy_points_delta": 2
+            }
+          },
+          {
+            "id": "carry_drag",
+            "weight": 25,
+            "sentiment": "negative",
+            "label_key": "EVENT_OUTCOME_RATE_DRAG",
+            "domain_impacts": {
+              "cash_delta_minor": -300000
+            }
+          }
         ]
       },
       {
@@ -435,6 +1169,27 @@
             "operation": "add",
             "value": 1100,
             "scope": "global"
+          }
+        ],
+        "outcomes": [
+          {
+            "id": "deposit_inflow_boom",
+            "weight": 65,
+            "sentiment": "positive",
+            "label_key": "EVENT_OUTCOME_RATE_INFLOW",
+            "domain_impacts": {
+              "cash_delta_minor": 1400000,
+              "satisfaction_delta": 3
+            }
+          },
+          {
+            "id": "promo_expense_high",
+            "weight": 35,
+            "sentiment": "negative",
+            "label_key": "EVENT_OUTCOME_RATE_EXPENSE",
+            "domain_impacts": {
+              "cash_delta_minor": -550000
+            }
           }
         ]
       }

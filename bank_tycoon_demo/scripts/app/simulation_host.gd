@@ -5,6 +5,8 @@ extends Node
 
 signal snapshot_changed()
 
+const ContentStudioStoreScript := preload("res://scripts/infrastructure/content_studio_store.gd")
+
 var bank_state: BankState = null
 var clock: GameClock = null
 var simulation: BranchSimulation = null
@@ -51,7 +53,8 @@ func _process(delta: float) -> void:
 
 func bind_session(state: BankState, defs: Dictionary = {}) -> void:
 	bank_state = state
-	content_defs = defs.duplicate(true) if not defs.is_empty() else _try_fetch_content_defs()
+	var base_defs: Dictionary = defs.duplicate(true) if not defs.is_empty() else _try_fetch_content_defs()
+	content_defs = ContentStudioStoreScript.merge_into_content_defs(base_defs)
 
 	clock = GameClock.new()
 	clock.minute_duration_sec = _read_session_minute_duration()
@@ -69,6 +72,15 @@ func bind_session(state: BankState, defs: Dictionary = {}) -> void:
 	command_service.on_state_mutated = func() -> void:
 		snapshot_changed.emit()
 
+	snapshot_changed.emit()
+
+
+func reload_content_defs(merged_defs: Dictionary) -> void:
+	content_defs = merged_defs.duplicate(true)
+	if simulation != null:
+		simulation.content_defs = content_defs
+	if command_service != null:
+		command_service.content_defs = content_defs
 	snapshot_changed.emit()
 
 

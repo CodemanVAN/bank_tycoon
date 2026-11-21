@@ -15,6 +15,8 @@ var _lbl_profit_caption: Label = null
 var _lbl_profit_val: Label = null
 var _lbl_sat_caption: Label = null
 var _lbl_sat_val: Label = null
+var _lbl_aware_caption: Label = null
+var _lbl_aware_val: Label = null
 var _lbl_emp_caption: Label = null
 var _lbl_emp_val: Label = null
 var _lbl_day: Label = null
@@ -26,6 +28,7 @@ var _btn_speed_1: Button = null
 var _btn_speed_2: Button = null
 var _btn_speed_3: Button = null
 var _btn_day_action: Button = null
+var _btn_next_month: Button = null
 var _btn_settings: Button = null
 
 
@@ -47,7 +50,7 @@ func _on_locale_changed(_new_locale: String) -> void:
 
 func _build_ui() -> void:
 	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 10)
+	row.add_theme_constant_override("separation", 5)
 	add_child(row)
 
 	# Brand emblem + name
@@ -80,6 +83,12 @@ func _build_ui() -> void:
 	var sat_box := _make_kpi_box(row, "icon_satisfaction")
 	_lbl_sat_caption = sat_box["caption"] as Label
 	_lbl_sat_val = sat_box["value"] as Label
+
+	# KPI block: Bank Awareness (知名度)
+	var aware_box := _make_kpi_box(row, "icon_reputation")
+	_lbl_aware_caption = aware_box["caption"] as Label
+	_lbl_aware_val = aware_box["value"] as Label
+	_lbl_aware_val.add_theme_color_override("font_color", Color("#7FD8FF"))
 
 	# KPI block: Employees
 	var emp_box := _make_kpi_box(row, "icon_employees")
@@ -126,6 +135,13 @@ func _build_ui() -> void:
 	_btn_day_action.theme_type_variation = &"ButtonPrimary"
 	_btn_day_action.pressed.connect(_on_day_action_pressed)
 	row.add_child(_btn_day_action)
+
+	# Monthly fast-forward button (advance to 1st of next calendar month)
+	_btn_next_month = Button.new()
+	_btn_next_month.name = "BtnNextMonth"
+	_btn_next_month.theme_type_variation = &"ButtonGold"
+	_btn_next_month.pressed.connect(_on_next_month_pressed)
+	row.add_child(_btn_next_month)
 
 	# Save / Settings button
 	_btn_settings = Button.new()
@@ -215,11 +231,13 @@ func refresh() -> void:
 	_lbl_cash_caption.text = UiI18n.tr_key("UI_TOPBAR_CASH")
 	_lbl_profit_caption.text = UiI18n.tr_key("UI_TOPBAR_TODAY_PROFIT")
 	_lbl_sat_caption.text = UiI18n.tr_key("UI_TOPBAR_SATISFACTION")
+	_lbl_aware_caption.text = UiI18n.tr_key("UI_TOPBAR_AWARENESS")
 	_lbl_emp_caption.text = UiI18n.tr_key("UI_TOPBAR_EMPLOYEES")
 
 	var cash_minor: int = int(snap.get("cash_minor", 20_000_000))
 	var profit_minor: int = int(snap.get("today_profit_minor", 0))
 	var sat: int = int(snap.get("satisfaction", 75))
+	var aware: int = bs.awareness if bs != null else BalanceConfig.INITIAL_AWARENESS
 	var emp_cnt: int = int(snap.get("employee_count", 2))
 	var day_num: int = int(snap.get("day", 1))
 	var minute_val: int = int(snap.get("minute", 540))
@@ -230,9 +248,10 @@ func refresh() -> void:
 	_lbl_profit_val.text = FormatService.format_money(profit_minor, ccy, true, lc)
 	_lbl_profit_val.add_theme_color_override("font_color", StarwayTheme.delta_color(profit_minor))
 	_lbl_sat_val.text = "%d%%" % sat
+	_lbl_aware_val.text = "%d" % aware
 	_lbl_emp_val.text = str(emp_cnt)
 
-	_lbl_day.text = UiI18n.tr_key("UI_TOPBAR_DAY", {"day": day_num})
+	_lbl_day.text = FormatService.format_calendar_date(day_num, lc)
 	_lbl_time.text = FormatService.format_time(minute_val)
 	_lbl_phase.text = UiI18n.tr_phase(phase_val)
 
@@ -257,7 +276,20 @@ func refresh() -> void:
 			_btn_day_action.text = UiI18n.tr_key("UI_TOPBAR_ACTION_NEXT_DAY")
 			_btn_day_action.theme_type_variation = &"ButtonPrimary"
 
+	if _btn_next_month != null:
+		_btn_next_month.text = UiI18n.tr_key("UI_TOPBAR_ACTION_NEXT_MONTH")
 	_btn_settings.text = UiI18n.tr_key("UI_TOPBAR_BTN_SAVE_SETTINGS")
+
+
+func _on_next_month_pressed() -> void:
+	UiI18n.play_sfx("sfx_ui_click")
+	if _sim_host == null:
+		return
+	var cmd: Variant = _sim_host.get("command_service")
+	if cmd != null and (cmd as Object).has_method("advance_to_next_month"):
+		var r: Variant = (cmd as Object).call("advance_to_next_month")
+		command_executed.emit(r, "UI_TOPBAR_ACTION_NEXT_MONTH")
+	refresh()
 
 
 func _on_day_action_pressed() -> void:

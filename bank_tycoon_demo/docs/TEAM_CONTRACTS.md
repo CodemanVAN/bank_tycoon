@@ -134,7 +134,7 @@ This dict is what domain/app functions call `content_defs`.
 `scenes/world/bank_world.tscn` root `BankWorld` (Node2D, `scripts/presentation/world/bank_world.gd`):
 `signal entity_selected(entity_type: StringName, entity_id: String)` (`&"employee"|&"customer"|&"station"|&""`),
 `bind_runtime(sim_host: SimulationHost)`, `focus_entity(type, id)`, `set_camera_zoom_step(step: int)` (1..3).
-18x12 logical grid, 2:1 iso, `IsoGrid` (+ `AStarGrid2D`), Y-sort, Nearest filter, `PixelCamera2D`.
+18x12 logical grid, orthogonal 3/4 front-facing top-down view (32x20 tiles), `IsoGrid` (+ `AStarGrid2D`), Y-sort, Nearest filter, `PixelCamera2D`.
 Stations from `bank_state.stations` (`grid_pos`). Actor positions/animations are derived from domain state
 (presentation-only walking). Use `_unhandled_input` so HUD clicks never leak into the world. The visible play
 area is the screen minus HUD (§7 tokens); center the lobby there. Floating "+¥" / emotion bubbles on events.
@@ -223,13 +223,14 @@ current floor plan**, not a tile inside it; the connection between room and buil
 - `room_door_cell(rect)` picks the side with the most built neighbours and returns the middle cell of that side;
   `room_wall_cells(rect)` returns the rest of the perimeter. The door cell stays walkable and gets a gold
   `DoorFrame`; every other perimeter cell becomes a navigation solid.
-- Rendering: floor tile per cell, a door frame at the connection, a department nameplate above and
+- Rendering: floor tile per cell (`32x20` orthogonal), a door frame at the connection, a department nameplate above and
   desk/banner/level badge inside. Walls are **not** per-room sprites: `BankWorld._sync_exterior_walls()`
-  derives the built-cell union (lobby + all room rects) and emits one contiguous `wall_section_back.png`
-  panel (`ExtWallN_x_y` / `ExtWallW_x_y`) for every built cell whose north/west neighbour is empty land.
-  A signature of the built-cell set short-circuits rebuilds. Panels sit on the tile's top vertex
-  (`offset = (0,-32)`), replacing the old "every 2nd cell, 10px too low" static loop that left gaps and
-  floating blocks. The shared lobby edge gets no wall, so the auto-generated door stays open.
+  derives the built-cell union (lobby + all room rects) and emits contiguous `wall_section_back.png` north
+  panels (`ExtWallN_x_y`, `offset = (0,-34)`) plus architectural cutaway side-wall strips (`ExtWallW_x_y` /
+  `ExtWallE_x_y`) for every built cell whose outer edge faces empty land. A signature of the built-cell set
+  short-circuits rebuilds. The shared lobby edge gets no wall, so the auto-generated door stays open. Entering
+  placement mode automatically zooms the camera out to `1x` overview (and restores previous zoom on exit) so
+  surrounding buildable land is immediately visible.
 - Navigation: all site cells outside the built area are solid. `_sync_navigation_solids` carves the lobby, marks
   stations, then applies `room_wall_cells` per room. Empty land is therefore never walkable.
 - Data: `DepartmentInstance.grid_pos` (top-left) + `room_size` (w,h). `room_size == (1,1)` is the legacy

@@ -8,7 +8,7 @@ const ANIM_ROW_WALK: int = 1
 const ANIM_ROW_WORK: int = 2
 const ANIM_ROW_TALK: int = 3
 const ANIM_FPS: float = 6.0
-const WALK_SPEED_PX: float = 82.0
+const WALK_SPEED_PX: float = 135.0
 
 const COLOR_CYAN_GLOW: Color = Color("#00C6FF")
 const COLOR_GREEN: Color = Color("#35C978")
@@ -27,6 +27,7 @@ var grid_pos: Vector2i = Vector2i.ZERO
 var target_grid_pos: Vector2i = Vector2i.ZERO
 var actor_state: int = 0
 var is_selected: bool = false
+var speed_scale: float = 1.0
 
 # Status bar ratios (0.0 .. 1.0)
 var patience_ratio: float = 1.0
@@ -38,6 +39,10 @@ var _anim_row: int = ANIM_ROW_IDLE
 var _anim_col: int = 0
 var _anim_timer: float = 0.0
 var _waypoints: Array[Vector2] = []
+var _speech_panel: PanelContainer = null
+var _speech_label: Label = null
+var _speech_timer: float = 0.0
+var _speech_duration: float = 0.0
 
 
 func _init() -> void:
@@ -104,6 +109,64 @@ func set_screen_path(points: Array[Vector2]) -> void:
 		if rpt.distance_to(position) > 1.0:
 			_waypoints.append(rpt)
 	_update_anim_row()
+
+
+func is_walking() -> bool:
+	return not _waypoints.is_empty()
+
+
+func has_active_speech() -> bool:
+	return _speech_timer > 0.0
+
+
+func show_speech(text: String, duration: float = 2.4, border_color: Color = COLOR_CYAN_GLOW) -> void:
+	if text.strip_edges().is_empty():
+		return
+	_ensure_speech_bubble(border_color)
+	if _speech_panel == null or _speech_label == null:
+		return
+	_speech_label.text = text
+	var est_w: float = clampf(float(text.length()) * 9.5 + 14.0, 52.0, 146.0)
+	_speech_panel.size = Vector2(est_w, 18.0)
+	_speech_panel.position = Vector2(-est_w * 0.5, -52.0).round()
+	_speech_panel.modulate = Color(1.0, 1.0, 1.0, 1.0)
+	_speech_panel.visible = true
+	_speech_duration = maxf(0.6, duration)
+	_speech_timer = _speech_duration
+
+
+func _ensure_speech_bubble(border_color: Color) -> void:
+	if _speech_panel == null:
+		_speech_panel = PanelContainer.new()
+		_speech_panel.name = "SpeechBubble"
+		_speech_panel.z_index = 25
+		_speech_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_speech_panel.visible = false
+		_speech_panel.scale = Vector2(0.72, 0.72)
+		var sb := StyleBoxFlat.new()
+		sb.bg_color = Color(0.04, 0.12, 0.24, 0.92)
+		sb.border_color = border_color
+		sb.set_border_width_all(1)
+		sb.set_corner_radius_all(3)
+		sb.content_margin_left = 5
+		sb.content_margin_right = 5
+		sb.content_margin_top = 2
+		sb.content_margin_bottom = 2
+		_speech_panel.add_theme_stylebox_override("panel", sb)
+
+		_speech_label = Label.new()
+		_speech_label.name = "SpeechLabel"
+		_speech_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_speech_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		_speech_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		_speech_label.add_theme_font_size_override("font_size", 11)
+		_speech_label.add_theme_color_override("font_color", Color("#F5F8FF"))
+		_speech_panel.add_child(_speech_label)
+		add_child(_speech_panel)
+	else:
+		var existing_sb: StyleBox = _speech_panel.get_theme_stylebox("panel")
+		if existing_sb is StyleBoxFlat:
+			(existing_sb as StyleBoxFlat).border_color = border_color
 
 
 func snap_to_screen(screen_pos: Vector2) -> void:
@@ -184,7 +247,7 @@ func _process(delta: float) -> void:
 		var next_pt: Vector2 = _waypoints[0]
 		var to_next: Vector2 = next_pt - position
 		var dist: float = to_next.length()
-		var step: float = WALK_SPEED_PX * delta
+		var step: float = WALK_SPEED_PX * clampf(speed_scale, 0.5, 3.0) * delta
 		if _sprite != null and absf(to_next.x) > 0.5:
 			_sprite.flip_h = (to_next.x < 0.0)
 		if dist <= step or dist <= 0.5:
@@ -204,34 +267,26 @@ func _process(delta: float) -> void:
 		if _sprite != null:
 			_sprite.frame_coords = Vector2i(_anim_col, _anim_row)
 
+	# Overhead speech bubble auto-fade
+	if _speech_timer > 0.0 and _speech_panel != null:
+		_speech_timer -= delta
+		if _speech_timer <= 0.0:
+			_speech_timer = 0.0
+			_speech_panel.visible = false
+		elif _speech_timer < 0.45:
+			_speech_panel.modulate.a = clampf(_speech_timer / 0.45, 0.0, 1.0)
+
 
 func _draw() -> void:
 	# Foot ground shadow
-	var shadow_pts := PackedVector2Array([
-		Vector2(0.0, -3.0),
-		Vector2(7.0, 0.0),
-		Vector2(0.0, 3.0),
-		Vector2(-7.0, 0.0),
-	])
-	draw_colored_polygon(shadow_pts, Color(0.0, 0.04, 0.1, 0.32))
+	# Orthogonal ground contact shadow
+	draw_rect(Rect2(-6.0, -2.0, 12.0, 4.0), Color(0.0, 0.04, 0.1, 0.32), true)
 
-	# Selection cyan ring
+	# Selection cyan frame
 	if is_selected:
-		var sel_ring := PackedVector2Array([
-			Vector2(0.0, -6.0),
-			Vector2(12.0, 0.0),
-			Vector2(0.0, 6.0),
-			Vector2(-12.0, 0.0),
-			Vector2(0.0, -6.0),
-		])
-		var sel_fill := PackedVector2Array([
-			Vector2(0.0, -5.0),
-			Vector2(10.0, 0.0),
-			Vector2(0.0, 5.0),
-			Vector2(-10.0, 0.0),
-		])
-		draw_colored_polygon(sel_fill, Color(0.0, 0.776, 1.0, 0.25))
-		draw_polyline(sel_ring, COLOR_CYAN_GLOW, 1.5, false)
+		var sel_rect := Rect2(-10.0, -5.0, 20.0, 10.0)
+		draw_rect(sel_rect, Color(0.0, 0.776, 1.0, 0.25), true)
+		draw_rect(sel_rect, COLOR_CYAN_GLOW, false, 1.5)
 
 	# Overhead status bubble / bar
 	if actor_kind == &"customer":

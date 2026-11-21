@@ -138,7 +138,14 @@ func refresh() -> void:
 
 	var day_num: int = int(rep.get("day", 1))
 	var lc: String = UiI18n.get_locale()
-	_lbl_title.text = UiI18n.tr_key("UI_REPORT_TITLE", {"day": day_num})
+	if bool(rep.get("is_monthly", false)):
+		_lbl_title.text = UiI18n.tr_key("UI_REPORT_MONTHLY_TITLE", {
+			"year": int(rep.get("year", 2026)),
+			"month": int(rep.get("month", 1)),
+			"days": int(rep.get("days_advanced", 30)),
+		})
+	else:
+		_lbl_title.text = "%s · %s" % [FormatService.format_calendar_date(day_num, lc), UiI18n.tr_key("UI_REPORT_TITLE", {"day": day_num})]
 	_lbl_subtitle.text = UiI18n.tr_key("UI_REPORT_SUBTITLE")
 	_lbl_pnl_header.text = UiI18n.tr_key("UI_REPORT_PNL_HEADER")
 	_lbl_bs_header.text = UiI18n.tr_key("UI_REPORT_BS_HEADER")

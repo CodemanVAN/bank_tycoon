@@ -261,83 +261,75 @@ class PixelCanvas:
 # ---------------------------------------------------------------------------
 
 def gen_tile_floor_ivory() -> PixelCanvas:
-    c = PixelCanvas(32, 16)
-
-    def color_fn(x: int, y: int, x_start: int) -> str:
-        x_end = 31 - x_start
-        if y < 8 and (x <= x_start + 1 or x >= x_end - 1):
-            return "IVORY_H" if x < 16 else "IVORY_B"
-        if y >= 8 and (x <= x_start + 1 or x >= x_end - 1):
-            return "IVORY_D"
-        # Subtle warm marble veining
-        if (x + y * 2) % 11 == 0 and det_hash(x, y, 1) % 3 == 0:
-            return "IVORY_M"
-        if (x - y) % 13 == 0 and x < 16:
-            return "IVORY_H"
-        return "IVORY_M" if (det_hash(x, y, 2) % 7 == 0) else "IVORY_B"
-
-    c.fill_iso_diamond_32x16(color_fn)
+    c = PixelCanvas(32, 20)
+    for y in range(20):
+        for x in range(32):
+            # Clean 32x20 orthogonal marble slab (2 sub-slabs side by side)
+            if y == 19 or x == 31:
+                c.set_px(x, y, "IVORY_D")
+            elif x == 15:
+                c.set_px(x, y, "IVORY_M")
+            elif y == 0 or x == 0 or x == 16:
+                c.set_px(x, y, "IVORY_H")
+            elif (x + y * 2) % 13 == 0 and det_hash(x, y, 1) % 3 == 0:
+                c.set_px(x, y, "IVORY_M")
+            elif (x - y * 2) % 17 == 0 and y < 14:
+                c.set_px(x, y, "IVORY_H")
+            else:
+                c.set_px(x, y, "IVORY_M" if (det_hash(x, y, 2) % 11 == 0) else "IVORY_B")
     return c
 
 
 def gen_tile_floor_wood() -> PixelCanvas:
-    c = PixelCanvas(32, 16)
-
-    def color_fn(x: int, y: int, x_start: int) -> str:
-        x_end = 31 - x_start
-        # Plank lines running parallel to upper-left -> lower-right iso axis
-        diag = (x - 2 * y)
-        if y < 8 and x <= x_start + 1:
-            return "WOOD_H"
-        if y >= 8 and x >= x_end - 1:
-            return "WOOD_D"
-        if diag % 8 == 0:
-            return "WOOD_D"
-        plank_id = diag // 8
-        # Staggered butt joint
-        if (x + 2 * y + plank_id * 5) % 16 == 0:
-            return "WOOD_D"
-        if abs(diag % 8) == 1:
-            return "WOOD_H" if plank_id % 2 == 0 else "WOOD_B"
-        return "WOOD_M" if (det_hash(x, y, 11) % 5 == 0) else "WOOD_B"
-
-    c.fill_iso_diamond_32x16(color_fn)
+    c = PixelCanvas(32, 20)
+    # 4 horizontal hardwood planks (5px tall each) with staggered vertical joints
+    joint_cols = (11, 24, 6, 19)
+    for y in range(20):
+        plank_id = y // 5
+        local_y = y % 5
+        joint_x = joint_cols[plank_id]
+        for x in range(32):
+            if local_y == 4 or x == joint_x:
+                c.set_px(x, y, "WOOD_D")
+            elif local_y == 0:
+                c.set_px(x, y, "WOOD_H" if (plank_id % 2 == 0 or x > joint_x) else "WOOD_B")
+            elif det_hash(x, y, 11 + plank_id) % 6 == 0:
+                c.set_px(x, y, "WOOD_M")
+            else:
+                c.set_px(x, y, "WOOD_B")
     return c
 
 
 def gen_tile_floor_carpet_blue() -> PixelCanvas:
-    c = PixelCanvas(32, 16)
-
-    def color_fn(x: int, y: int, x_start: int) -> str:
-        x_end = 31 - x_start
-        dist_edge = min(x - x_start, x_end - x)
-        if dist_edge <= 1:
-            return "SB_BLUE" if y < 8 else "CARPET_BLUE_D"
-        if dist_edge in (3, 4) and (x in (14, 15, 16, 17) or y in (7, 8)):
-            return "SB_ELECTRIC"
-        if (x + y) % 2 == 0:
-            return "SB_PANEL"
-        return "CARPET_BLUE_D"
-
-    c.fill_iso_diamond_32x16(color_fn)
+    c = PixelCanvas(32, 20)
+    for y in range(20):
+        for x in range(32):
+            if y == 0 or y == 19 or x == 0 or x == 31:
+                c.set_px(x, y, "SB_BLUE" if y < 10 else "CARPET_BLUE_D")
+            elif (y in (2, 17) and 2 <= x <= 29) or (x in (2, 29) and 2 <= y <= 17):
+                c.set_px(x, y, "SB_BLUE")
+            elif abs(x - 15.5) + abs(y - 9.5) <= 2.5:
+                c.set_px(x, y, "SB_ELECTRIC" if (x + y) % 2 == 0 else "SB_BLUE")
+            else:
+                c.set_px(x, y, "SB_PANEL" if (x + y) % 2 == 0 else "CARPET_BLUE_D")
     return c
 
 
 def gen_tile_floor_vip() -> PixelCanvas:
-    c = PixelCanvas(32, 16)
-
-    def color_fn(x: int, y: int, x_start: int) -> str:
-        x_end = 31 - x_start
-        dist_edge = min(x - x_start, x_end - x)
-        if dist_edge == 0:
-            return "SB_NAVY"
-        if dist_edge in (2, 3):
-            return "GOLD_B" if y < 8 else "GOLD_M"
-        if abs(x - 15.5) + abs(y - 7.5) * 2 <= 6:
-            return "GOLD_H" if (x == 15 and y == 7) else "VIP_CRIMSON"
-        return "SB_PANEL" if (x + y) % 2 == 0 else "VIP_CRIMSON"
-
-    c.fill_iso_diamond_32x16(color_fn)
+    c = PixelCanvas(32, 20)
+    for y in range(20):
+        for x in range(32):
+            if y == 0 or y == 19 or x == 0 or x == 31:
+                c.set_px(x, y, "SB_NAVY")
+            elif (y in (2, 17) and 2 <= x <= 29) or (x in (2, 29) and 2 <= y <= 17):
+                c.set_px(x, y, "GOLD_B" if y < 10 else "GOLD_M")
+            elif abs(x - 15.5) + abs(y - 9.5) <= 3.0:
+                if abs(x - 15.5) < 1.0 and abs(y - 9.5) < 1.0:
+                    c.set_px(x, y, "GOLD_H")
+                else:
+                    c.set_px(x, y, "VIP_CRIMSON")
+            else:
+                c.set_px(x, y, "SB_PANEL" if (x + y) % 2 == 0 else "VIP_CRIMSON")
     return c
 
 
@@ -616,6 +608,115 @@ def gen_prop_atm() -> PixelCanvas:
     c.fill_rect(8, 23, 8, 2, "SB_NAVY")
     c.fill_rect(5, 30, 14, 3, "SB_SLATE")
     c.apply_outline("OUTLINE_TECH")
+    return c
+
+
+def gen_prop_coffee_bar() -> PixelCanvas:
+    c = PixelCanvas(36, 32)
+    # Warm wood bar cabinet
+    c.fill_rect(3, 14, 30, 14, "WOOD_B")
+    c.fill_rect(3, 24, 30, 4, "WOOD_M")
+    c.fill_rect(3, 27, 30, 2, "WOOD_D")
+    # Starway tech-blue trim band
+    c.fill_rect(3, 17, 30, 3, "SB_BLUE")
+    c.fill_rect(3, 17, 30, 1, "SB_ELECTRIC")
+    # Ivory marble countertop
+    c.fill_rect(2, 12, 32, 3, "IVORY_B")
+    c.fill_rect(2, 12, 32, 1, "IVORY_H")
+    # Espresso machine on left
+    c.fill_rect(6, 5, 11, 7, "SB_STEEL")
+    c.fill_rect(7, 6, 9, 5, "SB_SLATE")
+    c.fill_rect(8, 7, 3, 2, "SB_CYAN")
+    c.fill_rect(12, 7, 3, 1, "GOLD_H")
+    # Coffee cups + steam on right
+    c.fill_rect(21, 9, 4, 3, "IVORY_H")
+    c.fill_rect(27, 9, 4, 3, "GOLD_B")
+    c.set_px(22, 7, "SB_ICE")
+    c.set_px(23, 6, "SB_WHITE")
+    c.set_px(28, 7, "SB_ICE")
+    c.apply_outline("OUTLINE_WARM")
+    return c
+
+
+def gen_prop_aquarium() -> PixelCanvas:
+    c = PixelCanvas(40, 36)
+    # Sleek slate cabinet base
+    c.fill_rect(3, 22, 34, 11, "SB_SLATE")
+    c.fill_rect(4, 23, 32, 8, "SB_PANEL")
+    c.fill_rect(4, 23, 32, 1, "SB_STEEL")
+    # Illuminated glass tank
+    c.fill_rect(3, 5, 34, 17, "SB_STEEL")
+    c.fill_rect(5, 7, 30, 13, "SB_BLUE")
+    c.fill_rect(5, 7, 30, 3, "SB_ELECTRIC")
+    # Seaweed & coral
+    c.fill_rect(8, 15, 2, 5, "GREEN_B")
+    c.fill_rect(10, 16, 2, 4, "GREEN_H")
+    c.fill_rect(28, 15, 3, 5, "GREEN_D")
+    c.fill_rect(29, 14, 2, 4, "GREEN_H")
+    # Golden fish & glowing cyan bubbles
+    c.fill_rect(14, 11, 4, 2, "GOLD_H")
+    c.set_px(13, 12, "GOLD_M")
+    c.fill_rect(22, 14, 4, 2, "GOLD_B")
+    c.set_px(26, 15, "GOLD_H")
+    c.set_px(18, 9, "SB_ICE")
+    c.set_px(19, 11, "SB_WHITE")
+    c.set_px(25, 9, "SB_ICE")
+    # Top light bar
+    c.fill_rect(5, 4, 30, 2, "SB_CYAN")
+    c.apply_outline("OUTLINE_TECH")
+    return c
+
+
+def gen_prop_gold_bull() -> PixelCanvas:
+    c = PixelCanvas(32, 32)
+    # Ivory marble pedestal with navy trim
+    c.fill_rect(5, 22, 22, 7, "IVORY_M")
+    c.fill_rect(6, 22, 20, 2, "IVORY_H")
+    c.fill_rect(7, 25, 18, 2, "SB_BLUE")
+    c.fill_rect(4, 28, 24, 2, "SB_SLATE")
+    # Charging golden bull silhouette
+    c.fill_rect(9, 12, 14, 7, "GOLD_B")
+    c.fill_rect(10, 11, 10, 3, "GOLD_H")
+    c.fill_rect(11, 17, 11, 2, "GOLD_M")
+    # Head & horns (right-facing)
+    c.fill_rect(21, 10, 5, 5, "GOLD_B")
+    c.fill_rect(22, 10, 3, 2, "GOLD_H")
+    c.set_px(25, 8, "GOLD_H")
+    c.set_px(26, 9, "GOLD_H")
+    # Legs & tail
+    c.fill_rect(10, 19, 2, 3, "GOLD_D")
+    c.fill_rect(14, 19, 2, 3, "GOLD_M")
+    c.fill_rect(20, 19, 2, 3, "GOLD_D")
+    c.fill_rect(7, 13, 2, 2, "GOLD_M")
+    c.apply_outline("OUTLINE_WARM")
+    return c
+
+
+def gen_prop_bookshelf() -> PixelCanvas:
+    c = PixelCanvas(32, 36)
+    # Warm wood bookcase frame
+    c.fill_rect(4, 4, 24, 28, "WOOD_M")
+    c.fill_rect(5, 5, 22, 26, "WOOD_D")
+    c.fill_rect(4, 4, 24, 2, "WOOD_H")
+    # 3 shelves with colorful financial brochures/books
+    for sy in (11, 18, 25):
+        c.fill_rect(5, sy, 22, 2, "WOOD_B")
+        c.fill_rect(5, sy, 22, 1, "WOOD_H")
+    # Row 1 books
+    c.fill_rect(7, 6, 3, 5, "SB_BLUE")
+    c.fill_rect(11, 7, 3, 4, "GOLD_B")
+    c.fill_rect(15, 6, 3, 5, "SB_CYAN")
+    c.fill_rect(19, 7, 4, 4, "IVORY_H")
+    # Row 2 books
+    c.fill_rect(7, 13, 4, 5, "GREEN_B")
+    c.fill_rect(12, 14, 3, 4, "SB_ELECTRIC")
+    c.fill_rect(16, 13, 3, 5, "GOLD_H")
+    c.fill_rect(20, 14, 4, 4, "SB_BLUE")
+    # Row 3 binders
+    c.fill_rect(7, 20, 5, 5, "SB_PANEL")
+    c.fill_rect(13, 20, 5, 5, "IVORY_B")
+    c.fill_rect(19, 20, 5, 5, "GOLD_M")
+    c.apply_outline("OUTLINE_WARM")
     return c
 
 
@@ -1258,10 +1359,10 @@ def gen_icon_alert() -> PixelCanvas:
 
 def build_manifest() -> dict[str, tuple[tuple[int, int], Callable[[], PixelCanvas]]]:
     manifest: dict[str, tuple[tuple[int, int], Callable[[], PixelCanvas]]] = {
-        "environment/tile_floor_ivory.png": ((32, 16), gen_tile_floor_ivory),
-        "environment/tile_floor_wood.png": ((32, 16), gen_tile_floor_wood),
-        "environment/tile_floor_carpet_blue.png": ((32, 16), gen_tile_floor_carpet_blue),
-        "environment/tile_floor_vip.png": ((32, 16), gen_tile_floor_vip),
+        "environment/tile_floor_ivory.png": ((32, 20), gen_tile_floor_ivory),
+        "environment/tile_floor_wood.png": ((32, 20), gen_tile_floor_wood),
+        "environment/tile_floor_carpet_blue.png": ((32, 20), gen_tile_floor_carpet_blue),
+        "environment/tile_floor_vip.png": ((32, 20), gen_tile_floor_vip),
         "environment/wall_section_back.png": ((32, 48), gen_wall_section_back),
         "environment/wall_glass_facade.png": ((32, 48), gen_wall_glass_facade),
         "environment/wall_logo_backdrop.png": ((64, 48), gen_wall_logo_backdrop),
@@ -1275,6 +1376,10 @@ def build_manifest() -> dict[str, tuple[tuple[int, int], Callable[[], PixelCanva
         "environment/prop_vault_door.png": ((40, 48), gen_prop_vault_door),
         "environment/prop_queue_post.png": ((16, 24), gen_prop_queue_post),
         "environment/prop_dept_banner.png": ((24, 36), gen_prop_dept_banner),
+        "environment/prop_coffee_bar.png": ((36, 32), gen_prop_coffee_bar),
+        "environment/prop_aquarium.png": ((40, 36), gen_prop_aquarium),
+        "environment/prop_gold_bull.png": ((32, 32), gen_prop_gold_bull),
+        "environment/prop_bookshelf.png": ((32, 36), gen_prop_bookshelf),
         "icons/icon_overview.png": ((24, 24), gen_icon_overview),
         "icons/icon_finance.png": ((24, 24), gen_icon_finance),
         "icons/icon_employees.png": ((24, 24), gen_icon_employees),
@@ -1303,7 +1408,7 @@ def build_manifest() -> dict[str, tuple[tuple[int, int], Callable[[], PixelCanva
 
 
 def verify_all(manifest: dict[str, tuple[tuple[int, int], Callable[[], PixelCanvas]]]) -> list[tuple[str, str]]:
-    assert len(manifest) == 60, f"Expected 60 manifest entries, got {len(manifest)}"
+    assert len(manifest) == 64, f"Expected 64 manifest entries, got {len(manifest)}"
     hashes: list[tuple[str, str]] = []
 
     for rel_path, (expected_size, _) in sorted(manifest.items()):
@@ -1319,13 +1424,8 @@ def verify_all(manifest: dict[str, tuple[tuple[int, int], Callable[[], PixelCanv
 
             w, h = img.size
             if rel_path.startswith("environment/tile_floor_"):
-                opaque_coords = {
-                    (idx % w, idx // w)
-                    for idx, px in enumerate(pixels)
-                    if px[3] == 255
-                }
-                assert len(opaque_coords) == 256, f"{rel_path}: opaque={len(opaque_coords)} != 256"
-                assert opaque_coords == ISO_DIAMOND_256, f"{rel_path}: off-mask 2:1 iso pixel"
+                opaque_count = sum(1 for px in pixels if px[3] == 255)
+                assert opaque_count == w * h, f"{rel_path}: orthogonal floor tile opaque={opaque_count} != {w * h}"
 
             if rel_path == "environment/prop_fountain_sheet.png":
                 frames = []

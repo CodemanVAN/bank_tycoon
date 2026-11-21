@@ -30,16 +30,20 @@ func dispatch(
 
 	bank_state.service_requests.sort_custom(ServiceRequest.compare_queue_order)
 
-	# Identify busy stations
+	# Identify busy stations & claimed employees so two employees never race for the same counter
 	var busy_stations: Dictionary = {}
+	var claimed_employees: Dictionary = {}
 	for req in bank_state.service_requests:
 		if req == null:
 			continue
 		if (
 			req.status == Enums.RequestStatus.IN_PROGRESS
 			or req.status == Enums.RequestStatus.ASSIGNED
-		) and req.assigned_station_id != "":
-			busy_stations[req.assigned_station_id] = true
+		):
+			if req.assigned_station_id != "":
+				busy_stations[req.assigned_station_id] = true
+			if req.assigned_employee_id != "":
+				claimed_employees[req.assigned_employee_id] = true
 
 	var station_ids: Array[String] = []
 	for sid: Variant in bank_state.stations.keys():
@@ -56,6 +60,15 @@ func dispatch(
 	for req in bank_state.service_requests:
 		if req == null or req.status != Enums.RequestStatus.QUEUED:
 			continue
+		# Skip requests already routed to ATM self-service
+		if str(req.payload.get("atm_mode", "")) != "":
+			continue
+		# Wait until customer has finished walking in from the main entrance
+		var cust_check_v: Variant = bank_state.active_customers.get(req.customer_id, null)
+		if cust_check_v is CustomerInstance:
+			var cc: CustomerInstance = cust_check_v as CustomerInstance
+			if cc.state == Enums.CustomerState.FINDING_SERVICE or cc.approach_minutes_remaining > 0:
+				continue
 
 		var srv_str: String = String(req.service_type)
 		var req_skill: String = String(req.required_skill)
@@ -81,10 +94,12 @@ func dispatch(
 
 			var assigned_eid: String = str(st.get("assigned_employee_id", ""))
 			if assigned_eid != "":
+				if claimed_employees.has(assigned_eid):
+					continue
 				var emp_v: Variant = bank_state.employees.get(assigned_eid, null)
 				if emp_v is EmployeeInstance:
 					var emp: EmployeeInstance = emp_v as EmployeeInstance
-					if emp.can_accept_task():
+					if emp.can_accept_task() and emp.department_id == "" and emp.role_id != "lobby_manager":
 						var score: int = 1000 + emp.get_effective_productivity_bps() / 100
 						if emp.role_id == req_skill:
 							score += 500
@@ -93,13 +108,17 @@ func dispatch(
 							chosen_station_id = st_id
 							chosen_emp = emp
 			else:
-				# Unassigned open station: find best available unassigned employee
+				# Unassigned open station: find best available unassigned counter employee
 				for eid in emp_ids:
+					if claimed_employees.has(eid):
+						continue
 					var emp_v2: Variant = bank_state.employees.get(eid, null)
 					if not (emp_v2 is EmployeeInstance):
 						continue
 					var emp2: EmployeeInstance = emp_v2 as EmployeeInstance
 					if not emp2.can_accept_task():
+						continue
+					if emp2.department_id != "" or emp2.role_id == "lobby_manager":
 						continue
 					if emp2.assigned_station_id != "" and emp2.assigned_station_id != st_id:
 						continue
@@ -121,14 +140,16 @@ func dispatch(
 				continue
 			req.status = Enums.RequestStatus.IN_PROGRESS
 
-			var assign_emp_res: Result = chosen_emp.assign_task(req.request_id, st_pos)
+			var behind_pos: Vector2i = st_pos + Vector2i(0, -1)
+			var assign_emp_res: Result = chosen_emp.assign_task(req.request_id, behind_pos)
 			if not assign_emp_res.ok:
 				req.release_to_queue()
 				continue
-			chosen_emp.grid_pos = st_pos
+			chosen_emp.grid_pos = behind_pos
 			chosen_emp.transition_to(Enums.EmployeeState.WORKING)
 
 			busy_stations[chosen_station_id] = true
+			claimed_employees[chosen_emp.id] = true
 			dispatched_count += 1
 
 			var cust_v: Variant = bank_state.active_customers.get(req.customer_id, null)
@@ -148,6 +169,7 @@ func dispatch(
 						"employee_id": chosen_emp.id,
 						"station_id": chosen_station_id,
 						"service_type": srv_str,
+						"is_complex_case": bool(req.payload.get("is_complex_case", false)),
 					},
 					bank_state.current_day,
 					bank_state.current_minute_of_day

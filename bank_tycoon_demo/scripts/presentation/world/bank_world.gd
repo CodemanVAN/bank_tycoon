@@ -6,6 +6,12 @@ extends Node2D
 signal entity_selected(entity_type: StringName, entity_id: String)
 signal department_placement_confirmed(dept_id: String, room: Rect2i)
 signal department_placement_cancelled()
+signal layout_move_requested(kind: StringName, item_id: String, target_cell: Vector2i)
+signal layout_build_requested(item_type: String, target_cell: Vector2i)
+signal layout_delete_requested(kind: StringName, item_id: String)
+signal layout_mode_changed(active: bool)
+
+const ContentStudioStoreScript := preload("res://scripts/infrastructure/content_studio_store.gd")
 
 const FOUNTAIN_CELL: Vector2i = Vector2i(9, 7)
 const ENTRANCE_CELL: Vector2i = Vector2i(8, 11)
@@ -101,10 +107,28 @@ var _ghost_tiles: Node2D = null
 var _ghost_label: Label = null
 
 var _station_views: Dictionary = {}
+var _prop_views: Dictionary = {}
 var _employee_views: Dictionary = {}
 var _customer_views: Dictionary = {}
+var _leaving_customer_views: Array[ActorView] = []
+var _customer_exit_reasons: Dictionary = {}
+var _pending_arrival_speech: Dictionary = {}
+var _ambient_chatter_timer: float = 0.0
+var _ambient_chatter_seq: int = 0
+var _sofa_complained_cids: Dictionary = {}
+var _lobby_mgr_target_cells: Dictionary = {}
+var _pending_counter_dialogue: Dictionary = {}
 var _dept_nodes: Dictionary = {}
 var _floating_effects: Array[Dictionary] = []
+
+# Kairosoft-style Build / Layout Rearrange Mode
+var _layout_mode_active: bool = false
+var _layout_delete_mode: bool = false
+var _layout_held_kind: StringName = &""
+var _layout_held_id: String = ""
+var _layout_held_size: Vector2i = Vector2i.ONE
+var _layout_hover_cell: Vector2i = Vector2i(-99, -99)
+var _layout_ghost: Node2D = null
 
 var _selected_type: StringName = &""
 var _selected_id: String = ""
@@ -127,6 +151,7 @@ func _ready() -> void:
 
 func _exit_tree() -> void:
 	_unbind_runtime_signals()
+	_clear_leaving_customers()
 	_sim_host = null
 
 
@@ -153,6 +178,28 @@ const WORLD_FALLBACK_I18N: Dictionary = {
 		"WORLD_FX_LOAN_APPROVED": "放款通过",
 		"WORLD_FX_LOAN_REJECTED": "贷款拒绝",
 		"WORLD_FX_DEPT_UPGRADED": "部门升级 Lv.{level}",
+		"WORLD_SPEECH_CUST_ENTER_DEPOSIT": "您好，我想存一笔钱",
+		"WORLD_SPEECH_CUST_ENTER_WITHDRAW": "请问取款在哪排队？",
+		"WORLD_SPEECH_CUST_ENTER_TRANSFER": "麻烦办一笔转账",
+		"WORLD_SPEECH_CUST_ENTER_LOAN": "我想咨询一下贷款",
+		"WORLD_SPEECH_CUST_ENTER_MEETING": "预约了贵宾理财洽谈",
+		"WORLD_SPEECH_CUST_ENTER_COMPLAINT": "这笔业务有点问题…",
+		"WORLD_SPEECH_CUST_SERVING": "好的，这是我的证件",
+		"WORLD_SPEECH_CUST_THANKS": "谢谢，效率真不错！",
+		"WORLD_SPEECH_CUST_TIMEOUT": "等太久了，改天再来…",
+		"WORLD_SPEECH_EMP_GREET": "您好！请问办理什么业务？",
+		"WORLD_SPEECH_EMP_LOAN": "请稍候，马上为您初审",
+		"WORLD_SPEECH_EMP_DONE": "手续已办妥，祝您愉快！",
+		"WORLD_SPEECH_EMP_COMPLEX": "复杂疑难单，请稍等仔细核验",
+		"WORLD_SPEECH_CUST_COMPLEX": "这笔跨行业务有点复杂，麻烦查下",
+		"WORLD_SPEECH_CUST_SOFA": "排队太久了，先去沙发坐会儿…",
+		"WORLD_SPEECH_EMP_TIRED_1": "好累啊，连轴转太久了…",
+		"WORLD_SPEECH_EMP_TIRED_2": "真想休个假喘口气…",
+		"WORLD_SPEECH_EMP_SLACK_1": "趁现在人少，摸会儿鱼聊聊天~",
+		"WORLD_SPEECH_EMP_SLACK_2": "中午打算一起吃什么呀？",
+		"WORLD_SPEECH_LM_ATM": "小额存取请跟我去 ATM 快速办理！",
+		"WORLD_SPEECH_LM_SOOTHE": "让您久等了，马上为您安排窗口！",
+		"WORLD_SPEECH_LM_COMPLAINT": "别着急，我立刻帮您妥善解决！",
 	},
 	"en": {
 		"WORLD_DEPT_OPS_SHORT": "OPS",
@@ -166,6 +213,18 @@ const WORLD_FALLBACK_I18N: Dictionary = {
 		"WORLD_FX_LOAN_APPROVED": "Loan Approved",
 		"WORLD_FX_LOAN_REJECTED": "Loan Rejected",
 		"WORLD_FX_DEPT_UPGRADED": "Dept Lv.{level}",
+		"WORLD_SPEECH_CUST_ENTER_DEPOSIT": "I'd like to make a deposit.",
+		"WORLD_SPEECH_CUST_ENTER_WITHDRAW": "Where do I queue to withdraw?",
+		"WORLD_SPEECH_CUST_ENTER_TRANSFER": "Need a quick wire transfer.",
+		"WORLD_SPEECH_CUST_ENTER_LOAN": "I'd like to apply for a loan.",
+		"WORLD_SPEECH_CUST_ENTER_MEETING": "Here for a VIP consultation.",
+		"WORLD_SPEECH_CUST_ENTER_COMPLAINT": "I have an issue to resolve...",
+		"WORLD_SPEECH_CUST_SERVING": "Sure, here is my ID.",
+		"WORLD_SPEECH_CUST_THANKS": "Thanks, great service!",
+		"WORLD_SPEECH_CUST_TIMEOUT": "Too long a wait, I'm leaving...",
+		"WORLD_SPEECH_EMP_GREET": "Welcome! How can I help?",
+		"WORLD_SPEECH_EMP_LOAN": "Reviewing your loan file now.",
+		"WORLD_SPEECH_EMP_DONE": "All set! Have a great day!",
 	},
 	"ja": {
 		"WORLD_DEPT_OPS_SHORT": "運営",
@@ -179,11 +238,25 @@ const WORLD_FALLBACK_I18N: Dictionary = {
 		"WORLD_FX_LOAN_APPROVED": "融資承認",
 		"WORLD_FX_LOAN_REJECTED": "融資却下",
 		"WORLD_FX_DEPT_UPGRADED": "部門 Lv.{level}",
+		"WORLD_SPEECH_CUST_ENTER_DEPOSIT": "預金をお願いしたいです",
+		"WORLD_SPEECH_CUST_ENTER_WITHDRAW": "引き出しの列はこちらですか？",
+		"WORLD_SPEECH_CUST_ENTER_TRANSFER": "振込の手続きをお願いします",
+		"WORLD_SPEECH_CUST_ENTER_LOAN": "融資の相談に来ました",
+		"WORLD_SPEECH_CUST_ENTER_MEETING": "VIP相談の予約があります",
+		"WORLD_SPEECH_CUST_ENTER_COMPLAINT": "少し確認したい件が…",
+		"WORLD_SPEECH_CUST_SERVING": "はい、身分証です",
+		"WORLD_SPEECH_CUST_THANKS": "ありがとう、助かりました！",
+		"WORLD_SPEECH_CUST_TIMEOUT": "待ちすぎたので帰ります…",
+		"WORLD_SPEECH_EMP_GREET": "いらっしゃいませ！ご用件は？",
+		"WORLD_SPEECH_EMP_LOAN": "ただいま審査いたします",
+		"WORLD_SPEECH_EMP_DONE": "手続き完了です、またどうぞ！",
 	},
 }
 
 
 func _tr(key: String, params: Dictionary = {}) -> String:
+	if key.begins_with("RAW:"):
+		return key.substr(4)
 	var locale: String = "zh_CN"
 	var tree: SceneTree = Engine.get_main_loop() as SceneTree
 	if tree != null and tree.root != null:
@@ -292,6 +365,7 @@ func refresh_world() -> void:
 	var bs_obj: Object = bs as Object
 	_sync_navigation_solids(bs_obj)
 	_sync_exterior_walls(bs_obj)
+	_sync_props(bs_obj)
 	_sync_departments(bs_obj)
 	_sync_stations(bs_obj)
 	_sync_employees(bs_obj)
@@ -315,6 +389,9 @@ func get_placement_cell() -> Vector2i:
 	return _placement_rect.position
 
 
+var _pre_placement_zoom: int = 0
+
+
 func begin_department_placement(dept_id: String) -> bool:
 	if dept_id.is_empty():
 		return false
@@ -323,6 +400,11 @@ func begin_department_placement(dept_id: String) -> bool:
 	_ensure_placement_ghost()
 	if _placement_ghost == null:
 		return false
+	if _camera != null and _camera.get_zoom_step() > 1:
+		_pre_placement_zoom = _camera.get_zoom_step()
+		_camera.set_zoom_step(1)
+	else:
+		_pre_placement_zoom = 0
 	_placement_dept_id = dept_id
 	var cfg: Dictionary = DEPT_ZONES.get(dept_id, {}) as Dictionary
 	_placement_short_key = str(cfg.get("short_key", dept_id))
@@ -478,6 +560,9 @@ func _end_department_placement() -> void:
 	_clear_ghost_tiles()
 	if _placement_ghost != null and is_instance_valid(_placement_ghost):
 		_placement_ghost.visible = false
+	if _pre_placement_zoom > 0 and _camera != null:
+		_camera.set_zoom_step(_pre_placement_zoom)
+		_pre_placement_zoom = 0
 
 
 func _confirm_department_placement(rect: Rect2i) -> void:
@@ -599,7 +684,7 @@ func _rebuild_ghost_tiles(rect: Rect2i, valid: bool) -> void:
 			var cell := Vector2i(x, y)
 			var tile := Polygon2D.new()
 			tile.polygon = PackedVector2Array([
-				Vector2(0.0, -8.0), Vector2(16.0, 0.0), Vector2(0.0, 8.0), Vector2(-16.0, 0.0),
+				Vector2(-16.0, -10.0), Vector2(16.0, -10.0), Vector2(16.0, 10.0), Vector2(-16.0, 10.0),
 			])
 			tile.color = Color(col.r, col.g, col.b, 0.30)
 			tile.position = iso_grid.grid_to_screen(cell).round()
@@ -607,7 +692,7 @@ func _rebuild_ghost_tiles(rect: Rect2i, valid: bool) -> void:
 
 			var edge := Line2D.new()
 			edge.points = PackedVector2Array([
-				Vector2(0.0, -8.0), Vector2(16.0, 0.0), Vector2(0.0, 8.0), Vector2(-16.0, 0.0), Vector2(0.0, -8.0),
+				Vector2(-16.0, -10.0), Vector2(16.0, -10.0), Vector2(16.0, 10.0), Vector2(-16.0, 10.0), Vector2(-16.0, -10.0),
 			])
 			edge.width = 1.0
 			edge.default_color = Color(col.r, col.g, col.b, 0.70)
@@ -616,13 +701,13 @@ func _rebuild_ghost_tiles(rect: Rect2i, valid: bool) -> void:
 			if cell == door_cell:
 				var opening_tile := Polygon2D.new()
 				opening_tile.polygon = PackedVector2Array([
-					Vector2(0.0, -6.0), Vector2(12.0, 0.0), Vector2(0.0, 6.0), Vector2(-12.0, 0.0),
+					Vector2(-12.0, -7.0), Vector2(12.0, -7.0), Vector2(12.0, 7.0), Vector2(-12.0, 7.0),
 				])
 				opening_tile.color = Color("#FFC857") if valid else Color(col.r, col.g, col.b, 0.55)
 				opening_tile.position = tile.position
 				_ghost_tiles.add_child(opening_tile)
 
-	# Preview the actual room shell (walls on the visible back edges + a desk inside),
+	# Preview the actual room shell (orthogonal back wall + cutaway side trim + desk),
 	# so the player sees the result before committing.
 	for x in range(rect.position.x, rect.position.x + rect.size.x):
 		var cell_n := Vector2i(x, rect.position.y)
@@ -631,22 +716,25 @@ func _rebuild_ghost_tiles(rect: Rect2i, valid: bool) -> void:
 			wall.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 			wall.texture = tex_wall
 			wall.centered = true
-			wall.offset = Vector2(0.0, -32.0)
+			wall.offset = Vector2(0.0, -34.0)
 			wall.modulate = tint
 			wall.position = iso_grid.grid_to_screen(cell_n).round()
 			_ghost_tiles.add_child(wall)
 	for y in range(rect.position.y, rect.position.y + rect.size.y):
 		var cell_w := Vector2i(rect.position.x, y)
 		if cell_w != door_cell:
-			var wall_w := Sprite2D.new()
-			wall_w.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-			wall_w.texture = tex_wall
-			wall_w.centered = true
-			wall_w.flip_h = true
-			wall_w.offset = Vector2(0.0, -32.0)
-			wall_w.modulate = tint
-			wall_w.position = iso_grid.grid_to_screen(cell_w).round()
-			_ghost_tiles.add_child(wall_w)
+			var side_w := ColorRect.new()
+			side_w.color = Color(col.r, col.g, col.b, 0.65)
+			side_w.size = Vector2(4.0, float(IsoGrid.TILE_HEIGHT))
+			side_w.position = iso_grid.grid_to_screen(cell_w).round() + Vector2(-IsoGrid.HALF_TILE_W, -IsoGrid.HALF_TILE_H)
+			_ghost_tiles.add_child(side_w)
+		var cell_e := Vector2i(rect.position.x + rect.size.x - 1, y)
+		if cell_e != door_cell:
+			var side_e := ColorRect.new()
+			side_e.color = Color(col.r, col.g, col.b, 0.65)
+			side_e.size = Vector2(4.0, float(IsoGrid.TILE_HEIGHT))
+			side_e.position = iso_grid.grid_to_screen(cell_e).round() + Vector2(IsoGrid.HALF_TILE_W - 4.0, -IsoGrid.HALF_TILE_H)
+			_ghost_tiles.add_child(side_e)
 
 	var desk := Sprite2D.new()
 	desk.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -720,6 +808,7 @@ func _ensure_scene_hierarchy() -> void:
 		add_child(_ysort_layer)
 	_ysort_layer.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_ysort_layer.y_sort_enabled = true
+	_ysort_layer.z_index = 1
 
 	_props_container = _ysort_layer.get_node_or_null("PropsContainer") as Node2D
 	if _props_container == null:
@@ -789,7 +878,7 @@ func _build_static_environment() -> void:
 	var tex_carpet: Texture2D = _load_tex("res://assets/environment/tile_floor_carpet_blue.png")
 	var tex_vip: Texture2D = _load_tex("res://assets/environment/tile_floor_vip.png")
 
-	# 1. Build 18x12 Isometric Floor Layer
+	# 1. Build 18x12 Orthogonal Top-Down Floor Layer
 	for y in range(IsoGrid.GRID_HEIGHT):
 		for x in range(IsoGrid.GRID_WIDTH):
 			var cell := Vector2i(x, y)
@@ -816,7 +905,7 @@ func _build_static_environment() -> void:
 				spr.texture = tex_ivory
 			_floor_layer.add_child(spr)
 
-	# 2. Logo backdrop / vault door sit on the dynamically generated exterior wall.
+	# 2. Logo backdrop / vault door sit flush on the straight horizontal north wall.
 	var tex_wall_logo: Texture2D = _load_tex("res://assets/environment/wall_logo_backdrop.png")
 	var tex_vault: Texture2D = _load_tex("res://assets/environment/prop_vault_door.png")
 
@@ -825,8 +914,9 @@ func _build_static_environment() -> void:
 	logo_spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	logo_spr.texture = tex_wall_logo
 	logo_spr.centered = true
-	logo_spr.offset = Vector2(0.0, -30.0)
+	logo_spr.offset = Vector2(16.0, -34.0)
 	logo_spr.position = iso_grid.grid_to_screen(Vector2i(8, 0)).round()
+	logo_spr.z_index = 2
 	_wall_layer.add_child(logo_spr)
 
 	var vault_spr := Sprite2D.new()
@@ -834,37 +924,96 @@ func _build_static_environment() -> void:
 	vault_spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	vault_spr.texture = tex_vault
 	vault_spr.centered = true
-	vault_spr.offset = Vector2(0.0, -28.0)
+	vault_spr.offset = Vector2(0.0, -34.0)
 	vault_spr.position = iso_grid.grid_to_screen(Vector2i(14, 0)).round()
+	vault_spr.z_index = 2
 	_wall_layer.add_child(vault_spr)
 
-	# 3. Build Y-Sorted Lobby Props (Animated Fountain, Sofas, Queue Posts, Plants, ATMs)
-	_fountain_sprite = Sprite2D.new()
-	_fountain_sprite.name = "StarwayFountain"
-	_fountain_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	_fountain_sprite.texture = _load_tex("res://assets/environment/prop_fountain_sheet.png")
-	_fountain_sprite.centered = true
-	_fountain_sprite.hframes = 4
-	_fountain_sprite.vframes = 1
-	_fountain_sprite.offset = Vector2(0.0, -14.0)
-	_fountain_sprite.position = iso_grid.grid_to_screen(FOUNTAIN_CELL).round()
-	_props_container.add_child(_fountain_sprite)
-
-	_add_prop_sprite("res://assets/environment/prop_sofa.png", Vector2i(3, 8), Vector2(0.0, -8.0))
-	_add_prop_sprite("res://assets/environment/prop_sofa.png", Vector2i(14, 8), Vector2(0.0, -8.0))
-
-	for qcell in [Vector2i(4, 6), Vector2i(6, 6), Vector2i(8, 6), Vector2i(11, 6)]:
-		_add_prop_sprite("res://assets/environment/prop_queue_post.png", qcell, Vector2(0.0, -8.0))
-
-	for pcell in [Vector2i(1, 1), Vector2i(16, 1), Vector2i(1, 10), Vector2i(16, 10), Vector2i(10, 4)]:
-		_add_prop_sprite("res://assets/environment/prop_plant.png", pcell, Vector2(0.0, -12.0))
-
-	for acell in [Vector2i(1, 5), Vector2i(1, 7)]:
-		_add_prop_sprite("res://assets/environment/prop_atm.png", acell, Vector2(0.0, -14.0))
-
-	# 4. Department rooms are spawned from BankState by _sync_departments() at the plot
-	# the player chose (no fixed zones any more).
+	# 3. Lobby props (fountain, sofas, queue posts, plants, ATMs) are synced dynamically
+	# from BankState.lobby_props by _sync_props() so players can rearrange them in Layout Mode.
 	queue_redraw()
+
+
+func _sync_props(bs_obj: Object) -> void:
+	if _props_container == null:
+		return
+	var raw_props: Variant = bs_obj.get("lobby_props")
+	var prop_dict: Dictionary = raw_props as Dictionary if (raw_props is Dictionary and not (raw_props as Dictionary).is_empty()) else BankState.default_lobby_props()
+
+	var seen: Dictionary = {}
+	for pid_v: Variant in prop_dict.keys():
+		var pid: String = str(pid_v)
+		var pr: Variant = prop_dict[pid_v]
+		if not (pr is Dictionary):
+			continue
+		var prd: Dictionary = pr as Dictionary
+		seen[pid] = true
+		var ptype: String = str(prd.get("prop_type", "plant"))
+		var gp: Vector2i = Vector2i(1, 1)
+		var raw_gp: Variant = prd.get("grid_pos", gp)
+		if raw_gp is Vector2i:
+			gp = raw_gp as Vector2i
+		elif raw_gp is Array and (raw_gp as Array).size() >= 2:
+			gp = Vector2i(int((raw_gp as Array)[0]), int((raw_gp as Array)[1]))
+
+		var spr: Sprite2D = _prop_views.get(pid, null) as Sprite2D
+		if spr == null:
+			spr = Sprite2D.new()
+			spr.name = "Prop_" + pid
+			spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			spr.centered = true
+			match ptype:
+				"fountain":
+					spr.texture = _load_tex("res://assets/environment/prop_fountain_sheet.png")
+					spr.hframes = 4
+					spr.vframes = 1
+					spr.offset = Vector2(0.0, -14.0)
+					_fountain_sprite = spr
+				"sofa":
+					spr.texture = _load_tex("res://assets/environment/prop_sofa.png")
+					spr.offset = Vector2(0.0, -8.0)
+				"atm":
+					spr.texture = _load_tex("res://assets/environment/prop_atm.png")
+					spr.offset = Vector2(0.0, -14.0)
+				"queue_post":
+					spr.texture = _load_tex("res://assets/environment/prop_queue_post.png")
+					spr.offset = Vector2(0.0, -8.0)
+				"coffee_bar":
+					spr.texture = _load_tex("res://assets/environment/prop_coffee_bar.png")
+					spr.offset = Vector2(0.0, -10.0)
+				"aquarium":
+					spr.texture = _load_tex("res://assets/environment/prop_aquarium.png")
+					spr.offset = Vector2(0.0, -12.0)
+				"gold_bull":
+					spr.texture = _load_tex("res://assets/environment/prop_gold_bull.png")
+					spr.offset = Vector2(0.0, -10.0)
+				"bookshelf":
+					spr.texture = _load_tex("res://assets/environment/prop_bookshelf.png")
+					spr.offset = Vector2(0.0, -12.0)
+				_:
+					var eff_cat: Dictionary = ContentStudioStoreScript.get_effective_build_catalog()
+					if eff_cat.has(ptype):
+						var cspec: Dictionary = eff_cat[ptype] as Dictionary
+						var ctex: String = str(cspec.get("tex_path", cspec.get("texture", "res://assets/environment/prop_plant.png")))
+						spr.texture = _load_tex(ctex)
+						spr.offset = cspec.get("offset", Vector2(0.0, -10.0)) as Vector2
+					else:
+						spr.texture = _load_tex("res://assets/environment/prop_plant.png")
+						spr.offset = Vector2(0.0, -12.0)
+			_props_container.add_child(spr)
+			_prop_views[pid] = spr
+		spr.position = iso_grid.grid_to_screen(gp).round()
+
+	for old_pid: String in _prop_views.keys().duplicate():
+		if not seen.has(old_pid):
+			var old_s: Node = _prop_views[old_pid] as Node
+			_prop_views.erase(old_pid)
+			if old_s == _fountain_sprite:
+				_fountain_sprite = null
+			if old_s != null:
+				if old_s.get_parent() != null:
+					old_s.get_parent().remove_child(old_s)
+				old_s.free()
 
 
 func _add_prop_sprite(tex_path: String, cell: Vector2i, offset_px: Vector2) -> Sprite2D:
@@ -893,6 +1042,7 @@ func _create_department_room(dept_id: String, rect: Rect2i) -> void:
 	var root := Node2D.new()
 	root.name = "DeptRoom_" + dept_id.replace("core:department.", "").replace(":", "_")
 	root.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	root.y_sort_enabled = true
 	root.position = iso_grid.grid_to_screen(front_center).round()
 
 	var door_cell: Vector2i = room_door_cell(rect)
@@ -904,25 +1054,28 @@ func _create_department_room(dept_id: String, rect: Rect2i) -> void:
 			tile.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 			tile.texture = tex_floor
 			tile.centered = true
+			tile.z_index = -1
 			tile.modulate = Color(1.0, 1.0, 1.0, 1.0) if cell != door_cell else Color(1.15, 1.1, 0.85, 1.0)
 			tile.position = iso_grid.grid_to_screen(cell).round() - root.position
 			root.add_child(tile)
 
 	# Auto-generated door at the connection with the existing building.
-	if door_cell.x >= 0:
+	if rect.has_point(door_cell):
 		var door_pos: Vector2 = iso_grid.grid_to_screen(door_cell).round() - root.position
 		var door_mark := Polygon2D.new()
 		door_mark.name = "DoorMark"
+		door_mark.z_index = -1
 		door_mark.polygon = PackedVector2Array([
-			Vector2(0.0, -7.0), Vector2(13.0, 0.0), Vector2(0.0, 7.0), Vector2(-13.0, 0.0),
+			Vector2(-13.0, -8.0), Vector2(13.0, -8.0), Vector2(13.0, 8.0), Vector2(-13.0, 8.0),
 		])
 		door_mark.color = Color(1.0, 0.78, 0.34, 0.55)
 		door_mark.position = door_pos
 		root.add_child(door_mark)
 		var door_frame := Line2D.new()
 		door_frame.name = "DoorFrame"
+		door_frame.z_index = -1
 		door_frame.points = PackedVector2Array([
-			Vector2(0.0, -7.0), Vector2(13.0, 0.0), Vector2(0.0, 7.0), Vector2(-13.0, 0.0), Vector2(0.0, -7.0),
+			Vector2(-13.0, -8.0), Vector2(13.0, -8.0), Vector2(13.0, 8.0), Vector2(-13.0, 8.0), Vector2(-13.0, -8.0),
 		])
 		door_frame.width = 1.5
 		door_frame.default_color = Color("#FFC857")
@@ -960,7 +1113,8 @@ func _create_department_room(dept_id: String, rect: Rect2i) -> void:
 	desk.texture = tex_desk
 	desk.centered = true
 	desk.offset = Vector2(0.0, -9.0)
-	desk.position = iso_grid.grid_to_screen(desk_cell).round() - root.position
+	# Place desk 5px in front of the middle cell so the department specialist stands visibly behind it
+	desk.position = iso_grid.grid_to_screen(desk_cell).round() - root.position + Vector2(0.0, 5.0)
 	root.add_child(desk)
 
 	var banner := Sprite2D.new()
@@ -1012,7 +1166,7 @@ func _create_legacy_department_node(dept_id: String, cell: Vector2i) -> void:
 	var mat := Polygon2D.new()
 	mat.name = "FloorMat"
 	mat.polygon = PackedVector2Array([
-		Vector2(0.0, -8.0), Vector2(16.0, 0.0), Vector2(0.0, 8.0), Vector2(-16.0, 0.0),
+		Vector2(-16.0, -10.0), Vector2(16.0, -10.0), Vector2(16.0, 10.0), Vector2(-16.0, 10.0),
 	])
 	mat.color = Color(accent.r, accent.g, accent.b, 0.16)
 	root.add_child(mat)
@@ -1092,34 +1246,76 @@ func _sync_exterior_walls(bs_obj: Object) -> void:
 
 	var tex_wall: Texture2D = _load_tex("res://assets/environment/wall_section_back.png")
 	for c: Vector2i in built.keys():
-		# North-facing wall segment when the cell above is empty land.
-		if not built.has(Vector2i(c.x, c.y - 1)):
+		var cell_pos: Vector2 = iso_grid.grid_to_screen(c).round()
+		var has_north_wall: bool = not built.has(Vector2i(c.x, c.y - 1))
+		# North-facing orthogonal back wall (32x48 sits flush along tile top edge y = -10).
+		if has_north_wall:
 			var wall := Sprite2D.new()
 			wall.name = "ExtWallN_%d_%d" % [c.x, c.y]
 			wall.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 			wall.texture = tex_wall
 			wall.centered = true
-			# Base of the 48px panel sits on the tile's top vertex (0,-8).
-			wall.offset = Vector2(0.0, -32.0)
-			wall.position = iso_grid.grid_to_screen(c).round()
+			wall.offset = Vector2(0.0, -34.0)
+			wall.position = cell_pos
 			_exterior_walls.add_child(wall)
-		# West-facing wall segment (mirrored) when the cell to the left is empty land.
+		# West-facing cutaway side wall when the cell to the left is empty land.
 		if not built.has(Vector2i(c.x - 1, c.y)):
-			var wall_w := Sprite2D.new()
-			wall_w.name = "ExtWallW_%d_%d" % [c.x, c.y]
-			wall_w.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-			wall_w.texture = tex_wall
-			wall_w.centered = true
-			wall_w.flip_h = true
-			wall_w.offset = Vector2(0.0, -32.0)
-			wall_w.position = iso_grid.grid_to_screen(c).round()
+			var wall_w := _make_side_wall_strip("ExtWallW_%d_%d" % [c.x, c.y], cell_pos, true, has_north_wall)
 			_exterior_walls.add_child(wall_w)
+		# East-facing cutaway side wall when the cell to the right is empty land.
+		if not built.has(Vector2i(c.x + 1, c.y)):
+			var wall_e := _make_side_wall_strip("ExtWallE_%d_%d" % [c.x, c.y], cell_pos, false, has_north_wall)
+			_exterior_walls.add_child(wall_e)
+
+
+func _make_side_wall_strip(node_name: String, cell_pos: Vector2, is_west: bool, extend_to_north_wall: bool) -> Node2D:
+	var root := Node2D.new()
+	root.name = node_name
+	root.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	root.position = cell_pos
+
+	var strip_w: float = 5.0
+	var x_left: float = -IsoGrid.HALF_TILE_W if is_west else (IsoGrid.HALF_TILE_W - strip_w)
+	var y_top: float = -58.0 if extend_to_north_wall else -IsoGrid.HALF_TILE_H
+	var total_h: float = IsoGrid.HALF_TILE_H - y_top
+
+	# Dark architectural outline backing
+	var border := ColorRect.new()
+	border.color = Color("#132A4A")
+	border.position = Vector2(x_left, y_top)
+	border.size = Vector2(strip_w, total_h)
+	root.add_child(border)
+
+	# Cutaway wall cap (slate architectural cross-section)
+	var body := ColorRect.new()
+	body.color = Color("#263D5C")
+	body.position = Vector2(x_left + 1.0, y_top + 1.0)
+	body.size = Vector2(strip_w - 2.0, total_h - 1.0)
+	root.add_child(body)
+
+	# Inner highlight edge facing the room
+	var trim := ColorRect.new()
+	trim.color = Color("#3D72B4")
+	trim.position = Vector2(x_left + (strip_w - 2.0 if is_west else 1.0), y_top + 1.0)
+	trim.size = Vector2(1.0, total_h - 1.0)
+	root.add_child(trim)
+
+	return root
 
 
 func _sync_navigation_solids(bs_obj: Object) -> void:
 	iso_grid.clear_solids()
-	for cell in STATIC_SOLID_CELLS:
-		iso_grid.set_solid(cell, true)
+	var raw_props: Variant = bs_obj.get("lobby_props")
+	if raw_props is Dictionary and not (raw_props as Dictionary).is_empty():
+		for pid_v: Variant in (raw_props as Dictionary).keys():
+			var pr: Variant = (raw_props as Dictionary)[pid_v]
+			if pr is Dictionary and bool((pr as Dictionary).get("solid", false)):
+				var pgp: Variant = (pr as Dictionary).get("grid_pos", null)
+				if pgp is Vector2i:
+					iso_grid.set_solid(pgp as Vector2i, true)
+	else:
+		for cell in STATIC_SOLID_CELLS:
+			iso_grid.set_solid(cell, true)
 
 	# Everything outside the current floor plan is empty land: not walkable.
 	var room_rects: Array[Rect2i] = []
@@ -1199,8 +1395,6 @@ func _fallback_dept_cell(dept_id: String) -> Vector2i:
 
 func _read_dept_rect(entry: Variant) -> Rect2i:
 	var cell: Vector2i = _read_dept_cell(entry)
-	if cell.x < 0 or cell.y < 0:
-		return Rect2i()
 	var size := Vector2i(1, 1)
 	if entry is Object:
 		var raw_o: Variant = (entry as Object).get("room_size")
@@ -1216,7 +1410,10 @@ func _read_dept_rect(entry: Variant) -> Rect2i:
 		elif raw is Dictionary:
 			var d: Dictionary = raw as Dictionary
 			size = Vector2i(int(d.get("x", 1)), int(d.get("y", 1)))
-	return Rect2i(cell, Vector2i(maxi(1, size.x), maxi(1, size.y)))
+	size = Vector2i(maxi(1, size.x), maxi(1, size.y))
+	if size.x <= 1 and size.y <= 1 and (cell.x < 0 or cell.y < 0):
+		return Rect2i()
+	return Rect2i(cell, size)
 
 
 func _sync_departments(bs_obj: Object) -> void:
@@ -1327,14 +1524,28 @@ func _sync_employees(bs_obj: Object) -> void:
 	var st_dict: Dictionary = raw_stations as Dictionary if raw_stations is Dictionary else {}
 
 	var seen: Dictionary = {}
+	var claimed_cells: Dictionary = {}
+	var emp_idx: int = 0
+	var spd: float = clampf(float(int(bs_obj.get("speed_multiplier"))), 1.0, 3.0)
+	var sorted_eids: Array[String] = []
 	for eid_v: Variant in emp_dict.keys():
-		var eid: String = str(eid_v)
-		var emp: Variant = emp_dict[eid_v]
+		sorted_eids.append(str(eid_v))
+	sorted_eids.sort()
+
+	for eid in sorted_eids:
+		var emp: Variant = emp_dict[eid]
 		if not (emp is Object):
 			continue
 		seen[eid] = true
 		var emp_obj: Object = emp as Object
-		var desired_cell: Vector2i = _resolve_employee_cell(emp_obj, st_dict)
+		var desired_cell: Vector2i = _resolve_employee_cell(emp_obj, st_dict, bs_obj, emp_idx)
+		# Guarantee two employees never share the exact same tile
+		var safety_try: int = 0
+		while claimed_cells.has(desired_cell) and safety_try < 6:
+			desired_cell = iso_grid.clamp_to_bounds(desired_cell + Vector2i(1, 0))
+			safety_try += 1
+		claimed_cells[desired_cell] = true
+		emp_idx += 1
 		var desired_screen: Vector2 = iso_grid.grid_to_screen(desired_cell)
 
 		var view: ActorView = _employee_views.get(eid, null) as ActorView
@@ -1343,11 +1554,13 @@ func _sync_employees(bs_obj: Object) -> void:
 			view.name = "Emp_" + eid
 			_actors_container.add_child(view)
 			_employee_views[eid] = view
+			view.speed_scale = spd
 			view.configure_employee(emp_obj, desired_screen)
 			view.grid_pos = desired_cell
 			view.snap_to_screen(desired_screen)
 		else:
 			var prev_cell: Vector2i = view.grid_pos
+			view.speed_scale = spd
 			view.configure_employee(emp_obj, desired_screen)
 			view.grid_pos = desired_cell
 			if prev_cell != desired_cell:
@@ -1368,10 +1581,43 @@ func _sync_employees(bs_obj: Object) -> void:
 				old_v.free()
 
 
-func _resolve_employee_cell(emp_obj: Object, st_dict: Dictionary) -> Vector2i:
+func _resolve_employee_cell(emp_obj: Object, st_dict: Dictionary, bs_obj: Object = null, emp_idx: int = 0) -> Vector2i:
 	var st_state: int = int(emp_obj.get("state"))
 	if st_state == Enums.EmployeeState.BREAK:
 		return BREAK_CELL
+	# 1. Department specialist works inside their department room
+	var dept_id: String = str(emp_obj.get("department_id"))
+	if not dept_id.is_empty() and bs_obj != null:
+		var depts: Variant = bs_obj.get("departments")
+		if depts is Dictionary and (depts as Dictionary).has(dept_id):
+			var d_rect: Rect2i = _read_dept_rect((depts as Dictionary)[dept_id])
+			if d_rect.size.x >= 2 or d_rect.size.y >= 2:
+				return iso_grid.clamp_to_bounds(Vector2i(d_rect.position.x + d_rect.size.x / 2, d_rect.position.y + d_rect.size.y / 2))
+			return _fallback_dept_cell(dept_id)
+	# 2. Lobby Manager patrols the main hall (ATMs, queue, welcome carpet)
+	var role_id: String = str(emp_obj.get("role_id"))
+	if role_id == "lobby_manager":
+		var eid: String = str(emp_obj.get("id"))
+		if _lobby_mgr_target_cells.has(eid):
+			return _lobby_mgr_target_cells[eid] as Vector2i
+		var cur_min: int = int(bs_obj.get("current_minute_of_day")) if bs_obj != null else 0
+		var patrol_pts: Array[Vector2i] = [Vector2i(8, 8), Vector2i(2, 6), Vector2i(6, 7), Vector2i(11, 7)]
+		return patrol_pts[(cur_min / 6 + emp_idx) % patrol_pts.size()]
+	# 3. Actively serving a request: always stand directly behind that station's counter
+	var task_id: String = str(emp_obj.get("current_request_id"))
+	if not task_id.is_empty() and bs_obj != null:
+		var reqs: Variant = bs_obj.get("service_requests")
+		if reqs is Array:
+			for req_v: Variant in (reqs as Array):
+				if req_v is Object and str((req_v as Object).get("request_id")) == task_id:
+					var active_st_id: String = str((req_v as Object).get("assigned_station_id"))
+					if not active_st_id.is_empty() and st_dict.has(active_st_id):
+						var st_a: Variant = st_dict[active_st_id]
+						if st_a is Dictionary:
+							var gp_a: Variant = (st_a as Dictionary).get("grid_pos", Vector2i(4, 4))
+							if gp_a is Vector2i:
+								return iso_grid.clamp_to_bounds((gp_a as Vector2i) + Vector2i(0, -1))
+	# 4. Assigned station: stand behind their counter
 	var assigned_st: String = str(emp_obj.get("assigned_station_id"))
 	if not assigned_st.is_empty() and st_dict.has(assigned_st):
 		var st: Variant = st_dict[assigned_st]
@@ -1379,10 +1625,8 @@ func _resolve_employee_cell(emp_obj: Object, st_dict: Dictionary) -> Vector2i:
 			var gp: Variant = (st as Dictionary).get("grid_pos", Vector2i(4, 4))
 			if gp is Vector2i:
 				return iso_grid.clamp_to_bounds((gp as Vector2i) + Vector2i(0, -1))
-	var emp_gp: Variant = emp_obj.get("grid_pos")
-	if emp_gp is Vector2i and (emp_gp as Vector2i) != Vector2i.ZERO:
-		return iso_grid.clamp_to_bounds(emp_gp as Vector2i)
-	return Vector2i(4, 3)
+	# 5. Unassigned idle employees stay in the back-office behind the counters
+	return Vector2i(3 + (emp_idx % 6) * 2, 2)
 
 
 func _sync_customers(bs_obj: Object) -> void:
@@ -1392,14 +1636,35 @@ func _sync_customers(bs_obj: Object) -> void:
 	var cust_dict: Dictionary = raw_custs as Dictionary
 	var raw_stations: Variant = bs_obj.get("stations")
 	var st_dict: Dictionary = raw_stations as Dictionary if raw_stations is Dictionary else {}
+	var day_phase: int = int(bs_obj.get("day_phase"))
+	var allow_walk_lifecycle: bool = (day_phase == Enums.DayPhase.OPEN or day_phase == Enums.DayPhase.CLOSING)
 
 	var sorted_cids: Array[String] = []
 	for cid_v: Variant in cust_dict.keys():
 		sorted_cids.append(str(cid_v))
-	sorted_cids.sort()
+	# Process IN_SERVICE customers first so they reserve their counter front, then WAITING in arrival order
+	sorted_cids.sort_custom(func(a: String, b: String) -> bool:
+		var ca: Variant = cust_dict.get(a, null)
+		var cb: Variant = cust_dict.get(b, null)
+		var sa: int = int((ca as Object).get("state")) if ca is Object else 0
+		var sb: int = int((cb as Object).get("state")) if cb is Object else 0
+		var a_srv: int = 0 if sa == Enums.CustomerState.IN_SERVICE else 1
+		var b_srv: int = 0 if sb == Enums.CustomerState.IN_SERVICE else 1
+		if a_srv != b_srv:
+			return a_srv < b_srv
+		var ma: int = int((ca as Object).get("arrival_minute")) if ca is Object else 0
+		var mb: int = int((cb as Object).get("arrival_minute")) if cb is Object else 0
+		if ma != mb:
+			return ma < mb
+		return a < b
+	)
 
 	var seen: Dictionary = {}
 	var wait_idx: int = 0
+	var used_cells: Dictionary = {}
+	var used_sofas: Array[Vector2i] = []
+	var sofa_seats: Array[Vector2i] = [Vector2i(3, 8), Vector2i(14, 8)]
+	var spd: float = clampf(float(int(bs_obj.get("speed_multiplier"))), 1.0, 3.0)
 	for cid in sorted_cids:
 		var cust: Variant = cust_dict[cid]
 		if not (cust is Object):
@@ -1407,7 +1672,20 @@ func _sync_customers(bs_obj: Object) -> void:
 		seen[cid] = true
 		var cust_obj: Object = cust as Object
 		var cstate: int = int(cust_obj.get("state"))
-		var desired_cell: Vector2i = _resolve_customer_cell(cust_obj, st_dict, wait_idx)
+		var p_max: int = maxi(1, int(cust_obj.get("patience_max")))
+		var p_rem: int = int(cust_obj.get("patience_remaining"))
+		var p_ratio: float = float(p_rem) / float(p_max)
+
+		var desired_cell: Vector2i = _resolve_customer_cell(cust_obj, st_dict, wait_idx, bs_obj, used_cells)
+		var sitting_sofa: bool = false
+		if cstate == Enums.CustomerState.WAITING and p_ratio < 0.65 and str(cust_obj.get("browsing_prop_id")).is_empty():
+			for s_cell in sofa_seats:
+				if not used_sofas.has(s_cell) and not used_cells.has(s_cell):
+					desired_cell = s_cell
+					used_sofas.append(s_cell)
+					sitting_sofa = true
+					break
+		used_cells[desired_cell] = true
 		if cstate == Enums.CustomerState.WAITING or cstate == Enums.CustomerState.FINDING_SERVICE:
 			wait_idx += 1
 		var desired_screen: Vector2 = iso_grid.grid_to_screen(desired_cell)
@@ -1418,7 +1696,9 @@ func _sync_customers(bs_obj: Object) -> void:
 			view.name = "Cust_" + cid
 			_actors_container.add_child(view)
 			_customer_views[cid] = view
-			var spawn_cell: Vector2i = ENTRANCE_CELL if cstate == Enums.CustomerState.SPAWNING else desired_cell
+			view.speed_scale = spd
+			# New customers always walk in from the main lobby entrance door (no premature speech).
+			var spawn_cell: Vector2i = ENTRANCE_CELL if allow_walk_lifecycle else desired_cell
 			var spawn_screen: Vector2 = iso_grid.grid_to_screen(spawn_cell)
 			view.configure_customer(cust_obj, spawn_screen)
 			view.grid_pos = desired_cell
@@ -1430,8 +1710,10 @@ func _sync_customers(bs_obj: Object) -> void:
 					screen_pts.append(iso_grid.grid_to_screen(c))
 				screen_pts.append(desired_screen)
 				view.set_screen_path(screen_pts)
+			_pending_arrival_speech.erase(cid)
 		else:
 			var prev_cell: Vector2i = view.grid_pos
+			view.speed_scale = spd
 			view.configure_customer(cust_obj, desired_screen)
 			view.grid_pos = desired_cell
 			if prev_cell != desired_cell:
@@ -1441,18 +1723,60 @@ func _sync_customers(bs_obj: Object) -> void:
 					screen_pts.append(iso_grid.grid_to_screen(c))
 				screen_pts.append(desired_screen)
 				view.set_screen_path(screen_pts)
+			if sitting_sofa and not _sofa_complained_cids.has(cid):
+				_sofa_complained_cids[cid] = true
+				view.show_speech(_tr("WORLD_SPEECH_CUST_SOFA"), 2.4, Color("#FFC857"))
 
 	for old_id: String in _customer_views.keys().duplicate():
 		if not seen.has(old_id):
-			var old_v: Node = _customer_views[old_id] as Node
+			var old_v: ActorView = _customer_views[old_id] as ActorView
 			_customer_views.erase(old_id)
-			if old_v != null:
+			var exit_reason: String = str(_customer_exit_reasons.get(old_id, "completed"))
+			_customer_exit_reasons.erase(old_id)
+			if old_v == null:
+				continue
+			if allow_walk_lifecycle and _leaving_customer_views.size() < 12:
+				var cur_cell: Vector2i = iso_grid.screen_to_grid(old_v.position)
+				if not iso_grid.is_in_bounds(cur_cell):
+					cur_cell = old_v.grid_pos
+				old_v.actor_state = Enums.CustomerState.LEAVING
+				old_v.grid_pos = ENTRANCE_CELL
+				var exit_path: Array[Vector2i] = iso_grid.find_path_or_adjacent(cur_cell, ENTRANCE_CELL)
+				var exit_pts: Array[Vector2] = []
+				for ec in exit_path:
+					exit_pts.append(iso_grid.grid_to_screen(ec))
+				exit_pts.append(iso_grid.grid_to_screen(ENTRANCE_CELL))
+				old_v.set_screen_path(exit_pts)
+				if exit_reason == "angry_complaint":
+					old_v.show_speech(_tr("WORLD_SPEECH_CUST_ANGRY_LEAVE"), 2.8, Color("#FF4D4F"))
+				elif exit_reason == "timeout":
+					old_v.show_speech(_tr("WORLD_SPEECH_CUST_TIMEOUT"), 2.2, Color("#E74C3C"))
+				else:
+					old_v.show_speech(_tr("WORLD_SPEECH_CUST_THANKS"), 2.2, Color("#35C978"))
+				_leaving_customer_views.append(old_v)
+			else:
 				if old_v.get_parent() != null:
 					old_v.get_parent().remove_child(old_v)
 				old_v.free()
 
 
-func _resolve_customer_cell(cust_obj: Object, st_dict: Dictionary, wait_idx: int) -> Vector2i:
+func _clear_leaving_customers() -> void:
+	for lv in _leaving_customer_views:
+		if lv != null and is_instance_valid(lv):
+			if lv.get_parent() != null:
+				lv.get_parent().remove_child(lv)
+			lv.free()
+	_leaving_customer_views.clear()
+	_customer_exit_reasons.clear()
+
+
+func _resolve_customer_cell(
+	cust_obj: Object,
+	st_dict: Dictionary,
+	wait_idx: int,
+	bs_obj: Object = null,
+	used_cells: Dictionary = {}
+) -> Vector2i:
 	var cstate: int = int(cust_obj.get("state"))
 	var assigned_st: String = str(cust_obj.get("assigned_station_id"))
 	if cstate == Enums.CustomerState.IN_SERVICE and not assigned_st.is_empty() and st_dict.has(assigned_st):
@@ -1463,9 +1787,104 @@ func _resolve_customer_cell(cust_obj: Object, st_dict: Dictionary, wait_idx: int
 				return iso_grid.clamp_to_bounds((gp as Vector2i) + Vector2i(0, 1))
 	if cstate == Enums.CustomerState.LEAVING or cstate == Enums.CustomerState.COMPLETED:
 		return ENTRANCE_CELL
-	var cust_gp: Variant = cust_obj.get("grid_pos")
-	if cust_gp is Vector2i and (cust_gp as Vector2i) != Vector2i.ZERO:
-		return iso_grid.clamp_to_bounds(cust_gp as Vector2i)
+
+	# Waiting customer randomly browsing luxury decor walks over to admire it
+	if cstate == Enums.CustomerState.WAITING and bs_obj != null:
+		var browse_pid: String = str(cust_obj.get("browsing_prop_id"))
+		if not browse_pid.is_empty():
+			var raw_bp: Variant = bs_obj.get("lobby_props")
+			if raw_bp is Dictionary and (raw_bp as Dictionary).has(browse_pid):
+				var bpr: Variant = (raw_bp as Dictionary)[browse_pid]
+				if bpr is Dictionary and (bpr as Dictionary).get("grid_pos", null) is Vector2i:
+					var bgp: Vector2i = (bpr as Dictionary)["grid_pos"] as Vector2i
+					for off_b: Vector2i in [Vector2i(0, 1), Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, -1)]:
+						var bc: Vector2i = iso_grid.clamp_to_bounds(bgp + off_b)
+						if not used_cells.has(bc):
+							return bc
+
+	# Direct pathfinding: ATM self-service customers queue neatly in front of ATMs without stacking
+	var srv_str: String = ""
+	var is_atm_routed: bool = false
+	var busy_stations: Dictionary = {}
+	if bs_obj != null:
+		var req_id: String = str(cust_obj.get("active_request_id"))
+		var reqs: Variant = bs_obj.get("service_requests")
+		if reqs is Array:
+			for r_v: Variant in (reqs as Array):
+				if r_v is Object:
+					var ro: Object = r_v as Object
+					var rst: int = int(ro.get("status"))
+					if rst == Enums.RequestStatus.IN_PROGRESS or rst == Enums.RequestStatus.ASSIGNED:
+						var ast: String = str(ro.get("assigned_station_id"))
+						if not ast.is_empty():
+							busy_stations[ast] = true
+					if str(ro.get("request_id")) == req_id:
+						srv_str = str(ro.get("service_type"))
+						var pl: Variant = ro.get("payload")
+						if pl is Dictionary and str((pl as Dictionary).get("atm_mode", "")) != "":
+							is_atm_routed = true
+
+	if is_atm_routed and bs_obj != null:
+		var atm_queue_cells: Array[Vector2i] = []
+		var raw_p: Variant = bs_obj.get("lobby_props")
+		if raw_p is Dictionary:
+			var pids_sorted: Array[String] = []
+			for pid_v: Variant in (raw_p as Dictionary).keys():
+				pids_sorted.append(str(pid_v))
+			pids_sorted.sort()
+			for step_x: int in [1, 2, 3]:
+				for pid_s: String in pids_sorted:
+					var pr: Variant = (raw_p as Dictionary)[pid_s]
+					if pr is Dictionary and str((pr as Dictionary).get("prop_type", "")) == "atm":
+						var agp: Variant = (pr as Dictionary).get("grid_pos", null)
+						if agp is Vector2i:
+							atm_queue_cells.append(iso_grid.clamp_to_bounds((agp as Vector2i) + Vector2i(step_x, 0)))
+		for ac: Vector2i in atm_queue_cells:
+			if not used_cells.has(ac):
+				return ac
+
+	if not srv_str.is_empty():
+		var st_ids: Array[String] = []
+		for k: Variant in st_dict.keys():
+			st_ids.append(str(k))
+		st_ids.sort()
+		# First try free matching counter front cells (step_y = 1), then neat single-file queue behind them (step_y = 2, 3, 4)
+		for step_y: int in [1, 2, 3, 4]:
+			for sid in st_ids:
+				if step_y == 1 and busy_stations.has(sid):
+					continue
+				var st_v: Variant = st_dict[sid]
+				if not (st_v is Dictionary):
+					continue
+				var std: Dictionary = st_v as Dictionary
+				if not bool(std.get("is_open", false)):
+					continue
+				var allowed: Variant = std.get("allowed_services", [])
+				if allowed is Array and not (allowed as Array).is_empty() and not (allowed as Array).has(srv_str):
+					continue
+				var gp_free: Variant = std.get("grid_pos", null)
+				if gp_free is Vector2i:
+					var cand_cell: Vector2i = iso_grid.clamp_to_bounds((gp_free as Vector2i) + Vector2i(0, step_y))
+					if not used_cells.has(cand_cell):
+						return cand_cell
+
+		if srv_str == "personal_loan_application" or srv_str == "business_meeting" or srv_str == "wealth_advisory":
+			var loan_q: Array[Vector2i] = [
+				Vector2i(11, 6), Vector2i(11, 7), Vector2i(11, 8), Vector2i(10, 8), Vector2i(12, 8),
+			]
+			for lq: Vector2i in loan_q:
+				if not used_cells.has(lq):
+					return lq
+
+	var fallback_q: Array[Vector2i] = [
+		Vector2i(4, 6), Vector2i(6, 6), Vector2i(8, 6),
+		Vector2i(4, 7), Vector2i(6, 7), Vector2i(8, 7),
+		Vector2i(5, 7), Vector2i(7, 7), Vector2i(5, 8), Vector2i(7, 8),
+		Vector2i(6, 8), Vector2i(8, 8), Vector2i(9, 8), Vector2i(10, 8),
+	]
+	for fq: Vector2i in fallback_q:
+		if not used_cells.has(fq):
+			return fq
 	return QUEUE_WAIT_CELLS[wait_idx % QUEUE_WAIT_CELLS.size()]
 
 
@@ -1550,40 +1969,134 @@ func _on_domain_event(event_type: StringName, payload: Dictionary) -> void:
 	var cur_frame: int = Engine.get_process_frames()
 	var allow_fx: bool = (_floating_effects.size() < 12 and cur_frame != _last_auto_world_frame)
 	match String(event_type):
-		"service_completed":
+		"CustomerArrived", "customer_arrived":
+			# Do not pop a speech bubble at the entrance door; wait until the customer reaches a counter.
+			pass
+		"ServiceStarted", "service_started":
+			var emp_s: String = str(payload.get("employee_id", ""))
+			var cid_s: String = str(payload.get("customer_id", ""))
+			var srv_s: String = str(payload.get("service_type", ""))
+			var is_complex: bool = bool(payload.get("is_complex_case", false))
+			var emp_key: String = "WORLD_SPEECH_EMP_COMPLEX" if is_complex else ("WORLD_SPEECH_EMP_LOAN" if srv_s == "personal_loan_application" else "WORLD_SPEECH_EMP_GREET")
+			var cust_key: String = "WORLD_SPEECH_CUST_COMPLEX" if is_complex else _customer_arrival_speech_key(srv_s)
+			# Defer both speech bubbles until the customer physically reaches the counter front
+			if not cid_s.is_empty():
+				_pending_counter_dialogue[cid_s] = {
+					"employee_id": emp_s,
+					"emp_key": emp_key,
+					"cust_key": cust_key,
+				}
+		"AtmServiceStarted", "atm_service_started":
+			var cid_a: String = str(payload.get("customer_id", ""))
+			var srv_a: String = str(payload.get("service_type", ""))
+			if not cid_a.is_empty():
+				_pending_counter_dialogue[cid_a] = {
+					"employee_id": "",
+					"emp_key": "",
+					"cust_key": "WORLD_SPEECH_CUST_ATM_WITHDRAW" if srv_a == "cash_withdrawal" else "WORLD_SPEECH_CUST_ATM",
+				}
+		"CustomerBrowsedDecor":
+			var cid_b: String = str(payload.get("customer_id", ""))
+			var ptype_b: String = str(payload.get("prop_type", "fountain"))
+			if not cid_b.is_empty():
+				var custom_decor_dlgs: Array[Dictionary] = ContentStudioStoreScript.get_dialogues_for_category("cust_decor")
+				var dkey: String = "WORLD_SPEECH_CUST_DECOR_COFFEE" if ptype_b == "coffee_bar" else ("WORLD_SPEECH_CUST_DECOR_BULL" if ptype_b == "gold_bull" else "WORLD_SPEECH_CUST_DECOR_GENERIC")
+				if not custom_decor_dlgs.is_empty():
+					var pick_d: Dictionary = custom_decor_dlgs[_ambient_chatter_seq % custom_decor_dlgs.size()]
+					_ambient_chatter_seq += 1
+					dkey = "RAW:" + str(pick_d.get("text", ""))
+				_pending_counter_dialogue[cid_b] = {
+					"employee_id": "",
+					"emp_key": "",
+					"cust_key": dkey,
+				}
+		"CustomerAngryComplaint":
+			var cid_ang: String = str(payload.get("customer_id", ""))
+			if not cid_ang.is_empty():
+				_customer_exit_reasons[cid_ang] = "angry_complaint"
+				if _customer_views.has(cid_ang):
+					var av_ang: ActorView = _customer_views[cid_ang] as ActorView
+					if av_ang != null and allow_fx:
+						_spawn_floating_text(av_ang.position + Vector2(0.0, -24.0), _tr("WORLD_FX_ANGRY_COMPLAINT"), Color("#FF4D4F"))
+		"LobbyManagerAction":
+			var lm_id: String = str(payload.get("employee_id", ""))
+			var lm_act: String = str(payload.get("action", "soothe"))
+			var lm_cid: String = str(payload.get("customer_id", ""))
+			if lm_act == "atm_guide":
+				_lobby_mgr_target_cells[lm_id] = Vector2i(3, 6)
+				if _customer_views.has(lm_cid):
+					var cv_g: ActorView = _customer_views[lm_cid] as ActorView
+					if cv_g != null:
+						cv_g.show_speech(_tr("WORLD_SPEECH_CUST_GUIDED_ATM"), 2.2, Color("#7FD8FF"))
+			elif lm_act == "soothe" or lm_act == "resolve_complaint":
+				_lobby_mgr_target_cells[lm_id] = Vector2i(7, 7)
+			if _employee_views.has(lm_id):
+				var lm_v: ActorView = _employee_views[lm_id] as ActorView
+				if lm_v != null:
+					var lm_key: String = "WORLD_SPEECH_LM_SOOTHE"
+					if lm_act == "atm_guide":
+						lm_key = "WORLD_SPEECH_LM_ATM"
+					elif lm_act == "resolve_complaint":
+						lm_key = "WORLD_SPEECH_LM_COMPLAINT"
+					var lm_txt: String = _pick_custom_dialogue("lm_guide", _tr(lm_key))
+					lm_v.show_speech(lm_txt, 2.6, Color("#FFC857"))
+		"ServiceCompleted", "service_completed":
+			var cid_c: String = str(payload.get("customer_id", ""))
+			if not cid_c.is_empty():
+				_customer_exit_reasons[cid_c] = "completed"
+			var emp_c: String = str(payload.get("employee_id", ""))
+			if _employee_views.has(emp_c):
+				var ev_c: ActorView = _employee_views[emp_c] as ActorView
+				if ev_c != null:
+					ev_c.show_speech(_tr("WORLD_SPEECH_EMP_DONE"), 2.0, Color("#35C978"))
 			if not allow_fx:
 				return
 			var st_id: String = str(payload.get("station_id", ""))
-			var pos: Vector2 = iso_grid.grid_to_screen(Vector2i(6, 4))
+			var srv_done: String = str(payload.get("service_type", ""))
+			var via_atm: bool = bool(payload.get("via_atm", false))
+			var pos: Vector2 = iso_grid.grid_to_screen(Vector2i(2, 6) if via_atm else Vector2i(6, 4))
 			if _station_views.has(st_id):
 				pos = (_station_views[st_id] as ServiceStationView).position
 			var fee_minor: int = int(payload.get("fee_minor", 0))
 			var amount_minor: int = int(payload.get("amount_minor", 0))
 			var display_val: int = fee_minor if fee_minor > 0 else amount_minor
 			var text: String = ""
-			if display_val > 0:
+			var fx_col: Color = Color("#FFD166")
+			if srv_done == "cash_deposit" and amount_minor > 0:
+				var m_dep: String = FormatService.format_money_compact(amount_minor, "CNY", false)
+				text = _tr("WORLD_FX_DEPOSIT_DONE", {"amount": m_dep})
+				fx_col = Color("#2ECC71")
+			elif srv_done == "cash_withdrawal" and amount_minor > 0:
+				var m_wd: String = FormatService.format_money_compact(amount_minor, "CNY", false)
+				text = _tr("WORLD_FX_WITHDRAW_DONE", {"amount": m_wd})
+				fx_col = Color("#FF9F43")
+			elif display_val > 0:
 				var money_str: String = FormatService.format_money_compact(display_val, "CNY", true)
 				text = _tr("WORLD_FX_SERVICE_DONE", {"amount": money_str})
+				fx_col = Color("#FFD166")
 			else:
 				text = _tr("WORLD_FX_SATISFACTION_UP")
-			_spawn_floating_text(pos + Vector2(0.0, -32.0), text, Color("#FFC857"))
-		"customer_left_unserved":
+				fx_col = Color("#00C6FF")
+			_spawn_floating_text(pos + Vector2(0.0, -34.0), text, fx_col)
+		"CustomerLeftUnserved", "customer_left_unserved":
+			var cid: String = str(payload.get("customer_id", ""))
+			if not cid.is_empty():
+				_customer_exit_reasons[cid] = "timeout"
 			if not allow_fx:
 				return
-			var cid: String = str(payload.get("customer_id", ""))
 			var pos: Vector2 = iso_grid.grid_to_screen(ENTRANCE_CELL)
 			if _customer_views.has(cid):
 				pos = (_customer_views[cid] as ActorView).position
 			_spawn_floating_text(pos + Vector2(0.0, -28.0), _tr("WORLD_FX_CUSTOMER_LEFT"), Color("#E74C3C"))
-		"loan_approved":
+		"LoanApproved", "loan_approved":
 			if allow_fx:
 				var pos: Vector2 = iso_grid.grid_to_screen(Vector2i(11, 4))
 				_spawn_floating_text(pos + Vector2(0.0, -34.0), _tr("WORLD_FX_LOAN_APPROVED"), Color("#35C978"))
-		"loan_rejected":
+		"LoanRejected", "loan_rejected":
 			if allow_fx:
 				var pos: Vector2 = iso_grid.grid_to_screen(Vector2i(11, 4))
 				_spawn_floating_text(pos + Vector2(0.0, -34.0), _tr("WORLD_FX_LOAN_REJECTED"), Color("#E74C3C"))
-		"department_created", "department_upgraded":
+		"DepartmentCreated", "DepartmentUpgraded", "department_created", "department_upgraded":
 			var did: String = str(payload.get("department_id", ""))
 			var lvl: int = maxi(1, int(payload.get("level", 1)))
 			if allow_fx:
@@ -1602,10 +2115,35 @@ func _on_domain_event(event_type: StringName, payload: Dictionary) -> void:
 			if cur_frame != _last_auto_world_frame:
 				_last_auto_world_frame = cur_frame
 				refresh_world()
-		"employee_hired", "employee_fired", "employee_assigned", "station_toggled", "state_reloaded":
+		"state_reloaded", "DailySettlementCompleted":
+			_clear_leaving_customers()
 			if cur_frame != _last_auto_world_frame:
 				_last_auto_world_frame = cur_frame
 				refresh_world()
+		"DepartmentMoved", "LayoutChanged", "DepartmentDemolished", "EmployeeFired", "EmployeeAssigned", "employee_hired", "employee_fired", "employee_assigned", "station_toggled":
+			if cur_frame != _last_auto_world_frame:
+				_last_auto_world_frame = cur_frame
+				refresh_world()
+
+
+func _customer_arrival_speech_key(service_type: String) -> String:
+	match service_type:
+		"cash_withdrawal":
+			return "WORLD_SPEECH_CUST_ENTER_WITHDRAW"
+		"transfer":
+			return "WORLD_SPEECH_CUST_ENTER_TRANSFER"
+		"account_opening":
+			return "WORLD_SPEECH_CUST_ENTER_ACCOUNT"
+		"wealth_advisory":
+			return "WORLD_SPEECH_CUST_ENTER_WEALTH"
+		"personal_loan_application":
+			return "WORLD_SPEECH_CUST_ENTER_LOAN"
+		"business_meeting":
+			return "WORLD_SPEECH_CUST_ENTER_MEETING"
+		"complaint":
+			return "WORLD_SPEECH_CUST_ENTER_COMPLAINT"
+		_:
+			return "WORLD_SPEECH_CUST_ENTER_DEPOSIT"
 
 
 func _spawn_floating_text(world_pos: Vector2, text: String, color: Color) -> void:
@@ -1614,12 +2152,14 @@ func _spawn_floating_text(world_pos: Vector2, text: String, color: Color) -> voi
 	var lbl := Label.new()
 	lbl.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	lbl.text = text
-	lbl.position = (world_pos - Vector2(36.0, 8.0)).round()
-	lbl.size = Vector2(72.0, 16.0)
-	lbl.scale = Vector2(0.75, 0.75)
+	lbl.position = (world_pos - Vector2(54.0, 10.0)).round()
+	lbl.size = Vector2(108.0, 20.0)
+	lbl.scale = Vector2(0.85, 0.85)
 	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	lbl.add_theme_font_size_override("font_size", 12)
+	lbl.add_theme_font_size_override("font_size", 13)
 	lbl.add_theme_color_override("font_color", color)
+	lbl.add_theme_color_override("font_outline_color", Color("#081B36"))
+	lbl.add_theme_constant_override("outline_size", 4)
 	_effects_layer.add_child(lbl)
 	_floating_effects.append({
 		"node": lbl,
@@ -1638,6 +2178,46 @@ func _process(delta: float) -> void:
 			_fountain_timer = fmod(_fountain_timer, interval)
 			_fountain_frame = (_fountain_frame + 1) % 4
 			_fountain_sprite.frame = _fountain_frame
+
+	# Clean up leaving customers once they have walked out the entrance door
+	if not _leaving_customer_views.is_empty():
+		var lidx: int = _leaving_customer_views.size() - 1
+		while lidx >= 0:
+			var lv: ActorView = _leaving_customer_views[lidx]
+			if lv == null or not is_instance_valid(lv):
+				_leaving_customer_views.remove_at(lidx)
+			elif not lv.is_walking():
+				_leaving_customer_views.remove_at(lidx)
+				if lv.get_parent() != null:
+					lv.get_parent().remove_child(lv)
+				lv.queue_free()
+			lidx -= 1
+
+	# Fire deferred counter dialogue bubbles ONLY once the customer has physically arrived at the counter
+	if not _pending_counter_dialogue.is_empty():
+		for cid_d: String in _pending_counter_dialogue.keys().duplicate():
+			if not _customer_views.has(cid_d):
+				_pending_counter_dialogue.erase(cid_d)
+				continue
+			var cv_d: ActorView = _customer_views[cid_d] as ActorView
+			if cv_d == null:
+				_pending_counter_dialogue.erase(cid_d)
+				continue
+			if not cv_d.is_walking():
+				var info_d: Dictionary = _pending_counter_dialogue[cid_d] as Dictionary
+				_pending_counter_dialogue.erase(cid_d)
+				cv_d.show_speech(_tr(str(info_d.get("cust_key", "WORLD_SPEECH_CUST_SERVING"))), 2.4, Color("#00C6FF"))
+				var eid_d: String = str(info_d.get("employee_id", ""))
+				if _employee_views.has(eid_d):
+					var ev_d: ActorView = _employee_views[eid_d] as ActorView
+					if ev_d != null:
+						ev_d.show_speech(_tr(str(info_d.get("emp_key", "WORLD_SPEECH_EMP_GREET"))), 2.5, Color("#FFC857"))
+
+	# Ambient employee life: high-fatigue complaints & idle colleague chatting/slacking
+	_ambient_chatter_timer += delta
+	if _ambient_chatter_timer >= 4.5:
+		_ambient_chatter_timer = 0.0
+		_tick_ambient_employee_chatter()
 
 	# Update floating effect labels
 	if not _floating_effects.is_empty():
@@ -1664,9 +2244,90 @@ func _process(delta: float) -> void:
 			idx -= 1
 
 
+func _tick_ambient_employee_chatter() -> void:
+	var bs: Variant = _get_bank_state()
+	if bs == null or not (bs is Object):
+		return
+	var bs_obj: Object = bs as Object
+	var phase: int = int(bs_obj.get("day_phase"))
+	if phase != Enums.DayPhase.OPEN:
+		return
+	var emps: Variant = bs_obj.get("employees")
+	if not (emps is Dictionary) or (emps as Dictionary).is_empty():
+		return
+	var emp_dict: Dictionary = emps as Dictionary
+	var eids: Array[String] = []
+	for k: Variant in emp_dict.keys():
+		eids.append(str(k))
+	eids.sort()
+	_ambient_chatter_seq += 1
+
+	# 1. High-fatigue complaint takes priority
+	for eid in eids:
+		var ev_obj: Variant = emp_dict[eid]
+		if not (ev_obj is Object):
+			continue
+		var fat: int = int((ev_obj as Object).get("fatigue"))
+		var st: int = int((ev_obj as Object).get("state"))
+		if (fat >= 65 or st == Enums.EmployeeState.OVERLOADED) and _employee_views.has(eid):
+			var view: ActorView = _employee_views[eid] as ActorView
+			if view != null and not view.has_active_speech():
+				var tkey: String = "WORLD_SPEECH_EMP_TIRED_1" if (_ambient_chatter_seq % 2 == 0) else "WORLD_SPEECH_EMP_TIRED_2"
+				view.show_speech(_pick_custom_dialogue("emp_tired", _tr(tkey)), 2.5, Color("#E74C3C"))
+				return
+
+	# 2. Idle & relaxed colleague chat / slacking
+	var idle_eids: Array[String] = []
+	for eid in eids:
+		var ev_obj2: Variant = emp_dict[eid]
+		if not (ev_obj2 is Object):
+			continue
+		var st2: int = int((ev_obj2 as Object).get("state"))
+		var fat2: int = int((ev_obj2 as Object).get("fatigue"))
+		if st2 == Enums.EmployeeState.AVAILABLE and fat2 < 50 and _employee_views.has(eid):
+			var view2: ActorView = _employee_views[eid] as ActorView
+			if view2 != null and not view2.has_active_speech():
+				idle_eids.append(eid)
+	if not idle_eids.is_empty():
+		var pick_id: String = idle_eids[_ambient_chatter_seq % idle_eids.size()]
+		var pick_view: ActorView = _employee_views[pick_id] as ActorView
+		if pick_view != null:
+			var skey: String = "WORLD_SPEECH_EMP_SLACK_1" if (_ambient_chatter_seq % 2 == 0) else "WORLD_SPEECH_EMP_SLACK_2"
+			pick_view.show_speech(_pick_custom_dialogue("emp_slack", _tr(skey)), 2.4, Color("#9BB5D6"))
+
+
+func _pick_custom_dialogue(category: String, fallback: String) -> String:
+	var list: Array[Dictionary] = ContentStudioStoreScript.get_dialogues_for_category(category)
+	if list.is_empty():
+		return fallback
+	var pick: Dictionary = list[_ambient_chatter_seq % list.size()]
+	var txt: String = str(pick.get("text", "")).strip_edges()
+	return txt if not txt.is_empty() else fallback
+
+
+func show_test_dialogue(text: String, category: String = "") -> bool:
+	if text.strip_edges().is_empty():
+		return false
+	if category.begins_with("cust_"):
+		for cid_v: Variant in _customer_views.keys():
+			var cv: ActorView = _customer_views[cid_v] as ActorView
+			if cv != null:
+				cv.show_speech(text, 3.8, Color("#56CCF2"))
+				return true
+	for eid_v: Variant in _employee_views.keys():
+		var ev: ActorView = _employee_views[eid_v] as ActorView
+		if ev != null:
+			ev.show_speech(text, 3.8, Color("#FFC857"))
+			return true
+	return false
+
+
 func _unhandled_input(event: InputEvent) -> void:
 	if is_department_placement_active():
 		if _handle_placement_input(event):
+			return
+	if _layout_mode_active:
+		if _handle_layout_input(event):
 			return
 	if event is InputEventMouseMotion:
 		update_hover((event as InputEventMouseMotion).position)
@@ -1770,10 +2431,35 @@ func _try_pick_entity_at(world_pos: Vector2) -> bool:
 		select_entity(&"station", best_station_id)
 		return true
 
-	# If click is inside the isometric grid floor but missed entities, clear selection
+	# Check lobby props (luxury decor, ATMs, plants, sofas, fountain, etc.) with generous hitbox + grid fallback
+	var best_prop_id: String = ""
+	var best_prop_y: float = -INF
+	for pid: String in _prop_views.keys():
+		var pv: Sprite2D = _prop_views[pid] as Sprite2D
+		if pv != null and Rect2(-24.0, -36.0, 48.0, 48.0).has_point(world_pos - pv.position):
+			if pv.position.y >= best_prop_y:
+				best_prop_y = pv.position.y
+				best_prop_id = pid
+
 	var clicked_cell: Vector2i = iso_grid.screen_to_grid(world_pos)
+	if best_prop_id.is_empty():
+		var bs_pick: Variant = _get_bank_state()
+		if bs_pick is Object:
+			var raw_lp: Variant = (bs_pick as Object).get("lobby_props")
+			if raw_lp is Dictionary:
+				for pid_g: Variant in (raw_lp as Dictionary).keys():
+					var pr_g: Variant = (raw_lp as Dictionary)[pid_g]
+					if pr_g is Dictionary and (pr_g as Dictionary).get("grid_pos", null) == clicked_cell:
+						best_prop_id = str(pid_g)
+						break
+
+	if not best_prop_id.is_empty():
+		select_entity(&"prop", best_prop_id)
+		return true
+
+	# If click is inside the isometric grid floor but missed entities, clear selection
 	if iso_grid.is_in_bounds(clicked_cell):
-		focus_entity(&"", "")
+		select_entity(&"", "")
 		return true
 
 	return false
@@ -1786,33 +2472,430 @@ func _load_tex(path: String) -> Texture2D:
 
 
 func _draw() -> void:
-	# Deep Space Navy surrounding backdrop and architectural podium border beneath the 18x12 iso floor
+	# Deep Space Navy surrounding backdrop and orthogonal architectural podium beneath the 18x12 floor
 	draw_rect(Rect2(-400.0, -300.0, 2200.0, 1600.0), Color("#081B36"), true)
 
 	if iso_grid == null:
 		return
 
-	var top_pt: Vector2 = iso_grid.grid_to_screen(Vector2i(0, 0)) + Vector2(0.0, -10.0)
-	var right_pt: Vector2 = iso_grid.grid_to_screen(Vector2i(IsoGrid.GRID_WIDTH - 1, 0)) + Vector2(18.0, 0.0)
-	var bottom_pt: Vector2 = iso_grid.grid_to_screen(Vector2i(IsoGrid.GRID_WIDTH - 1, IsoGrid.GRID_HEIGHT - 1)) + Vector2(0.0, 12.0)
-	var left_pt: Vector2 = iso_grid.grid_to_screen(Vector2i(0, IsoGrid.GRID_HEIGHT - 1)) + Vector2(-18.0, 0.0)
+	var tl: Vector2 = iso_grid.grid_to_screen(Vector2i(0, 0)) + Vector2(-IsoGrid.HALF_TILE_W, -IsoGrid.HALF_TILE_H)
+	var br: Vector2 = iso_grid.grid_to_screen(Vector2i(IsoGrid.GRID_WIDTH - 1, IsoGrid.GRID_HEIGHT - 1)) + Vector2(IsoGrid.HALF_TILE_W, IsoGrid.HALF_TILE_H)
+	var lobby_w: float = br.x - tl.x
+	var lobby_h: float = br.y - tl.y
 
-	# Podium slab thickness under south-west & south-east edges
-	var slab_pts := PackedVector2Array([
-		left_pt,
-		bottom_pt,
-		right_pt,
-		right_pt + Vector2(0.0, 10.0),
-		bottom_pt + Vector2(0.0, 10.0),
-		left_pt + Vector2(0.0, 10.0),
-	])
-	draw_colored_polygon(slab_pts, Color("#0B2D5B"))
+	# Orthogonal architectural foundation slab below the south cutaway edge
+	draw_rect(Rect2(tl.x - 2.0, br.y, lobby_w + 4.0, 12.0), Color("#0B2D5B"), true)
+	draw_rect(Rect2(tl.x - 2.0, br.y + 10.0, lobby_w + 4.0, 2.0), Color("#051226"), true)
 
-	var rim_line := PackedVector2Array([
-		left_pt,
-		bottom_pt,
-		right_pt,
-	])
-	draw_polyline(rim_line, Color("#1F6FEB"), 1.5, false)
-	draw_line(top_pt, right_pt, Color("#263D5C"), 1.0)
-	draw_line(top_pt, left_pt, Color("#263D5C"), 1.0)
+	# Outer rim border around the lobby footprint
+	draw_rect(Rect2(tl.x - 1.0, tl.y - 1.0, lobby_w + 2.0, lobby_h + 2.0), Color("#263D5C"), false, 1.5)
+	draw_line(Vector2(tl.x, br.y), Vector2(br.x, br.y), Color("#1F6FEB"), 2.0)
+
+	# Glowing Starway entrance threshold strip at x = 7..10 on the south edge
+	var ent_left: float = iso_grid.grid_to_screen(Vector2i(7, IsoGrid.GRID_HEIGHT - 1)).x - IsoGrid.HALF_TILE_W
+	var ent_right: float = iso_grid.grid_to_screen(Vector2i(10, IsoGrid.GRID_HEIGHT - 1)).x + IsoGrid.HALF_TILE_W
+	draw_rect(Rect2(ent_left, br.y - 1.0, ent_right - ent_left, 4.0), Color("#00C6FF"), true)
+
+	# Subtle cyan architectural grid overlay in Layout Mode, or warning RED in Delete Mode
+	if _layout_mode_active:
+		var grid_col := Color(0.95, 0.25, 0.25, 0.36) if _layout_delete_mode else Color(0.0, 0.776, 1.0, 0.28)
+		for gx in range(IsoGrid.GRID_WIDTH + 1):
+			var lx: float = tl.x + float(gx) * float(IsoGrid.TILE_WIDTH)
+			draw_line(Vector2(lx, tl.y), Vector2(lx, br.y), grid_col, 1.0)
+		for gy in range(IsoGrid.GRID_HEIGHT + 1):
+			var ly: float = tl.y + float(gy) * float(IsoGrid.TILE_HEIGHT)
+			draw_line(Vector2(tl.x, ly), Vector2(br.x, ly), grid_col, 1.0)
+
+
+# ---------------------------------------------------------------------------
+# Kairosoft-style Build / Layout Rearrange Mode (Stations, Props, Departments)
+# ---------------------------------------------------------------------------
+
+func is_layout_mode_active() -> bool:
+	return _layout_mode_active
+
+
+func set_layout_mode(active: bool) -> void:
+	if active and is_department_placement_active():
+		cancel_department_placement()
+	_layout_mode_active = active
+	_layout_delete_mode = false
+	if not active:
+		_clear_layout_held()
+	queue_redraw()
+	layout_mode_changed.emit(_layout_mode_active)
+
+
+func begin_delete_mode() -> void:
+	set_layout_mode(true)
+	_clear_layout_held()
+	_layout_delete_mode = true
+	queue_redraw()
+
+
+func begin_move_department(dept_id: String) -> void:
+	if dept_id.is_empty():
+		return
+	var bs: Variant = _get_bank_state()
+	if not (bs is Object):
+		return
+	var depts: Variant = (bs as Object).get("departments")
+	if not (depts is Dictionary) or not (depts as Dictionary).has(dept_id):
+		return
+	var cur_rect: Rect2i = _read_dept_rect((depts as Dictionary)[dept_id])
+	set_layout_mode(true)
+	if _camera != null and _camera.get_zoom_step() > 1:
+		_camera.set_zoom_step(1)
+	_layout_held_kind = &"department"
+	_layout_held_id = dept_id
+	_layout_held_size = cur_rect.size if cur_rect.size.x > 0 else Vector2i(3, 3)
+	_layout_hover_cell = cur_rect.position
+	_update_layout_ghost()
+
+
+func begin_build_item(item_type: String) -> void:
+	var catalog: Dictionary = ContentStudioStoreScript.get_effective_build_catalog()
+	if not catalog.has(item_type):
+		return
+	var spec: Dictionary = catalog[item_type] as Dictionary
+	var kind_str: String = str(spec.get("kind", "prop"))
+	set_layout_mode(true)
+	_layout_held_kind = &"build_station" if kind_str == "station" else &"build_prop"
+	_layout_held_id = item_type
+	_layout_held_size = Vector2i.ONE
+	_layout_hover_cell = Vector2i(8, 5)
+	_update_layout_ghost()
+
+
+func _clear_layout_held() -> void:
+	_layout_held_kind = &""
+	_layout_held_id = ""
+	_layout_held_size = Vector2i.ONE
+	if _layout_ghost != null and is_instance_valid(_layout_ghost):
+		for ch in _layout_ghost.get_children():
+			_layout_ghost.remove_child(ch)
+			ch.queue_free()
+		_layout_ghost.visible = false
+
+
+func _ensure_layout_ghost() -> void:
+	if _layout_ghost != null and is_instance_valid(_layout_ghost):
+		return
+	if _ysort_layer == null:
+		return
+	_layout_ghost = Node2D.new()
+	_layout_ghost.name = "LayoutMoveGhost"
+	_layout_ghost.z_index = 110
+	_layout_ghost.visible = false
+	_ysort_layer.add_child(_layout_ghost)
+
+
+func _is_valid_layout_target(cell: Vector2i) -> bool:
+	if iso_grid == null:
+		return false
+	if _layout_held_kind == &"department":
+		var rect := Rect2i(cell, _layout_held_size)
+		if not iso_grid.is_in_bounds(rect.position) or not iso_grid.is_in_bounds(rect.end - Vector2i.ONE):
+			return false
+		# Must not overlap lobby or other departments, and must touch built area
+		if LOBBY_RECT.intersects(rect):
+			return false
+		var bs: Variant = _get_bank_state()
+		if bs is Object:
+			var depts: Variant = (bs as Object).get("departments")
+			if depts is Dictionary:
+				for did_v: Variant in (depts as Dictionary).keys():
+					if str(did_v) == _layout_held_id:
+						continue
+					var other_r: Rect2i = _read_dept_rect((depts as Dictionary)[did_v])
+					if other_r.size.x > 0 and other_r.intersects(rect):
+						return false
+		var counts: Dictionary = _built_neighbours(rect)
+		for side: Variant in counts.keys():
+			if int(counts[side]) > 0:
+				return true
+		return false
+	elif _layout_held_kind == &"station" or _layout_held_kind == &"build_station":
+		return cell.x >= 1 and cell.x <= 16 and cell.y >= 2 and cell.y <= 10
+	elif _layout_held_kind == &"prop" or _layout_held_kind == &"build_prop":
+		return cell.x >= 1 and cell.x <= 16 and cell.y >= 1 and cell.y <= 10
+	return false
+
+
+func _update_layout_ghost() -> void:
+	_ensure_layout_ghost()
+	if _layout_ghost == null or _layout_held_id.is_empty():
+		return
+	for ch in _layout_ghost.get_children():
+		_layout_ghost.remove_child(ch)
+		ch.queue_free()
+	var valid: bool = _is_valid_layout_target(_layout_hover_cell)
+	var col: Color = Color("#35C978") if valid else Color("#E74C3C")
+	var w: int = _layout_held_size.x
+	var h: int = _layout_held_size.y
+	for dy in range(h):
+		for dx in range(w):
+			var c := _layout_hover_cell + Vector2i(dx, dy)
+			var p := Polygon2D.new()
+			p.polygon = PackedVector2Array([
+				Vector2(-16.0, -10.0), Vector2(16.0, -10.0), Vector2(16.0, 10.0), Vector2(-16.0, 10.0),
+			])
+			p.color = Color(col.r, col.g, col.b, 0.36)
+			p.position = iso_grid.grid_to_screen(c).round()
+			_layout_ghost.add_child(p)
+			var outline := Line2D.new()
+			outline.points = PackedVector2Array([
+				Vector2(-16.0, -10.0), Vector2(16.0, -10.0), Vector2(16.0, 10.0), Vector2(-16.0, 10.0), Vector2(-16.0, -10.0),
+			])
+			outline.width = 1.5
+			outline.default_color = Color(col.r, col.g, col.b, 0.85)
+			outline.position = p.position
+			_layout_ghost.add_child(outline)
+
+	# Virtual sprite preview on top of the green/red footprint so the player sees the real item
+	var tint := Color(0.75, 1.0, 0.85, 0.78) if valid else Color(1.0, 0.55, 0.55, 0.72)
+	if _layout_held_kind == &"department":
+		var tex_wall: Texture2D = _load_tex("res://assets/environment/wall_section_back.png")
+		var tex_desk: Texture2D = _load_tex("res://assets/environment/prop_desk_office.png")
+		for dx in range(w):
+			var wn := Sprite2D.new()
+			wn.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			wn.texture = tex_wall
+			wn.centered = true
+			wn.offset = Vector2(0.0, -34.0)
+			wn.modulate = tint
+			wn.position = iso_grid.grid_to_screen(_layout_hover_cell + Vector2i(dx, 0)).round()
+			_layout_ghost.add_child(wn)
+		var dspr := Sprite2D.new()
+		dspr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		dspr.texture = tex_desk
+		dspr.centered = true
+		dspr.offset = Vector2(0.0, -9.0)
+		dspr.modulate = tint
+		dspr.position = iso_grid.grid_to_screen(_layout_hover_cell + Vector2i(w / 2, h / 2)).round()
+		_layout_ghost.add_child(dspr)
+	else:
+		var preview_info: Dictionary = _resolve_layout_preview_sprite(_layout_held_kind, _layout_held_id)
+		var tex_path: String = str(preview_info.get("tex_path", ""))
+		if not tex_path.is_empty():
+			var spr := Sprite2D.new()
+			spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			spr.texture = _load_tex(tex_path)
+			spr.centered = true
+			spr.hframes = int(preview_info.get("hframes", 1))
+			spr.vframes = 1
+			spr.offset = preview_info.get("offset", Vector2(0.0, -10.0)) as Vector2
+			spr.modulate = tint
+			spr.position = iso_grid.grid_to_screen(_layout_hover_cell).round()
+			_layout_ghost.add_child(spr)
+
+	_layout_ghost.visible = true
+
+
+func _resolve_layout_preview_sprite(kind: StringName, item_id: String) -> Dictionary:
+	var eff_catalog: Dictionary = ContentStudioStoreScript.get_effective_build_catalog()
+	if kind == &"build_station" or kind == &"build_prop":
+		if eff_catalog.has(item_id):
+			var spec: Dictionary = eff_catalog[item_id] as Dictionary
+			return {
+				"tex_path": str(spec.get("tex_path", spec.get("texture", ""))),
+				"offset": spec.get("offset", Vector2(0.0, -10.0)),
+				"hframes": 1,
+			}
+	elif kind == &"station":
+		var is_loan: bool = item_id.begins_with("loan")
+		return {
+			"tex_path": "res://assets/environment/prop_desk_loan.png" if is_loan else "res://assets/environment/prop_counter_teller.png",
+			"offset": Vector2(0.0, -8.0) if is_loan else Vector2(0.0, -10.0),
+			"hframes": 1,
+		}
+	elif kind == &"prop":
+		var bs: Variant = _get_bank_state()
+		var ptype: String = "plant"
+		if bs is Object:
+			var raw_p: Variant = (bs as Object).get("lobby_props")
+			if raw_p is Dictionary and (raw_p as Dictionary).has(item_id):
+				ptype = str(((raw_p as Dictionary)[item_id] as Dictionary).get("prop_type", "plant"))
+		if ptype == "fountain":
+			return {"tex_path": "res://assets/environment/prop_fountain_sheet.png", "offset": Vector2(0.0, -14.0), "hframes": 4}
+		if ptype == "queue_post":
+			return {"tex_path": "res://assets/environment/prop_queue_post.png", "offset": Vector2(0.0, -8.0), "hframes": 1}
+		if eff_catalog.has(ptype):
+			var spec2: Dictionary = eff_catalog[ptype] as Dictionary
+			return {
+				"tex_path": str(spec2.get("tex_path", spec2.get("texture", ""))),
+				"offset": spec2.get("offset", Vector2(0.0, -10.0)),
+				"hframes": 1,
+			}
+	return {}
+
+
+func _update_delete_hover_ghost(world_pos: Vector2, cell: Vector2i) -> void:
+	_ensure_layout_ghost()
+	if _layout_ghost == null:
+		return
+	for ch in _layout_ghost.get_children():
+		_layout_ghost.remove_child(ch)
+		ch.queue_free()
+
+	var target_rect := Rect2i()
+	for sid: String in _station_views.keys():
+		var sv: ServiceStationView = _station_views[sid] as ServiceStationView
+		if sv != null and sv.get_hit_rect().has_point(world_pos - sv.position):
+			target_rect = Rect2i(sv.grid_pos, Vector2i.ONE)
+			break
+	if target_rect.size.x == 0:
+		for pid: String in _prop_views.keys():
+			var pv: Sprite2D = _prop_views[pid] as Sprite2D
+			if pv != null and Rect2(-18.0, -28.0, 36.0, 36.0).has_point(world_pos - pv.position):
+				target_rect = Rect2i(iso_grid.screen_to_grid(pv.position), Vector2i.ONE)
+				break
+	if target_rect.size.x == 0:
+		for did: String in _dept_nodes.keys():
+			var dinfo: Dictionary = _dept_nodes[did] as Dictionary
+			var drect: Rect2i = dinfo.get("rect", Rect2i()) as Rect2i
+			if drect.size.x > 0 and drect.has_point(cell):
+				target_rect = drect
+				break
+
+	if target_rect.size.x <= 0:
+		_layout_ghost.visible = false
+		return
+
+	var col := Color("#FF3B30")
+	for dy in range(target_rect.size.y):
+		for dx in range(target_rect.size.x):
+			var c := target_rect.position + Vector2i(dx, dy)
+			var center_p: Vector2 = iso_grid.grid_to_screen(c).round()
+			var p := Polygon2D.new()
+			p.polygon = PackedVector2Array([
+				Vector2(-16.0, -10.0), Vector2(16.0, -10.0), Vector2(16.0, 10.0), Vector2(-16.0, 10.0),
+			])
+			p.color = Color(col.r, col.g, col.b, 0.48)
+			p.position = center_p
+			_layout_ghost.add_child(p)
+			var outline := Line2D.new()
+			outline.points = PackedVector2Array([
+				Vector2(-16.0, -10.0), Vector2(16.0, -10.0), Vector2(16.0, 10.0), Vector2(-16.0, 10.0), Vector2(-16.0, -10.0),
+			])
+			outline.width = 2.0
+			outline.default_color = col
+			outline.position = center_p
+			_layout_ghost.add_child(outline)
+	# Draw a crisp red X across the center tile to unmistakably signal Delete
+	var mid_p: Vector2 = iso_grid.grid_to_screen(target_rect.position + target_rect.size / 2).round()
+	var x1 := Line2D.new()
+	x1.points = PackedVector2Array([Vector2(-9.0, -7.0), Vector2(9.0, 7.0)])
+	x1.width = 2.5
+	x1.default_color = Color("#FFE5E5")
+	x1.position = mid_p
+	_layout_ghost.add_child(x1)
+	var x2 := Line2D.new()
+	x2.points = PackedVector2Array([Vector2(9.0, -7.0), Vector2(-9.0, 7.0)])
+	x2.width = 2.5
+	x2.default_color = Color("#FFE5E5")
+	x2.position = mid_p
+	_layout_ghost.add_child(x2)
+	_layout_ghost.visible = true
+
+
+func _handle_layout_input(event: InputEvent) -> bool:
+	if event.is_action_pressed("ui_cancel"):
+		if not _layout_held_id.is_empty():
+			_clear_layout_held()
+		else:
+			set_layout_mode(false)
+		_consume_input()
+		return true
+	if event is InputEventMouseMotion:
+		var mm: InputEventMouseMotion = event as InputEventMouseMotion
+		var cell: Vector2i = cell_from_screen_position(mm.position)
+		if _layout_delete_mode:
+			var wpos: Vector2 = get_global_transform_with_canvas().affine_inverse() * mm.position
+			_update_delete_hover_ghost(wpos, cell)
+		elif not _layout_held_id.is_empty() and cell != _layout_hover_cell:
+			_layout_hover_cell = cell
+			_update_layout_ghost()
+		return false
+	if event is InputEventMouseButton:
+		var mb: InputEventMouseButton = event as InputEventMouseButton
+		if not mb.pressed:
+			return false
+		if mb.button_index == MOUSE_BUTTON_RIGHT:
+			if not _layout_held_id.is_empty():
+				_clear_layout_held()
+			elif _layout_delete_mode:
+				_layout_delete_mode = false
+				queue_redraw()
+			else:
+				set_layout_mode(false)
+			_consume_input()
+			return true
+		if mb.button_index == MOUSE_BUTTON_LEFT:
+			var world_pos: Vector2 = get_global_transform_with_canvas().affine_inverse() * mb.position
+			var cell: Vector2i = iso_grid.screen_to_grid(world_pos)
+			if _layout_delete_mode:
+				for sid: String in _station_views.keys():
+					var sv: ServiceStationView = _station_views[sid] as ServiceStationView
+					if sv != null and sv.get_hit_rect().has_point(world_pos - sv.position):
+						layout_delete_requested.emit(&"station", sid)
+						_consume_input()
+						return true
+				for pid: String in _prop_views.keys():
+					var pv: Sprite2D = _prop_views[pid] as Sprite2D
+					if pv != null and Rect2(-18.0, -28.0, 36.0, 36.0).has_point(world_pos - pv.position):
+						layout_delete_requested.emit(&"prop", pid)
+						_consume_input()
+						return true
+				for did: String in _dept_nodes.keys():
+					var dinfo: Dictionary = _dept_nodes[did] as Dictionary
+					var drect: Rect2i = dinfo.get("rect", Rect2i()) as Rect2i
+					if drect.size.x > 0 and drect.has_point(cell):
+						layout_delete_requested.emit(&"department", did)
+						_consume_input()
+						return true
+				_consume_input()
+				return true
+			if _layout_held_id.is_empty():
+				# Pick up station, prop, or department room under cursor
+				for sid: String in _station_views.keys():
+					var sv: ServiceStationView = _station_views[sid] as ServiceStationView
+					if sv != null and sv.get_hit_rect().has_point(world_pos - sv.position):
+						_layout_held_kind = &"station"
+						_layout_held_id = sid
+						_layout_held_size = Vector2i.ONE
+						_layout_hover_cell = cell
+						_update_layout_ghost()
+						_consume_input()
+						return true
+				for pid: String in _prop_views.keys():
+					var pv: Sprite2D = _prop_views[pid] as Sprite2D
+					if pv != null and Rect2(-18.0, -28.0, 36.0, 36.0).has_point(world_pos - pv.position):
+						_layout_held_kind = &"prop"
+						_layout_held_id = pid
+						_layout_held_size = Vector2i.ONE
+						_layout_hover_cell = cell
+						_update_layout_ghost()
+						_consume_input()
+						return true
+				for did: String in _dept_nodes.keys():
+					var dinfo: Dictionary = _dept_nodes[did] as Dictionary
+					var drect: Rect2i = dinfo.get("rect", Rect2i()) as Rect2i
+					if drect.size.x > 0 and drect.has_point(cell):
+						begin_move_department(did)
+						_consume_input()
+						return true
+			else:
+				# Place currently held item (either relocate existing or build new catalog item)
+				if _is_valid_layout_target(cell):
+					var k: StringName = _layout_held_kind
+					var iid: String = _layout_held_id
+					if k == &"build_station" or k == &"build_prop":
+						layout_build_requested.emit(iid, cell)
+					else:
+						_clear_layout_held()
+						layout_move_requested.emit(k, iid, cell)
+					_consume_input()
+					return true
+			return true
+	return false

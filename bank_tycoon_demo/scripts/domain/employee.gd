@@ -60,11 +60,81 @@ var loyalty: int = 60
 var potential: int = 50
 
 var traits: Array[String] = []
+var level: int = 1
+var work_xp: int = 0
 var fatigue: int = 0
 var adaptation_days_remaining: int = 0
 var daily_salary_minor: int = 20_000
 var training_count: int = 0
 var state: int = Enums.EmployeeState.OFF_DUTY
+
+
+func get_stat_cap() -> int:
+	return int(BalanceConfig.EMPLOYEE_LEVEL_STAT_CAPS.get(clampi(level, 1, BalanceConfig.EMPLOYEE_MAX_LEVEL), 65))
+
+
+func get_xp_required() -> int:
+	if level >= BalanceConfig.EMPLOYEE_MAX_LEVEL:
+		return 0
+	return int(BalanceConfig.EMPLOYEE_PROMOTE_XP_REQUIRED.get(level, 100))
+
+
+func can_promote() -> bool:
+	if level >= BalanceConfig.EMPLOYEE_MAX_LEVEL:
+		return false
+	return work_xp >= get_xp_required()
+
+
+func add_experience(xp_amount: int) -> void:
+	if level >= BalanceConfig.EMPLOYEE_MAX_LEVEL:
+		return
+	var req_xp: int = get_xp_required()
+	work_xp = clampi(work_xp + maxi(0, xp_amount), 0, req_xp)
+
+
+func gain_work_experience(xp_amount: int = BalanceConfig.EMPLOYEE_XP_PER_SERVICE) -> Dictionary:
+	add_experience(xp_amount)
+	var cap: int = get_stat_cap()
+	var grew: bool = false
+	var at_cap: bool = true
+	match role_id:
+		"loan_officer":
+			if risk_awareness < cap:
+				risk_awareness = mini(cap, risk_awareness + 1)
+				grew = true
+				at_cap = false
+			if professionalism < cap:
+				professionalism = mini(cap, professionalism + 1)
+				grew = true
+				at_cap = false
+		"lobby_manager":
+			if sociability < cap:
+				sociability = mini(cap, sociability + 1)
+				grew = true
+				at_cap = false
+			if management < cap:
+				management = mini(cap, management + 1)
+				grew = true
+				at_cap = false
+		"analyst", "manager":
+			if management < cap:
+				management = mini(cap, management + 1)
+				grew = true
+				at_cap = false
+			if risk_awareness < cap:
+				risk_awareness = mini(cap, risk_awareness + 1)
+				grew = true
+				at_cap = false
+		_:
+			if efficiency < cap:
+				efficiency = mini(cap, efficiency + 1)
+				grew = true
+				at_cap = false
+			if professionalism < cap:
+				professionalism = mini(cap, professionalism + 1)
+				grew = true
+				at_cap = false
+	return {"grew": grew, "at_cap": at_cap and level < BalanceConfig.EMPLOYEE_MAX_LEVEL, "can_promote": can_promote()}
 
 
 func can_transition_to(new_state: int) -> bool:
@@ -193,9 +263,57 @@ func tick_adaptation_day() -> void:
 	adaptation_days_remaining = maxi(0, adaptation_days_remaining - 1)
 
 
-func get_effective_productivity_bps() -> int:
-	# Baseline 10000 bps (1.0x), scaled by efficiency & professionalism, penalized by fatigue & adaptation
-	var base_bps: int = 7500 + (efficiency * 30) + (professionalism * 20)
+func get_trait_bonuses(content_defs: Dictionary = {}) -> Dictionary:
+	var bonuses: Dictionary = {
+		"professionalism": 0,
+		"efficiency": 0,
+		"sociability": 0,
+		"risk_awareness": 0,
+		"management": 0,
+		"loyalty": 0,
+		"potential": 0,
+	}
+	if traits.is_empty():
+		return bonuses
+	var raw_traits: Variant = content_defs.get("traits", [])
+	if not (raw_traits is Array):
+		return bonuses
+	for tid: String in traits:
+		for raw_t: Variant in (raw_traits as Array):
+			if raw_t is Dictionary and str((raw_t as Dictionary).get("id", "")) == tid:
+				var ab: Variant = (raw_t as Dictionary).get("attribute_bonuses", {})
+				if ab is Dictionary:
+					for k: Variant in (ab as Dictionary).keys():
+						var sk: String = str(k)
+						if bonuses.has(sk):
+							bonuses[sk] = int(bonuses[sk]) + int((ab as Dictionary)[k])
+				break
+	return bonuses
+
+
+func get_effective_attributes(content_defs: Dictionary = {}) -> Dictionary:
+	# Base stats are bounded by level cap; exclusive trait bonuses bypass the level cap (both + and -)
+	var cap: int = get_stat_cap()
+	var b: Dictionary = get_trait_bonuses(content_defs)
+	return {
+		"professionalism": clampi(mini(professionalism, cap) + int(b["professionalism"]), 0, 120),
+		"efficiency": clampi(mini(efficiency, cap) + int(b["efficiency"]), 0, 120),
+		"sociability": clampi(mini(sociability, cap) + int(b["sociability"]), 0, 120),
+		"risk_awareness": clampi(mini(risk_awareness, cap) + int(b["risk_awareness"]), 0, 120),
+		"management": clampi(mini(management, cap) + int(b["management"]), 0, 120),
+		"loyalty": clampi(mini(loyalty, cap) + int(b["loyalty"]), 0, 120),
+		"potential": clampi(potential + int(b["potential"]), 0, 120),
+		"bonuses": b,
+		"cap": cap,
+	}
+
+
+func get_effective_productivity_bps(content_defs: Dictionary = {}) -> int:
+	# Baseline 10000 bps (1.0x), scaled by effective efficiency & professionalism (including traits), penalized by fatigue & adaptation
+	var eff_attrs: Dictionary = get_effective_attributes(content_defs)
+	var eff_v: int = int(eff_attrs["efficiency"])
+	var prof_v: int = int(eff_attrs["professionalism"])
+	var base_bps: int = 7500 + (eff_v * 30) + (prof_v * 20)
 	if adaptation_days_remaining > 0:
 		base_bps -= 2500
 	if fatigue >= BalanceConfig.OVERLOAD_FATIGUE_THRESHOLD:
@@ -228,6 +346,8 @@ func to_dict() -> Dictionary:
 		"loyalty": loyalty,
 		"potential": potential,
 		"traits": traits_copy,
+		"level": level,
+		"work_xp": work_xp,
 		"fatigue": fatigue,
 		"adaptation_days_remaining": adaptation_days_remaining,
 		"daily_salary_minor": daily_salary_minor,
@@ -276,6 +396,8 @@ static func from_dict(data: Dictionary) -> Result:
 		for t in (raw_traits as Array):
 			emp.traits.append(str(t))
 
+	emp.level = clampi(int(data.get("level", 1)), 1, BalanceConfig.EMPLOYEE_MAX_LEVEL)
+	emp.work_xp = maxi(0, int(data.get("work_xp", 0)))
 	emp.fatigue = clampi(int(data.get("fatigue", 0)), 0, 100)
 	emp.adaptation_days_remaining = maxi(0, int(data.get("adaptation_days_remaining", 0)))
 	emp.daily_salary_minor = maxi(0, int(data.get("daily_salary_minor", 20_000)))

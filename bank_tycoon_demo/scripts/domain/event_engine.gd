@@ -170,15 +170,91 @@ func trigger_event(
 		return Result.fail(&"EVENT_NOT_FOUND", "ERR_EVENT_NOT_FOUND", {"event_id": event_id})
 
 	var inst_id: String = bank_state.next_id("ev")
+	var timeout_mins: int = maxi(15, int(ev_def.get("timeout_minutes", BalanceConfig.DEFAULT_EVENT_TIMEOUT_MINUTES)))
 	var inst: Dictionary = {
 		"instance_id": inst_id,
 		"event_id": event_id,
 		"day": bank_state.current_day,
 		"minute": bank_state.current_minute_of_day,
+		"timeout_minutes": timeout_mins,
+		"remaining_minutes": timeout_mins,
 		"metadata": metadata.duplicate(true),
 	}
 	bank_state.active_events.append(inst)
 	return Result.succeed(inst)
+
+
+func tick_active_events(
+	bank_state: BankState,
+	content_defs: Dictionary,
+	minutes_delta: int = 1
+) -> Array[Dictionary]:
+	var expired_records: Array[Dictionary] = []
+	if bank_state == null or bank_state.active_events.is_empty():
+		return expired_records
+
+	var remaining: Array[Dictionary] = []
+	var followups_to_trigger: Array[Dictionary] = []
+	for inst: Dictionary in bank_state.active_events:
+		var rem: int = int(inst.get("remaining_minutes", int(inst.get("timeout_minutes", BalanceConfig.DEFAULT_EVENT_TIMEOUT_MINUTES))))
+		rem -= maxi(1, minutes_delta)
+		if rem > 0:
+			inst["remaining_minutes"] = rem
+			remaining.append(inst)
+		else:
+			var inst_id: String = str(inst.get("instance_id", inst.get("id", "")))
+			var ev_id: String = str(inst.get("event_id", ""))
+			var ev_def: Dictionary = _find_event_def(ev_id, content_defs)
+			bank_state.event_history.append({
+				"instance_id": inst_id,
+				"event_id": ev_id,
+				"option_id": "__abandoned__",
+				"abandoned": true,
+				"day": bank_state.current_day,
+				"minute": bank_state.current_minute_of_day,
+			})
+			var abandon_next: String = str(ev_def.get("abandon_next_event_id", ""))
+			var abandon_delay: int = int(ev_def.get("abandon_next_delay_days", 0))
+			var rec: Dictionary = {
+				"instance_id": inst_id,
+				"event_id": ev_id,
+				"followup_event_id": abandon_next,
+				"followup_instance": {},
+			}
+			if not abandon_next.is_empty():
+				if abandon_delay <= 0:
+					followups_to_trigger.append({
+						"event_id": abandon_next,
+						"source_event_id": ev_id,
+						"record": rec,
+					})
+				else:
+					bank_state.scheduled_events.append({
+						"event_id": abandon_next,
+						"trigger_day": bank_state.current_day + abandon_delay,
+						"source_event_id": ev_id,
+						"source_option_id": "__abandoned__",
+					})
+			expired_records.append(rec)
+
+	bank_state.active_events = remaining
+
+	for ft: Dictionary in followups_to_trigger:
+		var tr: Result = trigger_event(
+			bank_state,
+			str(ft["event_id"]),
+			content_defs,
+			{
+				"source_event_id": str(ft["source_event_id"]),
+				"source_option_id": "__abandoned__",
+				"abandoned_followup": true,
+			}
+		)
+		if tr.ok and tr.data is Dictionary:
+			var rec_ref: Dictionary = ft["record"] as Dictionary
+			rec_ref["followup_instance"] = tr.data as Dictionary
+
+	return expired_records
 
 
 func process_scheduled_and_roll_event(
@@ -323,34 +399,57 @@ func resolve_event_option(
 		for k: Variant in (opt_impacts as Dictionary).keys():
 			impacts[str(k)] = (opt_impacts as Dictionary)[k]
 
-	var duration_days: int = maxi(1, int(opt_def.get("duration_days", impacts.get("duration_days", 3))))
+	# Roll probabilistic outcome if the option defines weighted outcomes (deterministic via event_rng).
+	var rolled_outcome: Dictionary = _roll_option_outcome(opt_def, bank_state)
+	var rolled_outcome_id: String = str(rolled_outcome.get("id", ""))
+	var rolled_outcome_label_key: String = str(rolled_outcome.get("label_key", ""))
+	var rolled_outcome_sentiment: String = str(rolled_outcome.get("sentiment", "mixed"))
+	var rolled_outcome_prob_pct: int = int(rolled_outcome.get("probability_pct", 100))
 
-	# Apply schema effects
-	var effs: Variant = opt_def.get("effects", [])
-	if effs is Array:
-		for raw_eff in (effs as Array):
-			if not (raw_eff is Dictionary):
-				continue
-			var eff: Dictionary = raw_eff as Dictionary
-			var target: String = str(eff.get("target", ""))
-			if not BalanceConfig.MODIFIER_BOUNDS.has(target):
-				continue
-			var op: String = str(eff.get("operation", ""))
-			if not BalanceConfig.VALID_MODIFIER_OPERATIONS.has(op):
-				continue
-			if target == "bank.reputation_points":
-				var val: int = int(eff.get("value", 0))
-				if op == "add":
-					bank_state.reputation = clampi(bank_state.reputation + val, 0, 100)
-				elif op == "set":
-					bank_state.reputation = clampi(val, 0, 100)
-			else:
-				bank_state.active_event_modifiers.append({
-					"source_id": event_id,
-					"option_id": option_id,
-					"effect": eff.duplicate(true),
-					"expires_day": bank_state.current_day + duration_days,
-				})
+	var out_impacts: Variant = rolled_outcome.get("domain_impacts", {})
+	if out_impacts is Dictionary:
+		for k_o: Variant in (out_impacts as Dictionary).keys():
+			impacts[str(k_o)] = (out_impacts as Dictionary)[k_o]
+
+	var duration_days: int = maxi(1, int(rolled_outcome.get("duration_days", opt_def.get("duration_days", impacts.get("duration_days", 3)))))
+
+	# Combine base option effects + rolled outcome effects
+	var combined_effects: Array = []
+	var base_effs: Variant = opt_def.get("effects", [])
+	if base_effs is Array:
+		for be in (base_effs as Array):
+			combined_effects.append(be)
+	var out_effs: Variant = rolled_outcome.get("effects", [])
+	if out_effs is Array:
+		for oe in (out_effs as Array):
+			combined_effects.append(oe)
+
+	for raw_eff in combined_effects:
+		if not (raw_eff is Dictionary):
+			continue
+		var eff: Dictionary = raw_eff as Dictionary
+		var target: String = str(eff.get("target", ""))
+		if not BalanceConfig.MODIFIER_BOUNDS.has(target):
+			continue
+		var op: String = str(eff.get("operation", ""))
+		if not BalanceConfig.VALID_MODIFIER_OPERATIONS.has(op):
+			continue
+		if target == "bank.reputation_points":
+			var val: int = int(eff.get("value", 0))
+			if op == "add":
+				bank_state.reputation = clampi(bank_state.reputation + val, 0, 100)
+				if val > 0:
+					bank_state.awareness = clampi(bank_state.awareness + maxi(1, val / 2), 0, 100)
+			elif op == "set":
+				bank_state.reputation = clampi(val, 0, 100)
+		else:
+			bank_state.active_event_modifiers.append({
+				"source_id": event_id,
+				"option_id": option_id,
+				"outcome_id": rolled_outcome_id,
+				"effect": eff.duplicate(true),
+				"expires_day": bank_state.current_day + duration_days,
+			})
 
 	# Apply non-effect domain impacts via Ledger / state fields
 	var fe: FinanceEngine = finance_engine if finance_engine != null else FinanceEngine.new()
@@ -402,6 +501,9 @@ func resolve_event_option(
 	var sat_delta: int = int(impacts.get("satisfaction_delta", 0))
 	if sat_delta != 0:
 		bank_state.satisfaction = clampi(bank_state.satisfaction + sat_delta, 0, 100)
+	var aw_delta: int = int(impacts.get("awareness_delta", 0))
+	if aw_delta != 0:
+		bank_state.awareness = clampi(bank_state.awareness + aw_delta, 0, 100)
 
 	var sp_delta: int = int(impacts.get("strategy_points_delta", 0))
 	if sp_delta != 0:
@@ -413,29 +515,128 @@ func resolve_event_option(
 		"instance_id": event_instance_id,
 		"event_id": event_id,
 		"option_id": option_id,
+		"outcome_id": rolled_outcome_id,
+		"outcome_label_key": rolled_outcome_label_key,
+		"outcome_sentiment": rolled_outcome_sentiment,
+		"outcome_probability_pct": rolled_outcome_prob_pct,
 		"day": bank_state.current_day,
 		"minute": bank_state.current_minute_of_day,
 		"macro_risk_choice": str(impacts.get("macro_risk_choice", "")),
 	}
 	bank_state.event_history.append(history_entry)
 
-	# Schedule chained event if configured
-	var next_id: String = str(opt_def.get("next_event_id", ""))
+	# Schedule chained event if configured (outcome-specific next_event_id overrides option-level)
+	var next_id: String = str(rolled_outcome.get("next_event_id", opt_def.get("next_event_id", "")))
 	if next_id != "":
-		var delay_days: int = maxi(1, int(opt_def.get("chain_delay_days", BalanceConfig.EVENT_CHAIN_DELAY_DAYS.get(next_id, 2))))
+		var delay_days: int = maxi(
+			1,
+			int(rolled_outcome.get("chain_delay_days", opt_def.get("chain_delay_days", BalanceConfig.EVENT_CHAIN_DELAY_DAYS.get(next_id, 2))))
+		)
 		bank_state.scheduled_events.append({
 			"event_id": next_id,
 			"trigger_day": bank_state.current_day + delay_days,
 			"source_event_id": event_id,
 			"source_option_id": option_id,
+			"source_outcome_id": rolled_outcome_id,
 		})
 
 	return Result.succeed({
 		"instance_id": event_instance_id,
 		"event_id": event_id,
 		"option_id": option_id,
+		"outcome_id": rolled_outcome_id,
+		"outcome_label_key": rolled_outcome_label_key,
+		"outcome_sentiment": rolled_outcome_sentiment,
+		"outcome_probability_pct": rolled_outcome_prob_pct,
 		"next_event_id": next_id,
 	})
+
+
+func _roll_option_outcome(opt_def: Dictionary, bank_state: BankState) -> Dictionary:
+	var raw_outcomes: Variant = opt_def.get("outcomes", [])
+	if not (raw_outcomes is Array) or (raw_outcomes as Array).is_empty():
+		return {}
+	var valid_outcomes: Array[Dictionary] = []
+	var total_weight: int = 0
+	for item in (raw_outcomes as Array):
+		if item is Dictionary:
+			var od: Dictionary = item as Dictionary
+			var w: int = maxi(1, int(od.get("weight", od.get("probability_pct", 1))))
+			total_weight += w
+			valid_outcomes.append(od)
+	if valid_outcomes.is_empty() or total_weight <= 0:
+		return {}
+	var ev_rng: RandomNumberGenerator = bank_state.rng_streams.event_rng if (bank_state != null and bank_state.rng_streams != null) else null
+	var pick: int = ev_rng.randi_range(0, total_weight - 1) if ev_rng != null else 0
+	var accum: int = 0
+	for od in valid_outcomes:
+		var w: int = maxi(1, int(od.get("weight", od.get("probability_pct", 1))))
+		accum += w
+		if pick < accum:
+			var chosen: Dictionary = od.duplicate(true)
+			chosen["probability_pct"] = int(round(float(w) * 100.0 / float(total_weight)))
+			return chosen
+	var fallback: Dictionary = valid_outcomes[0].duplicate(true)
+	var fw: int = maxi(1, int(fallback.get("weight", fallback.get("probability_pct", 1))))
+	fallback["probability_pct"] = int(round(float(fw) * 100.0 / float(total_weight)))
+	return fallback
+
+
+static func get_option_outcomes_preview(event_id: String, opt_def: Dictionary) -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	var impact_key: String = "%s:%s" % [event_id, str(opt_def.get("id", ""))]
+	var base_impacts: Dictionary = {}
+	if BalanceConfig.EVENT_DOMAIN_IMPACTS.has(impact_key):
+		base_impacts = (BalanceConfig.EVENT_DOMAIN_IMPACTS[impact_key] as Dictionary).duplicate(true)
+	var opt_imp: Variant = opt_def.get("domain_impacts", {})
+	if opt_imp is Dictionary:
+		for k: Variant in (opt_imp as Dictionary).keys():
+			base_impacts[str(k)] = (opt_imp as Dictionary)[k]
+	var base_effs: Array = (opt_def.get("effects", []) as Array).duplicate(true)
+	var base_next: String = str(opt_def.get("next_event_id", ""))
+
+	var raw_outcomes: Variant = opt_def.get("outcomes", [])
+	if raw_outcomes is Array and not (raw_outcomes as Array).is_empty():
+		var total_w: int = 0
+		for item in (raw_outcomes as Array):
+			if item is Dictionary:
+				total_w += maxi(1, int((item as Dictionary).get("weight", (item as Dictionary).get("probability_pct", 1))))
+		for item in (raw_outcomes as Array):
+			if not (item is Dictionary):
+				continue
+			var od: Dictionary = item as Dictionary
+			var w: int = maxi(1, int(od.get("weight", od.get("probability_pct", 1))))
+			var merged_impacts: Dictionary = base_impacts.duplicate(true)
+			var oimp: Variant = od.get("domain_impacts", {})
+			if oimp is Dictionary:
+				for k2: Variant in (oimp as Dictionary).keys():
+					merged_impacts[str(k2)] = (oimp as Dictionary)[k2]
+			var merged_effs: Array = base_effs.duplicate(true)
+			var oeffs: Variant = od.get("effects", [])
+			if oeffs is Array:
+				for oe in (oeffs as Array):
+					merged_effs.append(oe)
+			out.append({
+				"id": str(od.get("id", "")),
+				"probability_pct": int(round(float(w) * 100.0 / float(maxi(1, total_w)))),
+				"sentiment": str(od.get("sentiment", "mixed")),
+				"label_key": str(od.get("label_key", "")),
+				"effects": merged_effs,
+				"domain_impacts": merged_impacts,
+				"next_event_id": str(od.get("next_event_id", base_next)),
+			})
+		return out
+
+	out.append({
+		"id": "deterministic",
+		"probability_pct": 100,
+		"sentiment": "mixed",
+		"label_key": "",
+		"effects": base_effs,
+		"domain_impacts": base_impacts,
+		"next_event_id": base_next,
+	})
+	return out
 
 
 func expire_event_modifiers(bank_state: BankState) -> void:

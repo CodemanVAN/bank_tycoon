@@ -539,16 +539,16 @@ msgid "CUST_STATE_FINDING_SERVICE"
 msgstr "取号分流"
 
 msgid "CUST_STATE_WAITING"
-msgstr "排队等候"
+msgstr "排队等候中"
 
 msgid "CUST_STATE_IN_SERVICE"
-msgstr "正在办理"
+msgstr "业务办理中"
 
 msgid "CUST_STATE_COMPLETED"
-msgstr "办理完成"
+msgstr "已办结"
 
 msgid "CUST_STATE_LEAVING"
-msgstr "离开分行"
+msgstr "正在离开"
 
 msgid "PHASE_PRE_OPEN"
 msgstr "营业准备"
@@ -1722,3 +1722,837 @@ msgstr "当日经营归因与明日建议"
 
 msgid "UI_REPORT_BTN_NEXT_DAY"
 msgstr "进入下一天（自动保存）"
+
+msgid "WORLD_SPEECH_CUST_ENTER_DEPOSIT"
+msgstr "您好，我想存一笔钱"
+
+msgid "WORLD_SPEECH_CUST_ENTER_WITHDRAW"
+msgstr "请问取款在哪排队？"
+
+msgid "WORLD_SPEECH_CUST_ENTER_TRANSFER"
+msgstr "麻烦办一笔转账"
+
+msgid "WORLD_SPEECH_CUST_ENTER_LOAN"
+msgstr "我想咨询一下贷款"
+
+msgid "WORLD_SPEECH_CUST_ENTER_MEETING"
+msgstr "预约了贵宾理财洽谈"
+
+msgid "WORLD_SPEECH_CUST_ENTER_COMPLAINT"
+msgstr "这笔业务有点问题…"
+
+msgid "WORLD_SPEECH_CUST_SERVING"
+msgstr "好的，这是我的证件"
+
+msgid "WORLD_SPEECH_CUST_THANKS"
+msgstr "谢谢，效率真不错！"
+
+msgid "WORLD_SPEECH_CUST_TIMEOUT"
+msgstr "等太久了，改天再来…"
+
+msgid "WORLD_SPEECH_EMP_GREET"
+msgstr "您好！请问办理什么业务？"
+
+msgid "WORLD_SPEECH_EMP_LOAN"
+msgstr "请稍候，马上为您初审"
+
+msgid "WORLD_SPEECH_EMP_DONE"
+msgstr "手续已办妥，祝您愉快！"
+
+msgid "WORLD_SPEECH_EMP_COMPLEX"
+msgstr "复杂疑难单，请稍等仔细核验"
+
+msgid "WORLD_SPEECH_CUST_COMPLEX"
+msgstr "这笔跨行业务有点复杂，麻烦查下"
+
+msgid "WORLD_SPEECH_CUST_SOFA"
+msgstr "排队太久了，先去沙发坐会儿…"
+
+msgid "WORLD_SPEECH_EMP_TIRED_1"
+msgstr "好累啊，连轴转太久了…"
+
+msgid "WORLD_SPEECH_EMP_TIRED_2"
+msgstr "真想休个假喘口气…"
+
+msgid "WORLD_SPEECH_EMP_SLACK_1"
+msgstr "趁现在人少，摸会儿鱼聊聊天~"
+
+msgid "WORLD_SPEECH_EMP_SLACK_2"
+msgstr "中午打算一起吃什么呀？"
+
+msgid "WORLD_SPEECH_LM_ATM"
+msgstr "小额存取请跟我去 ATM 快速办理！"
+
+msgid "WORLD_SPEECH_LM_SOOTHE"
+msgstr "让您久等了，马上为您安排窗口！"
+
+msgid "WORLD_SPEECH_LM_COMPLAINT"
+msgstr "别着急，我立刻帮您妥善解决！"
+
+msgid "ROLE_LOBBY_MANAGER"
+msgstr "大堂经理"
+
+msgid "UI_EMP_BTN_HIRE_LOBBY_MGR"
+msgstr "录为大堂经理"
+
+msgid "UI_EMP_POST_UNASSIGNED"
+msgstr "待分配"
+
+msgid "UI_DEPT_STAFF_ACTIVE"
+msgstr "在岗 {count} 人 · 已生效"
+
+msgid "UI_DEPT_STAFF_INACTIVE"
+msgstr "缺编 0 人 · 未生效"
+
+msgid "UI_DEPT_BTN_DEMOLISH"
+msgstr "拆除部门"
+
+msgid "UI_DEPT_BTN_MOVE"
+msgstr "移动位置"
+
+msgid "UI_BOTTOM_LAYOUT_BTN"
+msgstr "装修布局"
+
+msgid "UI_BOTTOM_LAYOUT_EXIT"
+msgstr "退出装修"
+
+msgid "UI_LAYOUT_MODE_HINT"
+msgstr "装修布局模式：点击柜台、摆设或部门拾取，再点击目标位置放置（右键/Esc退出）"
+
+msgid "UI_LAYOUT_MOVE_DEPT_HINT"
+msgstr "请点击大厅四周空地以移动部门位置（右键/Esc取消）"
+
+msgid "UI_LAYOUT_MOVE_OK"
+msgstr "布局位置已更新！"
+
+msgid "UI_BUILD_MODE_MOVE"
+msgstr "移动现有"
+
+msgid "UI_BUILD_SUCCESS"
+msgstr "建造完成，已写入分行布局！"
+
+msgid "UI_BUILD_ITEM_TELLER"
+msgstr "+现金柜台"
+
+msgid "UI_BUILD_ITEM_LOAN_DESK"
+msgstr "+信贷专柜"
+
+msgid "UI_BUILD_ITEM_ATM"
+msgstr "+ATM 机"
+
+msgid "UI_BUILD_ITEM_SOFA"
+msgstr "+等候沙发"
+
+msgid "UI_BUILD_ITEM_COFFEE_BAR"
+msgstr "+咖啡吧台"
+
+msgid "UI_BUILD_ITEM_AQUARIUM"
+msgstr "+景观水族箱"
+
+msgid "UI_BUILD_ITEM_GOLD_BULL"
+msgstr "+华尔街金牛"
+
+msgid "UI_BUILD_ITEM_BOOKSHELF"
+msgstr "+金融书报架"
+
+msgid "UI_BUILD_ITEM_PLANT"
+msgstr "+室内绿植"
+
+msgid "WORLD_FX_DEPOSIT_DONE"
+msgstr "存款 +{amount}"
+
+msgid "WORLD_FX_WITHDRAW_DONE"
+msgstr "取款 -{amount}"
+
+msgid "WORLD_SPEECH_CUST_ENTER_ACCOUNT"
+msgstr "您好，我想办理对公开户"
+
+msgid "WORLD_SPEECH_CUST_ENTER_WEALTH"
+msgstr "想咨询一下稳健理财方案"
+
+msgid "SERVICE_ACCOUNT_OPENING"
+msgstr "对公/个人开户"
+
+msgid "SERVICE_WEALTH_ADVISORY"
+msgstr "贵宾理财咨询"
+
+msgid "UI_NOTIF_LOAN_TITLE"
+msgstr "【待审批贷款】新的授信申请"
+
+msgid "UI_NOTIF_LOAN_BODY"
+msgstr "申请金额 {amount} · 点击立即审批"
+
+msgid "UI_NOTIF_EVENT_TITLE"
+msgstr "【突发事件】需要行长决策"
+
+msgid "UI_NOTIF_EVENT_BODY"
+msgstr "{title} · 点击立即处理"
+
+msgid "EMP_DEPT_OPS_LEAD"
+msgstr "沈明轩（运营主管）"
+
+msgid "EMP_DEPT_HR_LEAD"
+msgstr "陆知微（人事主管）"
+
+msgid "EMP_DEPT_CREDIT_LEAD"
+msgstr "韩景川（信贷主管）"
+
+msgid "EMP_DEPT_RISK_LEAD"
+msgstr "许清晏（风控主管）"
+
+msgid "UI_EVENT_CHAIN_ARC"
+msgstr "【剧情事件线】"
+
+msgid "UI_EVENT_CHAIN_FOLLOWUP"
+msgstr "【后续关联事件】"
+
+msgid "UI_EVENT_SENTIMENT_POS"
+msgstr "正向"
+
+msgid "UI_EVENT_SENTIMENT_NEG"
+msgstr "负向"
+
+msgid "UI_EVENT_SENTIMENT_MIXED"
+msgstr "中性"
+
+msgid "UI_EVENT_EFF_CASH"
+msgstr "现金 {val}"
+
+msgid "UI_EVENT_EFF_SAT"
+msgstr "满意度 {val}"
+
+msgid "UI_EVENT_EFF_SP"
+msgstr "战略点 {val}"
+
+msgid "UI_EVENT_EFF_REP"
+msgstr "声誉 {val}"
+
+msgid "UI_EVENT_EFF_DEP"
+msgstr "存款增速 {val}"
+
+msgid "UI_EVENT_EFF_RISK"
+msgstr "违约风险 {val}"
+
+msgid "UI_EVENT_EFF_PROD"
+msgstr "员工效率 {val}"
+
+msgid "UI_EVENT_EFF_SPEED"
+msgstr "柜台提速 {val}"
+
+msgid "UI_EVENT_EFF_LIQ"
+msgstr "流动性要求 {val}"
+
+msgid "UI_EVENT_EFF_CHAIN"
+msgstr "→ 触发后续：{next}"
+
+msgid "UI_EVENT_RESULT_BANNER"
+msgstr "【决策结果 · {pct}% 概率触发】{outcome}"
+
+msgid "EVENT_VIP_SYNDICATE_TITLE"
+msgstr "VIP 财团联合授信邀约"
+
+msgid "EVENT_VIP_SYNDICATE_DESC"
+msgstr "此前获得礼宾接待的 VIP 客户引荐了本地商业财团，邀请星海银行牵头一笔高额综合金融服务包。"
+
+msgid "EVENT_VIP_SYNDICATE_OPT_LEAD"
+msgstr "牵头联合方案（高回报，伴随违约风险）"
+
+msgid "EVENT_VIP_SYNDICATE_OPT_ADVISE"
+msgstr "仅提供财务顾问服务（稳健赚取咨询费）"
+
+msgid "EVENT_COMMUNITY_WAVE_TITLE"
+msgstr "社区口碑发酵与储蓄热潮"
+
+msgid "EVENT_COMMUNITY_WAVE_DESC"
+msgstr "赞助社区节庆后，周边居民与商户纷纷前来咨询开户，但邻近银行也开始悄悄派发传单。"
+
+msgid "EVENT_COMMUNITY_WAVE_OPT_CLUB"
+msgstr "顺势推出星海邻里储蓄俱乐部"
+
+msgid "EVENT_COMMUNITY_WAVE_OPT_ORGANIC"
+msgstr "保持常规服务，依靠自然口碑沉淀"
+
+msgid "EVENT_FINTECH_CYBER_TITLE"
+msgstr "金融科技接口压力大考"
+
+msgid "EVENT_FINTECH_CYBER_DESC"
+msgstr "新接入的自动化接口迎来首个交易峰值，安全审计团队提示需评估是否立刻升级防火墙。"
+
+msgid "EVENT_FINTECH_CYBER_OPT_UPGRADE"
+msgstr "全面升级企业级防火墙与压测"
+
+msgid "EVENT_FINTECH_CYBER_OPT_BASIC"
+msgstr "仅打基础安全补丁，节省预算"
+
+msgid "EVENT_OUTCOME_RE_BOOM_WINDFALL"
+msgstr "市场热情高涨，利差与手续费大增"
+
+msgid "EVENT_OUTCOME_RE_BOOM_OVERHEAT"
+msgstr "部分开发商资金链趋紧，合规成本上升"
+
+msgid "EVENT_OUTCOME_RE_PRUDENT_PRAISED"
+msgstr "稳健口碑赢得大户青睐"
+
+msgid "EVENT_OUTCOME_RE_PRUDENT_MISSED"
+msgstr "错失部分短期高息客源"
+
+msgid "EVENT_OUTCOME_RE_COOL_SOFT"
+msgstr "提前收紧风控，平稳软着陆"
+
+msgid "EVENT_OUTCOME_RE_COOL_PUSHBACK"
+msgstr "部分借款人抱怨审批变严"
+
+msgid "EVENT_OUTCOME_RE_HOLD_YIELD"
+msgstr "抓住高息窗口期，录得额外收益"
+
+msgid "EVENT_OUTCOME_RE_HOLD_SPIKE"
+msgstr "逾期苗头显现，紧急催收增加开销"
+
+msgid "EVENT_OUTCOME_STRESS_CONTAINED"
+msgstr "及时计提拨备，市场信心稳定"
+
+msgid "EVENT_OUTCOME_STRESS_RUMORS"
+msgstr "外界猜测资产质量，满意度短暂承压"
+
+msgid "EVENT_OUTCOME_RESTRUCTURE_CLEAN"
+msgstr "债务重组顺利收回抵押变现"
+
+msgid "EVENT_OUTCOME_RESTRUCTURE_COSTLY"
+msgstr "法务与重组谈判费用超出预期"
+
+msgid "EVENT_OUTCOME_VIP_DELIGHTED"
+msgstr "贵宾高度认可，当场追加大额托管"
+
+msgid "EVENT_OUTCOME_VIP_OVERBUDGET"
+msgstr "接待成本偏高且客户暂未签约"
+
+msgid "EVENT_OUTCOME_VIP_STEADY"
+msgstr "流程规范，平稳成交一笔定存"
+
+msgid "EVENT_OUTCOME_VIP_COLD"
+msgstr "客户感觉缺乏专属感，略有不满"
+
+msgid "EVENT_OUTCOME_SYNDICATE_WIN"
+msgstr "财团签约落地，手续费与声誉双丰收"
+
+msgid "EVENT_OUTCOME_SYNDICATE_RISK"
+msgstr "尽调发现瑕疵条款，垫付整改成本"
+
+msgid "EVENT_OUTCOME_SYNDICATE_FEE"
+msgstr "顺利落袋顾问费，零风险提升声誉"
+
+msgid "EVENT_OUTCOME_SYNDICATE_DECLINE"
+msgstr "财团转向全牌照大行合作"
+
+msgid "EVENT_OUTCOME_HOTFIX_SMOOTH"
+msgstr "热修复秒级恢复，客户纷纷点赞"
+
+msgid "EVENT_OUTCOME_HOTFIX_ROLLBACK"
+msgstr "补丁兼容性故障被迫回滚"
+
+msgid "EVENT_OUTCOME_MANUAL_STABLE"
+msgstr "柜员手工兜底零差错，积累应急经验"
+
+msgid "EVENT_OUTCOME_MANUAL_JAM"
+msgstr "排队明显拉长，引发客户抱怨"
+
+msgid "EVENT_OUTCOME_POACH_SURGE"
+msgstr "留任激励见效，团队干劲十足"
+
+msgid "EVENT_OUTCOME_POACH_COST"
+msgstr "同业抬价导致留任支出超出预期"
+
+msgid "EVENT_OUTCOME_POACH_LOYAL"
+msgstr "核心骨干认可星海文化选择留任"
+
+msgid "EVENT_OUTCOME_POACH_DIP"
+msgstr "团队士气受到挖角传闻波及"
+
+msgid "EVENT_OUTCOME_COMM_HIT"
+msgstr "活动反响热烈，带来大批新客资金"
+
+msgid "EVENT_OUTCOME_COMM_RAIN"
+msgstr "突遇降雨人流不及预期，赞助费小亏"
+
+msgid "EVENT_OUTCOME_COMM_SAVED"
+msgstr "守住营销预算，积累经营策略经验"
+
+msgid "EVENT_OUTCOME_COMM_COLD"
+msgstr "社区代表略感遗憾"
+
+msgid "EVENT_OUTCOME_WAVE_BOOM"
+msgstr "储蓄俱乐部爆火，存款与口碑齐升"
+
+msgid "EVENT_OUTCOME_WAVE_CROWD"
+msgstr "客流激增导致运营物料超支"
+
+msgid "EVENT_OUTCOME_WAVE_STEADY"
+msgstr "自然转化稳步提升，无额外风险"
+
+msgid "EVENT_OUTCOME_WAVE_RIVAL"
+msgstr "邻近银行高息活动分流了部分客户"
+
+msgid "EVENT_OUTCOME_AUDIT_PASS"
+msgstr "获监管通报表扬与专项激励补贴"
+
+msgid "EVENT_OUTCOME_AUDIT_MINOR"
+msgstr "发现轻微台账瑕疵，缴纳小额整改费"
+
+msgid "EVENT_OUTCOME_AUDIT_FAST"
+msgstr "检查草草结束，节省了人力投入"
+
+msgid "EVENT_OUTCOME_AUDIT_FINE"
+msgstr "因披露不充分被处以合规罚款"
+
+msgid "EVENT_OUTCOME_FINTECH_WIN"
+msgstr "接口降本增效显著，斩获数字创新补贴"
+
+msgid "EVENT_OUTCOME_FINTECH_BUG"
+msgstr "联调初期出现账务重试，产生调试成本"
+
+msgid "EVENT_OUTCOME_LEGACY_SOLID"
+msgstr "传统系统稳定可靠，零故障运行"
+
+msgid "EVENT_OUTCOME_LEGACY_SLOW"
+msgstr "年轻客户吐槽办理流程不够数字化"
+
+msgid "EVENT_OUTCOME_CYBER_PASS"
+msgstr "顺利通过安全认证，获行业标杆奖励"
+
+msgid "EVENT_OUTCOME_CYBER_COST"
+msgstr "割接期间短暂停机，产生加班与补偿费"
+
+msgid "EVENT_OUTCOME_CYBER_OK"
+msgstr "基础补丁顶住峰值流量，平稳过关"
+
+msgid "EVENT_OUTCOME_CYBER_BREACH"
+msgstr "遭遇异常流量冲击，紧急处置损失惨重"
+
+msgid "EVENT_OUTCOME_RATE_HEDGED"
+msgstr "提前锁定低成本资金，净息差扩大"
+
+msgid "EVENT_OUTCOME_RATE_DRAG"
+msgstr "备付金闲置略微拉低短期收益"
+
+msgid "EVENT_OUTCOME_RATE_INFLOW"
+msgstr "高息揽储大获成功，现金储备充沛"
+
+msgid "EVENT_OUTCOME_RATE_EXPENSE"
+msgstr "营销返现成本高于预期"
+
+msgid "UI_BUILD_CAT_ALL"
+msgstr "全部"
+
+msgid "UI_BUILD_CAT_COUNTERS"
+msgstr "柜台服务"
+
+msgid "UI_BUILD_CAT_FACILITIES"
+msgstr "自助设施"
+
+msgid "UI_BUILD_CAT_DECOR"
+msgstr "豪华装饰"
+
+msgid "UI_BUILD_SEARCH_PLACEHOLDER"
+msgstr "搜索建造项目..."
+
+msgid "UI_CARD_LOAN_TITLE"
+msgstr "待审贷款"
+
+msgid "UI_CARD_EVENT_BADGE"
+msgstr "【突发事件】"
+
+msgid "WORLD_SPEECH_CUST_ATM"
+msgstr "正在 ATM 自助办理存款…"
+
+msgid "WORLD_SPEECH_CUST_ATM_WITHDRAW"
+msgstr "正在 ATM 自助取款…"
+
+msgid "UI_EVENT_TIMER_HM"
+msgstr "剩余 {h}时{m}分"
+
+msgid "UI_EVENT_TIMER_M"
+msgstr "剩余 {m}分"
+
+msgid "UI_EVENT_EXPIRED_TOAST"
+msgstr "事件「{title}」已超时放弃并结束"
+
+msgid "UI_EVENT_EXPIRED_FOLLOWUP_TOAST"
+msgstr "事件「{title}」超时放弃，已触发后续事件！"
+
+msgid "UI_RADAR_PROF"
+msgstr "专业"
+
+msgid "UI_RADAR_EFF"
+msgstr "效率"
+
+msgid "UI_RADAR_SOC"
+msgstr "社交"
+
+msgid "UI_RADAR_RISK"
+msgstr "风控"
+
+msgid "UI_RADAR_MGMT"
+msgstr "管理"
+
+msgid "UI_RADAR_LOYAL"
+msgstr "忠诚"
+
+msgid "UI_RADAR_POT"
+msgstr "潜力"
+
+msgid "UI_EMP_NO_TRAITS"
+msgstr "暂无专属标签"
+
+msgid "UI_EMP_BTN_TRAIN_STATS"
+msgstr "能力培训"
+
+msgid "UI_EMP_BTN_REFRESH_TRAIT"
+msgstr "标签进修"
+
+msgid "TRAIT_VIP_WHISPERER_NAME"
+msgstr "贵宾顾问"
+
+msgid "TRAIT_VIP_WHISPERER_DESC"
+msgstr "擅长维系高净值客户，显著提升社交力与存款增速。"
+
+msgid "TRAIT_FAST_HANDS_NAME"
+msgstr "点钞快手"
+
+msgid "TRAIT_FAST_HANDS_DESC"
+msgstr "业务动作行云流水，大幅提升柜台效率。"
+
+msgid "TRAIT_COMPLIANCE_SHIELD_NAME"
+msgstr "合规盾牌"
+
+msgid "TRAIT_COMPLIANCE_SHIELD_DESC"
+msgstr "严守风控底线，有效压降贷款违约风险。"
+
+msgid "TRAIT_RISING_STAR_NAME"
+msgstr "星海新星"
+
+msgid "TRAIT_RISING_STAR_DESC"
+msgstr "全能成长型人才，多维能力均衡增强。"
+
+msgid "UI_TOPBAR_AWARENESS"
+msgstr "知名度"
+
+msgid "UI_BUILD_MODE_DELETE"
+msgstr "拆除删除"
+
+msgid "UI_BUILD_DELETE_HINT"
+msgstr "删除模式：点击大厅中的柜台、摆设或部门即可拆除（右键/Esc退出）"
+
+msgid "UI_BUILD_DELETE_OK"
+msgstr "已拆除目标设施！"
+
+msgid "ERR_CANNOT_DELETE_LAST_TELLER"
+msgstr "至少需要保留 1 个现金柜台以维持正常营业！"
+
+msgid "ERR_PROP_NOT_FOUND"
+msgstr "未找到目标摆设。"
+
+msgid "WORLD_SPEECH_CUST_DECOR_COFFEE"
+msgstr "这咖啡吧台真惬意，等一会儿也无妨~"
+
+msgid "WORLD_SPEECH_CUST_DECOR_BULL"
+msgstr "华尔街金牛真气派，大银行风范！"
+
+msgid "WORLD_SPEECH_CUST_DECOR_GENERIC"
+msgstr "大厅装潢很讲究，先欣赏一会儿~"
+
+msgid "WORLD_SPEECH_CUST_ANGRY_LEAVE"
+msgstr "等太久又没地方歇脚，我要投诉你们银行！"
+
+msgid "WORLD_FX_ANGRY_COMPLAINT"
+msgstr "客户愤怒投诉！满意度 -5"
+
+msgid "UI_TOAST_ANGRY_COMPLAINT"
+msgstr "有顾客等待过久且缺乏休闲设施，愤怒离开并提出投诉（满意度 -5）！"
+
+msgid "UI_DELETE_CONFIRM_TITLE"
+msgstr "确认拆除 / 删除"
+
+msgid "UI_DELETE_CONFIRM_BODY"
+msgstr "确定要拆除「{name}」吗？拆除后不返还建造费用。"
+
+msgid "UI_DELETE_CONFIRM_YES"
+msgstr "确认删除"
+
+msgid "UI_DELETE_CONFIRM_NO"
+msgstr "取消"
+
+msgid "UI_CARD_TAG_COMPLEX"
+msgstr "复杂疑难单"
+
+msgid "UI_CARD_TAG_ATM"
+msgstr "ATM 自助通道"
+
+msgid "UI_CARD_TAG_BROWSING"
+msgstr "正在欣赏：{prop}"
+
+msgid "UI_CARD_CUST_META"
+msgstr "已等待 {wait} 分钟 · 信用分 {score}"
+
+msgid "UI_CARD_CUST_PATIENCE"
+msgstr "等待耐心值：{cur} / {max}"
+
+msgid "UI_CARD_CUST_DISSAT"
+msgstr "不满意度：{val} / 100"
+
+msgid "UI_CARD_STATION_EFFECT_TELLER"
+msgstr "作用：办理现金存取、转账、对公/个人开户与客诉业务。"
+
+msgid "UI_CARD_STATION_EFFECT_LOAN"
+msgstr "作用：受理贷款申请、贵宾理财咨询与企业商务洽谈。"
+
+msgid "UI_STATION_OPEN"
+msgstr "开放营业中"
+
+msgid "UI_STATION_CLOSED"
+msgstr "已暂停开放"
+
+msgid "UI_STATION_BTN_OPEN"
+msgstr "开放柜台"
+
+msgid "UI_STATION_BTN_CLOSE"
+msgstr "暂停柜台"
+
+msgid "UI_CARD_PROP_EFFECT_LUXURY"
+msgstr "豪华装饰作用：排队客户随机前来逛览，降低不满意度、恢复等待耐心并提升满意度，同时助力每日银行知名度成长。"
+
+msgid "UI_CARD_PROP_EFFECT_ATM"
+msgstr "自助设施作用：自动分流小额存取与转账客户，显著减轻柜台排队压力。"
+
+msgid "UI_CARD_PROP_EFFECT_AMENITY"
+msgstr "休闲设施作用：美化大厅环境并减缓排队顾客的不满意度上升速度。"
+
+msgid "UI_PROP_NAME_FOUNTAIN"
+msgstr "中心喷泉"
+
+msgid "CUST_STATE_APPROACHING"
+msgstr "进门寻路中"
+
+msgid "TRAIT_PROCRASTINATOR_NAME"
+msgstr "拖延症"
+
+msgid "TRAIT_PROCRASTINATOR_DESC"
+msgstr "办事节奏偏慢，降低柜台办理效率与专业表现。"
+
+msgid "TRAIT_IMPATIENT_NAME"
+msgstr "急躁易怒"
+
+msgid "TRAIT_IMPATIENT_DESC"
+msgstr "面对客流高峰容易烦躁，降低社交亲和力与忠诚度。"
+
+msgid "TRAIT_CARELESS_NAME"
+msgstr "粗心大意"
+
+msgid "TRAIT_CARELESS_DESC"
+msgstr "偶尔疏漏核验细节，降低风控意识并略微增加违约风险。"
+
+msgid "TRAIT_BURNOUT_PRONE_NAME"
+msgstr "抗压较弱"
+
+msgid "TRAIT_BURNOUT_PRONE_DESC"
+msgstr "高压环境下容易动摇，降低忠诚度与管理表现。"
+
+msgid "UI_EMP_STAT_CAP_SHORT"
+msgstr "上限"
+
+msgid "UI_EMP_BTN_PROMOTE"
+msgstr "升职 Lv.{lv} ({cost})"
+
+msgid "UI_EMP_MAX_LEVEL_BTN"
+msgstr "已满级 Lv.3"
+
+msgid "UI_EMP_PROMOTE_OK"
+msgstr "员工晋升成功，能力上限已解锁！"
+
+msgid "ERR_EMPLOYEE_MAX_LEVEL"
+msgstr "该员工已达到最高等级 Lv.3！"
+
+msgid "UI_RESIGN_CARD_TITLE"
+msgstr "【离职预警】{name} 萌生去意"
+
+msgid "UI_RESIGN_CARD_BODY"
+msgstr "当前疲劳度 {fatigue}/100 · 忠诚度 {loyalty}。因长期高压工作不满，该员工提出离职；若批准离职将损及银行知名度、满意度与声誉。"
+
+msgid "UI_RESIGN_BTN_RETAIN"
+msgstr "加薪挽留 ({cost})"
+
+msgid "UI_RESIGN_BTN_ACCEPT"
+msgstr "批准离职"
+
+msgid "UI_RESIGN_RETAIN_OK"
+msgstr "已发放留任奖金并加薪，员工决定留下！"
+
+msgid "UI_RESIGN_ACCEPT_DONE"
+msgstr "员工因不满离职，银行知名度 -3 · 满意度 -5 · 声誉 -4"
+
+msgid "UI_PROP_LORE_ATM"
+msgstr "24 小时全自动金融自助终端，支持小额存款、取款与快捷转账，是现代银行网点提升吞吐效率的核心设备。"
+
+msgid "UI_PROP_STATS_ATM"
+msgstr "属性：单笔限额 ¥2,500 · 每增设 1 台自主分流 +5%（最高 50%）· 可由大堂经理引导客流快速办理。"
+
+msgid "UI_PROP_LORE_GOLD_BULL"
+msgstr "以华尔街铜牛为蓝本铸造的金融地标级豪华雕塑，象征牛市繁荣与星海银行雄厚的资本实力。"
+
+msgid "UI_PROP_STATS_GOLD_BULL"
+msgstr "属性：豪华装饰 · 排队顾客随机驻足欣赏（不满意度 -1/分，恢复耐心）、提升客户满意度并助力每日知名度成长。"
+
+msgid "UI_PROP_LORE_COFFEE_BAR"
+msgstr "精致的现磨手冲咖啡与贵宾茶歇吧台，让顾客在等候办理业务期间享受头等舱般的金融礼遇。"
+
+msgid "UI_PROP_STATS_COFFEE_BAR"
+msgstr "属性：豪华装饰 · 吸引候客驻足品尝（不满意度 -1/分，恢复耐心）、显著提升客户满意度与银行口碑。"
+
+msgid "UI_PROP_LORE_AQUARIUM"
+msgstr "深海蓝光景观水族箱，灵动游鱼与静谧水景能瞬间抚平大厅排队的焦躁情绪。"
+
+msgid "UI_PROP_STATS_AQUARIUM"
+msgstr "属性：豪华装饰 · 排队顾客随机前来观赏（不满意度 -1/分，恢复耐心）、提升大厅格调与知名度。"
+
+msgid "UI_PROP_LORE_BOOKSHELF"
+msgstr "陈列《金融时报》、星海理财季刊与宏观经济读物的精品书报架，兼具文化气息与专业形象。"
+
+msgid "UI_PROP_STATS_BOOKSHELF"
+msgstr "属性：豪华装饰 · 供候客翻阅消遣（不满意度 -1/分，恢复耐心）、助力每日银行知名度提升。"
+
+msgid "UI_PROP_LORE_FOUNTAIN"
+msgstr "星海银行大厅中央标志性蓝晶喷泉，寓意「财源广进、生生不息」，是分行最具辨识度的视觉地标。"
+
+msgid "UI_PROP_STATS_FOUNTAIN"
+msgstr "属性：核心豪华景观 · 吸引排队客户驻足欣赏（不满意度 -1/分，恢复耐心）、稳定大厅满意度。"
+
+msgid "UI_PROP_LORE_SOFA"
+msgstr "人体工学蓝皮等候沙发，为排队时间较长的储户提供舒适的歇脚空间。"
+
+msgid "UI_PROP_STATS_SOFA"
+msgstr "属性：基础休闲设施 · 耐心偏低的顾客自动前来就座，减缓不满意度上升速度。"
+
+msgid "UI_PROP_LORE_PLANT"
+msgstr "常青室内绿植盆栽，净化大厅空气、增添生机，让严肃的金融空间更显亲和。"
+
+msgid "UI_PROP_STATS_PLANT"
+msgstr "属性：基础环境装饰 · 美化大厅环境，减缓等待顾客的不满意度累积。"
+
+msgid "ERR_EMPLOYEE_XP_NOT_FULL"
+msgstr "员工经验值尚未满级（{xp}/{required}），需通过工作或培训积累满经验后再升级！"
+
+msgid "UI_EMP_XP_PROG"
+msgstr "经验 {xp}/{req}"
+
+msgid "UI_EMP_XP_READY"
+msgstr "经验已满 {xp}/{req} · 可升职！"
+
+msgid "UI_EMP_XP_MAX"
+msgstr "经验已满 · Lv.3 满级"
+
+msgid "UI_EMP_XP_LOCKED_BTN"
+msgstr "需满经验 ({xp}/{req})"
+
+msgid "ERR_LOAN_NOT_OVERDUE"
+msgstr "该笔贷款尚未逾期，不能执行坏账核销！"
+
+msgid "UI_FINANCE_LOAN_LEDGER_HEADER"
+msgstr "贷款台账与坏账核销（共 {count} 笔）"
+
+msgid "UI_FINANCE_LOAN_LEDGER_EMPTY"
+msgstr "暂无在途或历史贷款记录。"
+
+msgid "UI_LOAN_STATUS_ACTIVE"
+msgstr "正常按天还款"
+
+msgid "UI_LOAN_STATUS_REPAID"
+msgstr "本息已结清"
+
+msgid "UI_LOAN_STATUS_OVERDUE"
+msgstr "已逾期 {days} 天 · 需核销"
+
+msgid "UI_LOAN_STATUS_WRITTEN_OFF"
+msgstr "已核销坏账"
+
+msgid "UI_FINANCE_LOAN_REPAY_LINE"
+msgstr "已还本金 {repaid} / {orig} · 累计收息 {interest} · 第 {elapsed}/{term} 天"
+
+msgid "UI_LOAN_BTN_WRITEOFF"
+msgstr "坏账核销"
+
+msgid "UI_LOAN_WRITEOFF_OK"
+msgstr "已完成逾期贷款坏账核销与抵押变现入账！"
+
+msgid "UI_TOPBAR_ACTION_NEXT_MONTH"
+msgstr "推进下月"
+
+msgid "UI_REPORT_MONTHLY_TITLE"
+msgstr "{year}年{month}月 · 月度经营结算（推进 {days} 天）"
+
+msgid "POLICY_FLEXIBLE_REPAYMENT_NAME"
+msgstr "灵活还款产品政策"
+
+msgid "POLICY_FLEXIBLE_REPAYMENT_DESC"
+msgstr "解锁贷款产品的「先息后本」与「先本后息」差异化还款方式，灵活平衡现金回流与利息收益。"
+
+msgid "ERR_REPAYMENT_POLICY_REQUIRED"
+msgstr "需先在政策页面采用「灵活还款产品政策」后才可切换该还款方式！"
+
+msgid "ERR_INVALID_REPAYMENT_MODE"
+msgstr "无效的还款方式。"
+
+msgid "UI_FINANCE_REPAY_MODE_HEADER"
+msgstr "贷款还款方式"
+
+msgid "UI_FINANCE_REPAY_UNLOCKED_HINT"
+msgstr "已解锁灵活还款政策：新放贷款将按选定方式还本付息。"
+
+msgid "UI_FINANCE_REPAY_LOCKED_HINT"
+msgstr "默认按天回收本金+利息；采用「灵活还款产品政策」可解锁先息后本 / 先本后息。"
+
+msgid "UI_REPAY_MODE_EQUAL"
+msgstr "按天还本付息"
+
+msgid "UI_REPAY_MODE_INT_FIRST"
+msgstr "先息后本"
+
+msgid "UI_REPAY_MODE_PRIN_FIRST"
+msgstr "先本后息"
+
+msgid "WORLD_SPEECH_CUST_GUIDED_ATM"
+msgstr "好的，谢谢大堂经理，我去 ATM 办！"
+
+msgid "UI_BOTTOM_STUDIO_BTN"
+msgstr "内容工坊"
+
+msgid "UI_STUDIO_TITLE"
+msgstr "内容工坊 · 游戏控制台管理器"
+
+msgid "UI_STUDIO_SUBTITLE"
+msgstr "可视化新增、编辑与删除员工标签、随机事件、装饰设施及实时对话，保存后立即生效（快捷键 F9）"
+
+msgid "UI_STUDIO_RESET_ALL"
+msgstr "重置全部自定义"
+
+msgid "UI_STUDIO_TAB_TRAITS"
+msgstr "员工标签"
+
+msgid "UI_STUDIO_TAB_EVENTS"
+msgstr "随机事件"
+
+msgid "UI_STUDIO_TAB_PROPS"
+msgstr "装饰与设施"
+
+msgid "UI_STUDIO_TAB_DIALOGUES"
+msgstr "实时对话"
+
+msgid "UI_STUDIO_NEW_ITEM"
+msgstr "＋ 新增条目"
+
+msgid "UI_STUDIO_STATUS_READY"
+msgstr "就绪：修改将自动保存至本地数据文件并热加载到当前游戏。"
+
+msgid "UI_STUDIO_EVENT_TRIGGERED"
+msgstr "已立即触发自定义随机事件，请查看右上角决策卡片！"
+
+msgid "UI_STUDIO_DIALOGUE_TRIGGERED"
+msgstr "已在大厅实时弹出自定义对话气泡！"

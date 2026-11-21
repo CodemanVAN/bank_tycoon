@@ -204,6 +204,7 @@ func disburse_loan(
 	loan.annual_rate_bps = annual_rate_bps
 	loan.term_days = term_days
 	loan.originated_day = bank_state.current_day
+	loan.repayment_mode = bank_state.loan_repayment_mode
 	loan.status = Enums.LoanStatus.ACTIVE
 	bank_state.loans[loan_id] = loan
 	return Result.succeed(loan)
@@ -479,7 +480,7 @@ func run_daily_settlement(
 	if modifiers != null:
 		active_effects = modifiers.collect_active_effects(bank_state, content_defs)
 
-	# Step 2: Accrue daily interest (integer half-up, speed-independent)
+	# Step 2: Accrue daily interest & scheduled daily principal amortization (performing loans only; overdue loans do not pay)
 	var total_loan_interest: int = 0
 	var tracked_loan_principal: int = 0
 	var loan_ids: Array[String] = []
@@ -497,13 +498,19 @@ func run_daily_settlement(
 			or loan.status == Enums.LoanStatus.DEFAULTED
 		) and loan.principal_outstanding > 0:
 			tracked_loan_principal += loan.principal_outstanding
-		if loan.is_active():
+		# Only performing loans (ACTIVE & 0 days past due) pay daily interest & principal per repayment_mode
+		if loan.status == Enums.LoanStatus.ACTIVE and loan.days_past_due == 0 and loan.principal_outstanding > 0:
 			var l_int: int = _mul_div_nonneg_sat(
 				loan.principal_outstanding,
 				loan.annual_rate_bps,
 				BalanceConfig.BPS_DENOMINATOR * BalanceConfig.DAYS_PER_YEAR
 			)
-			total_loan_interest += l_int
+			if loan.repayment_mode == "principal_first":
+				# Principal-first: defer daily interest until principal is paid off or maturity
+				loan.accrued_unpaid_interest_minor += l_int
+			else:
+				total_loan_interest += l_int
+				loan.total_interest_paid_minor += l_int
 			loan.last_accrued_day = day
 
 	var ledger_loan_bal: int = bank_state.ledger.get_balance(&"loan_principal_outstanding")
@@ -514,6 +521,38 @@ func run_daily_settlement(
 			bank_state.loan_base_rate_bps,
 			BalanceConfig.BPS_DENOMINATOR * BalanceConfig.DAYS_PER_YEAR
 		)
+
+	# Daily scheduled principal amortization according to each loan's repayment_mode:
+	# - equal_installment (default): daily principal installment + daily interest
+	# - interest_first: daily interest only during term, balloon principal at maturity
+	# - principal_first: accelerated 1.5x daily principal first, deferred interest collected on payoff/maturity
+	for lid in loan_ids:
+		var loan_p: LoanInstance = bank_state.loans[lid] as LoanInstance
+		if loan_p == null:
+			continue
+		if loan_p.status == Enums.LoanStatus.ACTIVE and loan_p.days_past_due == 0 and loan_p.principal_outstanding > 0:
+			var daily_prin: int = 0
+			if loan_p.repayment_mode == "interest_first":
+				if loan_p.days_elapsed + 1 >= loan_p.term_days:
+					daily_prin = loan_p.principal_outstanding
+			elif loan_p.repayment_mode == "principal_first":
+				var base_step: int = loan_p.get_daily_principal_installment()
+				daily_prin = mini(loan_p.principal_outstanding, maxi(1, round_div(base_step * 150, 100)))
+			else:
+				# Default equal_installment: recover a portion of principal EVERY day alongside interest
+				daily_prin = loan_p.get_daily_principal_installment()
+
+			var max_ledger_prin: int = bank_state.ledger.get_balance(&"loan_principal_outstanding")
+			var collect_prin: int = mini(daily_prin, max_ledger_prin)
+			if collect_prin > 0:
+				record_loan_repayment(bank_state, lid, collect_prin, day, BalanceConfig.BUSINESS_CLOSE_MINUTE)
+
+			# If principal_first finished principal (or hit maturity), collect deferred interest now
+			if loan_p.repayment_mode == "principal_first" and (loan_p.principal_outstanding == 0 or loan_p.days_elapsed + 1 >= loan_p.term_days):
+				if loan_p.accrued_unpaid_interest_minor > 0:
+					total_loan_interest += loan_p.accrued_unpaid_interest_minor
+					loan_p.total_interest_paid_minor += loan_p.accrued_unpaid_interest_minor
+					loan_p.accrued_unpaid_interest_minor = 0
 
 	if total_loan_interest > 0:
 		var li_res: Result = bank_state.ledger.post_entry(
@@ -743,6 +782,41 @@ func run_daily_settlement(
 	elif liquidity_status == Enums.LiquidityStatus.CAUTION or npl_ratio >= 0.05 or net_profit < 0:
 		warning_level = Enums.EventSeverity.WARNING
 
+	# Step 8b: Organic daily awareness (知名度) growth from operations, staff loyalty/satisfaction, departments & luxury decor
+	var awareness_gain: int = 1
+	var emp_loyalty_sum: int = 0
+	var emp_cnt: int = 0
+	for ev_emp: Variant in bank_state.employees.values():
+		if ev_emp is EmployeeInstance:
+			emp_loyalty_sum += (ev_emp as EmployeeInstance).loyalty
+			emp_cnt += 1
+	var avg_loyalty: int = (emp_loyalty_sum / emp_cnt) if emp_cnt > 0 else 50
+	if avg_loyalty >= 75 and bank_state.satisfaction >= 78:
+		awareness_gain += 2
+	elif avg_loyalty >= 62 and bank_state.satisfaction >= 65:
+		awareness_gain += 1
+	var active_dept_bonus: int = 0
+	for did_aw: Variant in bank_state.departments.keys():
+		var de_aw: Variant = bank_state.departments[did_aw]
+		var has_staff_aw: bool = true
+		if de_aw is Dictionary:
+			var s_ids: Variant = (de_aw as Dictionary).get("staff_ids", [])
+			if s_ids is Array and (s_ids as Array).is_empty() and bool((de_aw as Dictionary).get("requires_staff", false)):
+				has_staff_aw = false
+		if has_staff_aw:
+			active_dept_bonus += 1
+	awareness_gain += mini(3, active_dept_bonus)
+	var lux_cnt: int = 0
+	for pid_aw: Variant in bank_state.lobby_props.keys():
+		var pr_aw: Variant = bank_state.lobby_props[pid_aw]
+		if pr_aw is Dictionary and BalanceConfig.LUXURY_DECOR_TYPES.has(str((pr_aw as Dictionary).get("prop_type", ""))):
+			lux_cnt += 1
+	if lux_cnt >= 2:
+		awareness_gain += 1
+	if bank_state.satisfaction < 40:
+		awareness_gain = mini(0, awareness_gain - 2)
+	bank_state.awareness = clampi(bank_state.awareness + awareness_gain, 0, 100)
+
 	# Step 9: Build DailySettlementRecord with deltas & driver_keys
 	var prev_report: Dictionary = bank_state.daily_reports.back() as Dictionary if not bank_state.daily_reports.is_empty() else {}
 	var deltas: Dictionary = {
@@ -788,6 +862,8 @@ func run_daily_settlement(
 		"warning_level": warning_level,
 		"reputation": bank_state.reputation,
 		"satisfaction": bank_state.satisfaction,
+		"awareness": bank_state.awareness,
+		"awareness_delta": awareness_gain,
 		"deltas": deltas,
 		"driver_keys": driver_keys,
 	}

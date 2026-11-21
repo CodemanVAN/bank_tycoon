@@ -143,8 +143,8 @@ func _t1_f1_03_pixel_art_assets_and_alpha(h: Variant) -> void:
 			var ok: int = img.load(abs_p)
 			h.assert_eq(ok, OK, "Failed to load tile PNG: %s" % tpath)
 			h.assert_eq(img.get_width(), 32, "Tile width must be 32: %s" % tpath)
-			h.assert_eq(img.get_height(), 16, "Tile height must be 16: %s" % tpath)
-			h.assert_true(img.detect_alpha() != Image.ALPHA_NONE, "Tile must have alpha channel: %s" % tpath)
+			h.assert_eq(img.get_height(), 20, "Tile height must be 20: %s" % tpath)
+			h.assert_eq(img.get_format(), Image.FORMAT_RGBA8, "Tile must be RGBA8 PNG-32: %s" % tpath)
 
 	var env_props: Array[String] = [
 		"res://assets/environment/wall_section_back.png",

@@ -5,6 +5,7 @@ extends PanelContainer
 signal close_requested()
 signal command_executed(res: Variant, action_key: String)
 signal placement_requested(dept_id: String)
+signal move_requested(dept_id: String)
 
 var _sim_host: Node = null
 var _lbl_title: Label = null
@@ -134,9 +135,13 @@ func refresh() -> void:
 			var ddef_sig: Dictionary = raw_d as Dictionary
 			var did_sig: String = str(ddef_sig.get("id", ""))
 			var lvl_sig: int = dept_svc.get_department_level(bs, did_sig) if bs != null else 0
-			sig_parts.append("%s:%d:%d:%d" % [
+			var staff_cnt_sig: int = DepartmentService.get_department_staff_ids(bs, did_sig).size() if bs != null else 0
+			var active_sig: int = 1 if (bs != null and dept_svc.is_department_active(bs, did_sig)) else 0
+			sig_parts.append("%s:%d:%d:%d:%d:%d" % [
 				did_sig,
 				lvl_sig,
+				staff_cnt_sig,
+				active_sig,
 				int(ddef_sig.get("initial_cost_minor", 0)),
 				int(ddef_sig.get("daily_cost_minor", 0)),
 			])
@@ -175,8 +180,18 @@ func refresh() -> void:
 		cv.add_child(name_l)
 
 		var lvl_l := Label.new()
-		lvl_l.text = UiI18n.tr_key("UI_DEPT_LEVEL_FORMAT", {"level": cur_lvl, "max": max_lvl}) if cur_lvl > 0 else UiI18n.tr_key("UI_DEPT_NOT_CREATED")
-		lvl_l.add_theme_color_override("font_color", StarwayTheme.CYAN_500 if cur_lvl > 0 else StarwayTheme.GOLD_500)
+		if cur_lvl > 0:
+			var staff_cnt: int = DepartmentService.get_department_staff_ids(bs, dept_id).size() if bs != null else 0
+			var is_act: bool = dept_svc.is_department_active(bs, dept_id) if bs != null else false
+			var status_txt: String = UiI18n.tr_key("UI_DEPT_STAFF_ACTIVE", {"count": staff_cnt}) if is_act else UiI18n.tr_key("UI_DEPT_STAFF_INACTIVE")
+			lvl_l.text = "%s · %s" % [
+				UiI18n.tr_key("UI_DEPT_LEVEL_FORMAT", {"level": cur_lvl, "max": max_lvl}),
+				status_txt,
+			]
+			lvl_l.add_theme_color_override("font_color", StarwayTheme.CYAN_500 if is_act else StarwayTheme.RED_500)
+		else:
+			lvl_l.text = UiI18n.tr_key("UI_DEPT_NOT_CREATED")
+			lvl_l.add_theme_color_override("font_color", StarwayTheme.GOLD_500)
 		cv.add_child(lvl_l)
 
 		var desc_l := Label.new()
@@ -197,7 +212,12 @@ func refresh() -> void:
 			ul.text = "• " + UiI18n.tr_key(str(uk))
 			cv.add_child(ul)
 
+		var btn_row := HBoxContainer.new()
+		btn_row.add_theme_constant_override("separation", 6)
+		cv.add_child(btn_row)
+
 		var btn := Button.new()
+		btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		if cur_lvl <= 0:
 			btn.theme_type_variation = &"ButtonPrimary"
 			btn.text = UiI18n.tr_key("UI_DEPT_BTN_CHOOSE_PLOT", {"cost": FormatService.format_money(init_cost, ccy, false, lc)})
@@ -220,7 +240,30 @@ func refresh() -> void:
 			btn.text = UiI18n.tr_key("UI_DEPT_BTN_MAX_LEVEL")
 			btn.disabled = true
 		UiListRefresh.watch_release(btn, _on_list_button_up)
-		cv.add_child(btn)
+		btn_row.add_child(btn)
+
+		if cur_lvl > 0:
+			var move_btn := Button.new()
+			move_btn.theme_type_variation = &"ButtonPrimary"
+			move_btn.text = UiI18n.tr_key("UI_DEPT_BTN_MOVE")
+			var move_did: String = dept_id
+			move_btn.pressed.connect(func() -> void:
+				UiI18n.play_sfx("sfx_ui_click")
+				move_requested.emit(move_did)
+			)
+			UiListRefresh.watch_release(move_btn, _on_list_button_up)
+			btn_row.add_child(move_btn)
+
+			var dem_btn := Button.new()
+			dem_btn.theme_type_variation = &"ButtonDanger"
+			dem_btn.text = UiI18n.tr_key("UI_DEPT_BTN_DEMOLISH")
+			var dem_did: String = dept_id
+			dem_btn.pressed.connect(func() -> void:
+				UiI18n.play_sfx("sfx_ui_click")
+				_exec_cmd("demolish_department", [dem_did], "UI_DEPT_BTN_DEMOLISH")
+			)
+			UiListRefresh.watch_release(dem_btn, _on_list_button_up)
+			btn_row.add_child(dem_btn)
 
 
 static func _get_dept_unlock_keys(dept_id: String, ddef: Dictionary) -> Array:

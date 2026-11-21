@@ -50,8 +50,11 @@ var grid_pos: Vector2i = Vector2i.ZERO
 var target_grid_pos: Vector2i = Vector2i.ZERO
 var arrival_day: int = 1
 var arrival_minute: int = 540
+var approach_minutes_remaining: int = 0
 var timed_out: bool = false
 var satisfaction_delta: int = 0
+var dissatisfaction: int = 0
+var browsing_prop_id: String = ""
 
 
 func can_transition_to(new_state: int) -> bool:
@@ -121,8 +124,11 @@ func to_dict() -> Dictionary:
 		"target_grid_pos": [target_grid_pos.x, target_grid_pos.y],
 		"arrival_day": arrival_day,
 		"arrival_minute": arrival_minute,
+		"approach_minutes_remaining": approach_minutes_remaining,
 		"timed_out": timed_out,
 		"satisfaction_delta": satisfaction_delta,
+		"dissatisfaction": dissatisfaction,
+		"browsing_prop_id": browsing_prop_id,
 	}
 
 
@@ -172,6 +178,9 @@ static func from_dict(data: Dictionary) -> Result:
 	cust.target_grid_pos = _parse_vec2i(data.get("target_grid_pos", [0, 0]))
 	cust.arrival_day = maxi(1, int(data.get("arrival_day", 1)))
 	cust.arrival_minute = maxi(0, int(data.get("arrival_minute", 540)))
+	cust.approach_minutes_remaining = maxi(0, int(data.get("approach_minutes_remaining", 0)))
 	cust.timed_out = bool(data.get("timed_out", false))
 	cust.satisfaction_delta = int(data.get("satisfaction_delta", 0))
+	cust.dissatisfaction = clampi(int(data.get("dissatisfaction", 0)), 0, 100)
+	cust.browsing_prop_id = str(data.get("browsing_prop_id", ""))
 	return Result.succeed(cust)

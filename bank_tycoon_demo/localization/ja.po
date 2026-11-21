@@ -539,16 +539,16 @@ msgid "CUST_STATE_FINDING_SERVICE"
 msgstr "受付案内"
 
 msgid "CUST_STATE_WAITING"
-msgstr "順番待ち"
+msgstr "待機中"
 
 msgid "CUST_STATE_IN_SERVICE"
-msgstr "手続中"
+msgstr "手続き中"
 
 msgid "CUST_STATE_COMPLETED"
-msgstr "手続完了"
+msgstr "完了"
 
 msgid "CUST_STATE_LEAVING"
-msgstr "退店"
+msgstr "退店中"
 
 msgid "PHASE_PRE_OPEN"
 msgstr "開店準備"
@@ -1722,3 +1722,837 @@ msgstr "日次業績要因と翌日の展望"
 
 msgid "UI_REPORT_BTN_NEXT_DAY"
 msgstr "翌日へ進む（オートセーブ）"
+
+msgid "WORLD_SPEECH_CUST_ENTER_DEPOSIT"
+msgstr "預金をお願いしたいです"
+
+msgid "WORLD_SPEECH_CUST_ENTER_WITHDRAW"
+msgstr "引き出しの列はこちらですか？"
+
+msgid "WORLD_SPEECH_CUST_ENTER_TRANSFER"
+msgstr "振込の手続きをお願いします"
+
+msgid "WORLD_SPEECH_CUST_ENTER_LOAN"
+msgstr "融資の相談に来ました"
+
+msgid "WORLD_SPEECH_CUST_ENTER_MEETING"
+msgstr "VIP相談の予約があります"
+
+msgid "WORLD_SPEECH_CUST_ENTER_COMPLAINT"
+msgstr "少し確認したい件が…"
+
+msgid "WORLD_SPEECH_CUST_SERVING"
+msgstr "はい、身分証です"
+
+msgid "WORLD_SPEECH_CUST_THANKS"
+msgstr "ありがとう、助かりました！"
+
+msgid "WORLD_SPEECH_CUST_TIMEOUT"
+msgstr "待ちすぎたので帰ります…"
+
+msgid "WORLD_SPEECH_EMP_GREET"
+msgstr "いらっしゃいませ！ご用件は？"
+
+msgid "WORLD_SPEECH_EMP_LOAN"
+msgstr "ただいま審査いたします"
+
+msgid "WORLD_SPEECH_EMP_DONE"
+msgstr "手続き完了です、またどうぞ！"
+
+msgid "WORLD_SPEECH_EMP_COMPLEX"
+msgstr "複雑な案件ですね、慎重に確認します"
+
+msgid "WORLD_SPEECH_CUST_COMPLEX"
+msgstr "少し複雑な他行手続きなのですが…"
+
+msgid "WORLD_SPEECH_CUST_SOFA"
+msgstr "待ち時間が長いのでソファで休みます…"
+
+msgid "WORLD_SPEECH_EMP_TIRED_1"
+msgstr "もうクタクタだ、少し休みたい…"
+
+msgid "WORLD_SPEECH_EMP_TIRED_2"
+msgstr "連続対応で目が回ってきた…"
+
+msgid "WORLD_SPEECH_EMP_SLACK_1"
+msgstr "空いてるうちにちょっと雑談しよう〜"
+
+msgid "WORLD_SPEECH_EMP_SLACK_2"
+msgstr "今日のお昼は何を食べようか？"
+
+msgid "WORLD_SPEECH_LM_ATM"
+msgstr "少額のお手続きはATMへご案内します！"
+
+msgid "WORLD_SPEECH_LM_SOOTHE"
+msgstr "お待たせして恐縮です、まもなくご案内します！"
+
+msgid "WORLD_SPEECH_LM_COMPLAINT"
+msgstr "ご安心ください、私がすぐに対応いたします！"
+
+msgid "ROLE_LOBBY_MANAGER"
+msgstr "ロビーマネージャー"
+
+msgid "UI_EMP_BTN_HIRE_LOBBY_MGR"
+msgstr "ロビー長で採用"
+
+msgid "UI_EMP_POST_UNASSIGNED"
+msgstr "未配置"
+
+msgid "UI_DEPT_STAFF_ACTIVE"
+msgstr "在籍 {count} 名・稼働中"
+
+msgid "UI_DEPT_STAFF_INACTIVE"
+msgstr "欠員 0 名・停止中"
+
+msgid "UI_DEPT_BTN_DEMOLISH"
+msgstr "部門解体"
+
+msgid "UI_DEPT_BTN_MOVE"
+msgstr "移設"
+
+msgid "UI_BOTTOM_LAYOUT_BTN"
+msgstr "レイアウト"
+
+msgid "UI_BOTTOM_LAYOUT_EXIT"
+msgstr "配置終了"
+
+msgid "UI_LAYOUT_MODE_HINT"
+msgstr "レイアウトモード：窓口・家具・部門をクリックで選択し移動先に配置（右クリック/Escで終了）"
+
+msgid "UI_LAYOUT_MOVE_DEPT_HINT"
+msgstr "ロビー周囲の空き地をクリックして部門を移設（右クリック/Escでキャンセル）"
+
+msgid "UI_LAYOUT_MOVE_OK"
+msgstr "配置を更新しました！"
+
+msgid "UI_BUILD_MODE_MOVE"
+msgstr "既存を移動"
+
+msgid "UI_BUILD_SUCCESS"
+msgstr "新設完了！支店レイアウトに保存されました"
+
+msgid "UI_BUILD_ITEM_TELLER"
+msgstr "+現金窓口"
+
+msgid "UI_BUILD_ITEM_LOAN_DESK"
+msgstr "+融資デスク"
+
+msgid "UI_BUILD_ITEM_ATM"
+msgstr "+ATM端末"
+
+msgid "UI_BUILD_ITEM_SOFA"
+msgstr "+待合ソファ"
+
+msgid "UI_BUILD_ITEM_COFFEE_BAR"
+msgstr "+コーヒーバー"
+
+msgid "UI_BUILD_ITEM_AQUARIUM"
+msgstr "+観賞水槽"
+
+msgid "UI_BUILD_ITEM_GOLD_BULL"
+msgstr "+黄金の雄牛像"
+
+msgid "UI_BUILD_ITEM_BOOKSHELF"
+msgstr "+金融ラック"
+
+msgid "UI_BUILD_ITEM_PLANT"
+msgstr "+観葉植物"
+
+msgid "WORLD_FX_DEPOSIT_DONE"
+msgstr "預入 +{amount}"
+
+msgid "WORLD_FX_WITHDRAW_DONE"
+msgstr "引出 -{amount}"
+
+msgid "WORLD_SPEECH_CUST_ENTER_ACCOUNT"
+msgstr "法人口座を開設したいのですが"
+
+msgid "WORLD_SPEECH_CUST_ENTER_WEALTH"
+msgstr "資産運用の相談をお願いしたいです"
+
+msgid "SERVICE_ACCOUNT_OPENING"
+msgstr "口座開設（非現金）"
+
+msgid "SERVICE_WEALTH_ADVISORY"
+msgstr "資産運用相談"
+
+msgid "UI_NOTIF_LOAN_TITLE"
+msgstr "【融資承認待ち】新規審査依頼"
+
+msgid "UI_NOTIF_LOAN_BODY"
+msgstr "申込額 {amount}・クリックで審査"
+
+msgid "UI_NOTIF_EVENT_TITLE"
+msgstr "【イベント発生】支店長決裁待ち"
+
+msgid "UI_NOTIF_EVENT_BODY"
+msgstr "{title}・クリックで対応"
+
+msgid "EMP_DEPT_OPS_LEAD"
+msgstr "沈明軒（運営主任）"
+
+msgid "EMP_DEPT_HR_LEAD"
+msgstr "陸知微（人事主任）"
+
+msgid "EMP_DEPT_CREDIT_LEAD"
+msgstr "韓景川（与信主任）"
+
+msgid "EMP_DEPT_RISK_LEAD"
+msgstr "許清晏（リスク主任）"
+
+msgid "UI_EVENT_CHAIN_ARC"
+msgstr "【連続イベント線】"
+
+msgid "UI_EVENT_CHAIN_FOLLOWUP"
+msgstr "【続編イベント】"
+
+msgid "UI_EVENT_SENTIMENT_POS"
+msgstr "好転"
+
+msgid "UI_EVENT_SENTIMENT_NEG"
+msgstr "リスク"
+
+msgid "UI_EVENT_SENTIMENT_MIXED"
+msgstr "中立"
+
+msgid "UI_EVENT_EFF_CASH"
+msgstr "現金 {val}"
+
+msgid "UI_EVENT_EFF_SAT"
+msgstr "満足度 {val}"
+
+msgid "UI_EVENT_EFF_SP"
+msgstr "戦略P {val}"
+
+msgid "UI_EVENT_EFF_REP"
+msgstr "評判 {val}"
+
+msgid "UI_EVENT_EFF_DEP"
+msgstr "預金成長 {val}"
+
+msgid "UI_EVENT_EFF_RISK"
+msgstr "貸倒リスク {val}"
+
+msgid "UI_EVENT_EFF_PROD"
+msgstr "業務効率 {val}"
+
+msgid "UI_EVENT_EFF_SPEED"
+msgstr "窓口速度 {val}"
+
+msgid "UI_EVENT_EFF_LIQ"
+msgstr "流動性基準 {val}"
+
+msgid "UI_EVENT_EFF_CHAIN"
+msgstr "→ 続編発生：{next}"
+
+msgid "UI_EVENT_RESULT_BANNER"
+msgstr "【結果判定・確率{pct}%】{outcome}"
+
+msgid "EVENT_VIP_SYNDICATE_TITLE"
+msgstr "VIP財団 協調融資の招待"
+
+msgid "EVENT_VIP_SYNDICATE_DESC"
+msgstr "先日の特別接待に感動したVIP顧客が、地元財団の大型金融パッケージ幹事を打診してきました。"
+
+msgid "EVENT_VIP_SYNDICATE_OPT_LEAD"
+msgstr "幹事行として引き受ける（高収益・リスクあり）"
+
+msgid "EVENT_VIP_SYNDICATE_OPT_ADVISE"
+msgstr "アドバイザリー専任（安全に手数料獲得）"
+
+msgid "EVENT_COMMUNITY_WAVE_TITLE"
+msgstr "地域の評判拡大と預金ブーム"
+
+msgid "EVENT_COMMUNITY_WAVE_DESC"
+msgstr "地域祭りの協賛後、近隣住民の口座開設相談が急増しましたが、競合行もチラシ配布を開始しました。"
+
+msgid "EVENT_COMMUNITY_WAVE_OPT_CLUB"
+msgstr "星海ご近所貯蓄クラブを設立する"
+
+msgid "EVENT_COMMUNITY_WAVE_OPT_ORGANIC"
+msgstr "通常営業を維持し自然な口コミに任せる"
+
+msgid "EVENT_FINTECH_CYBER_TITLE"
+msgstr "フィンテックAPI負荷・安全テスト"
+
+msgid "EVENT_FINTECH_CYBER_DESC"
+msgstr "新導入の自動化APIが初のピーク取引を迎えました。セキュリティ監査団がファイアウォール強化を提言しています。"
+
+msgid "EVENT_FINTECH_CYBER_OPT_UPGRADE"
+msgstr "企業級ファイアウォールへ全面刷新"
+
+msgid "EVENT_FINTECH_CYBER_OPT_BASIC"
+msgstr "基本パッチのみで予算を抑える"
+
+msgid "EVENT_OUTCOME_RE_BOOM_WINDFALL"
+msgstr "市場活況で手数料と利ざやが大幅増"
+
+msgid "EVENT_OUTCOME_RE_BOOM_OVERHEAT"
+msgstr "一部業者の資金繰り悪化で対応コスト増"
+
+msgid "EVENT_OUTCOME_RE_PRUDENT_PRAISED"
+msgstr "堅実な姿勢が大口顧客から高評価"
+
+msgid "EVENT_OUTCOME_RE_PRUDENT_MISSED"
+msgstr "短期の高金利案件を一部逃した"
+
+msgid "EVENT_OUTCOME_RE_COOL_SOFT"
+msgstr "早期引き締めで無事に軟着陸"
+
+msgid "EVENT_OUTCOME_RE_COOL_PUSHBACK"
+msgstr "審査厳格化に一部顧客が不満"
+
+msgid "EVENT_OUTCOME_RE_HOLD_YIELD"
+msgstr "高金利期を活かし追加収益を確保"
+
+msgid "EVENT_OUTCOME_RE_HOLD_SPIKE"
+msgstr "延滞兆候で督促コストが増加"
+
+msgid "EVENT_OUTCOME_STRESS_CONTAINED"
+msgstr "迅速な引当で市場の信頼を維持"
+
+msgid "EVENT_OUTCOME_STRESS_RUMORS"
+msgstr "資産健全性の噂で満足度が一時低下"
+
+msgid "EVENT_OUTCOME_RESTRUCTURE_CLEAN"
+msgstr "担保回収が順調に進み現金を確保"
+
+msgid "EVENT_OUTCOME_RESTRUCTURE_COSTLY"
+msgstr "法務・再編コストが想定を超過"
+
+msgid "EVENT_OUTCOME_VIP_DELIGHTED"
+msgstr "VIPが大満足し追加預金を契約"
+
+msgid "EVENT_OUTCOME_VIP_OVERBUDGET"
+msgstr "接待費が嵩み成約は持ち越し"
+
+msgid "EVENT_OUTCOME_VIP_STEADY"
+msgstr "丁寧な対応で堅実に定期預金を獲得"
+
+msgid "EVENT_OUTCOME_VIP_COLD"
+msgstr "特別感が薄くVIPがやや不満"
+
+msgid "EVENT_OUTCOME_SYNDICATE_WIN"
+msgstr "財団契約が成立！手数料と評判が大幅上昇"
+
+msgid "EVENT_OUTCOME_SYNDICATE_RISK"
+msgstr "条項不備が見つかり是正費用が発生"
+
+msgid "EVENT_OUTCOME_SYNDICATE_FEE"
+msgstr "無リスクで顧問料を獲得し評判も向上"
+
+msgid "EVENT_OUTCOME_SYNDICATE_DECLINE"
+msgstr "財団は大手銀行へ乗り換えた"
+
+msgid "EVENT_OUTCOME_HOTFIX_SMOOTH"
+msgstr "迅速復旧に顧客から称賛の声"
+
+msgid "EVENT_OUTCOME_HOTFIX_ROLLBACK"
+msgstr "パッチ不具合でロールバック費用発生"
+
+msgid "EVENT_OUTCOME_MANUAL_STABLE"
+msgstr "手作業対応が無事故で完了しノウハウ蓄積"
+
+msgid "EVENT_OUTCOME_MANUAL_JAM"
+msgstr "待ち時間が延び顧客が不満"
+
+msgid "EVENT_OUTCOME_POACH_SURGE"
+msgstr "慰留ボーナスでチームの士気が高揚"
+
+msgid "EVENT_OUTCOME_POACH_COST"
+msgstr "競合の上乗せで人件費が膨らんだ"
+
+msgid "EVENT_OUTCOME_POACH_LOYAL"
+msgstr "主力社員が星海文化を選び残留"
+
+msgid "EVENT_OUTCOME_POACH_DIP"
+msgstr "引き抜きの噂で士気がやや低下"
+
+msgid "EVENT_OUTCOME_COMM_HIT"
+msgstr "祭り大盛況で新規預金が大幅流入"
+
+msgid "EVENT_OUTCOME_COMM_RAIN"
+msgstr "雨天で集客が伸びず協賛費がやや赤字"
+
+msgid "EVENT_OUTCOME_COMM_SAVED"
+msgstr "予算を守り戦略的知見を得た"
+
+msgid "EVENT_OUTCOME_COMM_COLD"
+msgstr "地域団体がやや残念そうだった"
+
+msgid "EVENT_OUTCOME_WAVE_BOOM"
+msgstr "貯蓄クラブが大人気で預金と評判が急上昇"
+
+msgid "EVENT_OUTCOME_WAVE_CROWD"
+msgstr "来客殺到で備品費が予定を超過"
+
+msgid "EVENT_OUTCOME_WAVE_STEADY"
+msgstr "無理のない自然な成長を達成"
+
+msgid "EVENT_OUTCOME_WAVE_RIVAL"
+msgstr "競合キャンペーンに一部顧客が流出"
+
+msgid "EVENT_OUTCOME_AUDIT_PASS"
+msgstr "当局から優良行表彰と補助金を獲得"
+
+msgid "EVENT_OUTCOME_AUDIT_MINOR"
+msgstr "軽微な帳簿不備で少額の是正費"
+
+msgid "EVENT_OUTCOME_AUDIT_FAST"
+msgstr "検査が早期終了し労力を節約"
+
+msgid "EVENT_OUTCOME_AUDIT_FINE"
+msgstr "開示不足により法令違反の罰金"
+
+msgid "EVENT_OUTCOME_FINTECH_WIN"
+msgstr "APIが大活躍しデジタル革新補助金を獲得"
+
+msgid "EVENT_OUTCOME_FINTECH_BUG"
+msgstr "初期連携の調整で追加費用が発生"
+
+msgid "EVENT_OUTCOME_LEGACY_SOLID"
+msgstr "既存システムが無停止で安定稼働"
+
+msgid "EVENT_OUTCOME_LEGACY_SLOW"
+msgstr "若年層からデジタル化を望む声"
+
+msgid "EVENT_OUTCOME_CYBER_PASS"
+msgstr "安全認証に合格し業界表彰を獲得"
+
+msgid "EVENT_OUTCOME_CYBER_COST"
+msgstr "切替時の一時停止で補償費が発生"
+
+msgid "EVENT_OUTCOME_CYBER_OK"
+msgstr "基本パッチでピーク負荷を無事に凌いだ"
+
+msgid "EVENT_OUTCOME_CYBER_BREACH"
+msgstr "異常トラフィック対応で大きな損失"
+
+msgid "EVENT_OUTCOME_RATE_HEDGED"
+msgstr "低利資金を早期確保し利ざや拡大"
+
+msgid "EVENT_OUTCOME_RATE_DRAG"
+msgstr "待機資金の運用効率が一時低下"
+
+msgid "EVENT_OUTCOME_RATE_INFLOW"
+msgstr "預金キャンペーン大成功で現金潤沢"
+
+msgid "EVENT_OUTCOME_RATE_EXPENSE"
+msgstr "販促還元コストが想定を上回った"
+
+msgid "UI_BUILD_CAT_ALL"
+msgstr "すべて"
+
+msgid "UI_BUILD_CAT_COUNTERS"
+msgstr "窓口カウンター"
+
+msgid "UI_BUILD_CAT_FACILITIES"
+msgstr "セルフ設備"
+
+msgid "UI_BUILD_CAT_DECOR"
+msgstr "高級装飾"
+
+msgid "UI_BUILD_SEARCH_PLACEHOLDER"
+msgstr "建築アイテムを検索..."
+
+msgid "UI_CARD_LOAN_TITLE"
+msgstr "融資審査"
+
+msgid "UI_CARD_EVENT_BADGE"
+msgstr "【突発イベント】"
+
+msgid "WORLD_SPEECH_CUST_ATM"
+msgstr "ATMでセルフ手続き中…"
+
+msgid "WORLD_SPEECH_CUST_ATM_WITHDRAW"
+msgstr "ATMで現金を引き出し中…"
+
+msgid "UI_EVENT_TIMER_HM"
+msgstr "残り {h}時間{m}分"
+
+msgid "UI_EVENT_TIMER_M"
+msgstr "残り {m}分"
+
+msgid "UI_EVENT_EXPIRED_TOAST"
+msgstr "イベント「{title}」は期限切れで放棄されました"
+
+msgid "UI_EVENT_EXPIRED_FOLLOWUP_TOAST"
+msgstr "イベント「{title}」が期限切れとなり後続イベントが発生！"
+
+msgid "UI_RADAR_PROF"
+msgstr "専門"
+
+msgid "UI_RADAR_EFF"
+msgstr "効率"
+
+msgid "UI_RADAR_SOC"
+msgstr "社交"
+
+msgid "UI_RADAR_RISK"
+msgstr "リスク"
+
+msgid "UI_RADAR_MGMT"
+msgstr "管理"
+
+msgid "UI_RADAR_LOYAL"
+msgstr "忠誠"
+
+msgid "UI_RADAR_POT"
+msgstr "潜在"
+
+msgid "UI_EMP_NO_TRAITS"
+msgstr "固有タグなし"
+
+msgid "UI_EMP_BTN_TRAIN_STATS"
+msgstr "能力研修"
+
+msgid "UI_EMP_BTN_REFRESH_TRAIT"
+msgstr "タグ習得"
+
+msgid "TRAIT_VIP_WHISPERER_NAME"
+msgstr "VIP顧問"
+
+msgid "TRAIT_VIP_WHISPERER_DESC"
+msgstr "富裕層対応に長け、社交力と預金成長を高める。"
+
+msgid "TRAIT_FAST_HANDS_NAME"
+msgstr "迅速処理"
+
+msgid "TRAIT_FAST_HANDS_DESC"
+msgstr "素早い窓口処理で効率を大幅に引き上げる。"
+
+msgid "TRAIT_COMPLIANCE_SHIELD_NAME"
+msgstr "法令の盾"
+
+msgid "TRAIT_COMPLIANCE_SHIELD_DESC"
+msgstr "厳格な審査で貸倒リスクを抑える。"
+
+msgid "TRAIT_RISING_STAR_NAME"
+msgstr "期待の新星"
+
+msgid "TRAIT_RISING_STAR_DESC"
+msgstr "バランス良く多方面の能力を伸ばす逸材。"
+
+msgid "UI_TOPBAR_AWARENESS"
+msgstr "知名度"
+
+msgid "UI_BUILD_MODE_DELETE"
+msgstr "撤去・削除"
+
+msgid "UI_BUILD_DELETE_HINT"
+msgstr "削除モード：窓口・装飾・部門をクリックして撤去（右クリック/Escで終了）"
+
+msgid "UI_BUILD_DELETE_OK"
+msgstr "設備を撤去しました！"
+
+msgid "ERR_CANNOT_DELETE_LAST_TELLER"
+msgstr "営業維持のため窓口は最低1つ必要です！"
+
+msgid "ERR_PROP_NOT_FOUND"
+msgstr "対象の装飾が見つかりません。"
+
+msgid "WORLD_SPEECH_CUST_DECOR_COFFEE"
+msgstr "素敵なコーヒーバーですね、待ち時間も快適！"
+
+msgid "WORLD_SPEECH_CUST_DECOR_BULL"
+msgstr "黄金の雄牛が立派ですね！"
+
+msgid "WORLD_SPEECH_CUST_DECOR_GENERIC"
+msgstr "ロビーの装飾が素敵で退屈しませんね～"
+
+msgid "WORLD_SPEECH_CUST_ANGRY_LEAVE"
+msgstr "待たされすぎて限界だ！苦情を入れてやる！"
+
+msgid "WORLD_FX_ANGRY_COMPLAINT"
+msgstr "怒りのクレーム！満足度 -5"
+
+msgid "UI_TOAST_ANGRY_COMPLAINT"
+msgstr "待ち時間に不満を抱いた顧客がクレームを入れて退店しました（満足度 -5）！"
+
+msgid "UI_DELETE_CONFIRM_TITLE"
+msgstr "撤去・削除の確認"
+
+msgid "UI_DELETE_CONFIRM_BODY"
+msgstr "「{name}」を撤去しますか？建築費は返還されません。"
+
+msgid "UI_DELETE_CONFIRM_YES"
+msgstr "削除を確定"
+
+msgid "UI_DELETE_CONFIRM_NO"
+msgstr "キャンセル"
+
+msgid "UI_CARD_TAG_COMPLEX"
+msgstr "複雑案件"
+
+msgid "UI_CARD_TAG_ATM"
+msgstr "ATMセルフ"
+
+msgid "UI_CARD_TAG_BROWSING"
+msgstr "鑑賞中：{prop}"
+
+msgid "UI_CARD_CUST_META"
+msgstr "待機 {wait}分 · 信用スコア {score}"
+
+msgid "UI_CARD_CUST_PATIENCE"
+msgstr "待機忍耐力：{cur} / {max}"
+
+msgid "UI_CARD_CUST_DISSAT"
+msgstr "不満度：{val} / 100"
+
+msgid "UI_CARD_STATION_EFFECT_TELLER"
+msgstr "効果：現金預入・引出・振込・口座開設・苦情対応を行います。"
+
+msgid "UI_CARD_STATION_EFFECT_LOAN"
+msgstr "効果：融資審査・VIP資産相談・法人商談を受け付けます。"
+
+msgid "UI_STATION_OPEN"
+msgstr "営業中"
+
+msgid "UI_STATION_CLOSED"
+msgstr "休止中"
+
+msgid "UI_STATION_BTN_OPEN"
+msgstr "窓口を開く"
+
+msgid "UI_STATION_BTN_CLOSE"
+msgstr "窓口を閉じる"
+
+msgid "UI_CARD_PROP_EFFECT_LUXURY"
+msgstr "高級装飾の効果：待機中の顧客が立ち寄り、不満度を下げ忍耐力を回復させ、満足度と知名度の成長を後押しします。"
+
+msgid "UI_CARD_PROP_EFFECT_ATM"
+msgstr "セルフ設備の効果：少額の預入・引出・振込を分散し、窓口の混雑を緩和します。"
+
+msgid "UI_CARD_PROP_EFFECT_AMENITY"
+msgstr "休憩設備の効果：ロビーの快適性を高め、待機中の不満上昇を抑えます。"
+
+msgid "UI_PROP_NAME_FOUNTAIN"
+msgstr "中央噴水"
+
+msgid "CUST_STATE_APPROACHING"
+msgstr "入店移動中"
+
+msgid "TRAIT_PROCRASTINATOR_NAME"
+msgstr "先延ばし癖"
+
+msgid "TRAIT_PROCRASTINATOR_DESC"
+msgstr "作業ペースが遅く、効率と専門性が低下する。"
+
+msgid "TRAIT_IMPATIENT_NAME"
+msgstr "短気"
+
+msgid "TRAIT_IMPATIENT_DESC"
+msgstr "混雑時にイライラしやすく、社交と忠誠が低下する。"
+
+msgid "TRAIT_CARELESS_NAME"
+msgstr "うっかり屋"
+
+msgid "TRAIT_CARELESS_DESC"
+msgstr "確認漏れが出やすく、リスク管理意識が低下する。"
+
+msgid "TRAIT_BURNOUT_PRONE_NAME"
+msgstr "打たれ弱い"
+
+msgid "TRAIT_BURNOUT_PRONE_DESC"
+msgstr "高負荷に弱く、忠誠と管理能力が低下する。"
+
+msgid "UI_EMP_STAT_CAP_SHORT"
+msgstr "上限"
+
+msgid "UI_EMP_BTN_PROMOTE"
+msgstr "昇進 Lv.{lv} ({cost})"
+
+msgid "UI_EMP_MAX_LEVEL_BTN"
+msgstr "最大 Lv.3"
+
+msgid "UI_EMP_PROMOTE_OK"
+msgstr "社員が昇進し、能力上限が解放されました！"
+
+msgid "ERR_EMPLOYEE_MAX_LEVEL"
+msgstr "すでに最高レベル Lv.3 です！"
+
+msgid "UI_RESIGN_CARD_TITLE"
+msgstr "【離職警告】{name} が退職を希望"
+
+msgid "UI_RESIGN_CARD_BODY"
+msgstr "疲労 {fatigue}/100 · 忠誠 {loyalty}。過負荷への不満から退職を申し出ています。退職を認めると知名度・満足度・評判が低下します。"
+
+msgid "UI_RESIGN_BTN_RETAIN"
+msgstr "昇給で慰留 ({cost})"
+
+msgid "UI_RESIGN_BTN_ACCEPT"
+msgstr "退職を承認"
+
+msgid "UI_RESIGN_RETAIN_OK"
+msgstr "慰留ボーナスを支給し、社員が残留しました！"
+
+msgid "UI_RESIGN_ACCEPT_DONE"
+msgstr "不満による離職が発生：知名度 -3 · 満足度 -5 · 評判 -4"
+
+msgid "UI_PROP_LORE_ATM"
+msgstr "24時間稼働の自動取引端末。少額の預入・引出・振込をセルフで高速処理します。"
+
+msgid "UI_PROP_STATS_ATM"
+msgstr "性能：上限 ¥2,500/件 · 1台につきセルフ率 +5%（最大50%）· ロビー係の誘導に対応。"
+
+msgid "UI_PROP_LORE_GOLD_BULL"
+msgstr "ウォール街のチャージング・ブルを象った高級彫刻。強気相場と銀行の資本力を象徴します。"
+
+msgid "UI_PROP_STATS_GOLD_BULL"
+msgstr "性能：高級装飾 · 待機客が立ち寄り不満度 -1/分・忍耐回復、毎日の知名度成長に貢献。"
+
+msgid "UI_PROP_LORE_COFFEE_BAR"
+msgstr "挽きたてコーヒーを提供する高級ラウンジバー。待ち時間を上質な体験に変えます。"
+
+msgid "UI_PROP_STATS_COFFEE_BAR"
+msgstr "性能：高級装飾 · 待機客の不満度 -1/分・忍耐回復、満足度と評判を向上。"
+
+msgid "UI_PROP_LORE_AQUARIUM"
+msgstr "深海の青い光が癒やしをもたらす大型アクアリウム。ロビーの緊張を和らげます。"
+
+msgid "UI_PROP_STATS_AQUARIUM"
+msgstr "性能：高級装飾 · 待機客の不満度 -1/分・忍耐回復、ロビーの品格と知名度を向上。"
+
+msgid "UI_PROP_LORE_BOOKSHELF"
+msgstr "金融紙や資産運用誌を揃えた高級ブックスタンド。知的なブランド印象を高めます。"
+
+msgid "UI_PROP_STATS_BOOKSHELF"
+msgstr "性能：高級装飾 · 待機客の不満度 -1/分・忍耐回復、毎日の知名度成長に貢献。"
+
+msgid "UI_PROP_LORE_FOUNTAIN"
+msgstr "星海銀行ロビーの象徴となる中央噴水。絶え間ない繁栄を象徴します。"
+
+msgid "UI_PROP_STATS_FOUNTAIN"
+msgstr "性能：象徴的装飾 · 待機客が鑑賞し不満度 -1/分・忍耐回復。"
+
+msgid "UI_PROP_LORE_SOFA"
+msgstr "長時間待機する顧客が腰を下ろせる快適なレザーソファ。"
+
+msgid "UI_PROP_STATS_SOFA"
+msgstr "性能：休憩設備 · 忍耐が低下した顧客が着席し不満上昇を抑制。"
+
+msgid "UI_PROP_LORE_PLANT"
+msgstr "ロビーに彩りと安らぎを添える観葉植物。"
+
+msgid "UI_PROP_STATS_PLANT"
+msgstr "性能：環境装飾 · ロビー環境を改善し待機中の不満上昇を緩和。"
+
+msgid "ERR_EMPLOYEE_XP_NOT_FULL"
+msgstr "経験値が満タンではありません（{xp}/{required}）。業務や研修で経験値を貯めてから昇進してください！"
+
+msgid "UI_EMP_XP_PROG"
+msgstr "経験値 {xp}/{req}"
+
+msgid "UI_EMP_XP_READY"
+msgstr "経験値満タン {xp}/{req} · 昇進可！"
+
+msgid "UI_EMP_XP_MAX"
+msgstr "経験値最大 · Lv.3"
+
+msgid "UI_EMP_XP_LOCKED_BTN"
+msgstr "経験値不足 ({xp}/{req})"
+
+msgid "ERR_LOAN_NOT_OVERDUE"
+msgstr "延滞していない融資は貸倒償却できません！"
+
+msgid "UI_FINANCE_LOAN_LEDGER_HEADER"
+msgstr "融資台帳・貸倒償却（計 {count} 件）"
+
+msgid "UI_FINANCE_LOAN_LEDGER_EMPTY"
+msgstr "融資履歴はまだありません。"
+
+msgid "UI_LOAN_STATUS_ACTIVE"
+msgstr "日次返済中"
+
+msgid "UI_LOAN_STATUS_REPAID"
+msgstr "完済済み"
+
+msgid "UI_LOAN_STATUS_OVERDUE"
+msgstr "{days}日延滞 · 要償却"
+
+msgid "UI_LOAN_STATUS_WRITTEN_OFF"
+msgstr "貸倒償却済み"
+
+msgid "UI_FINANCE_LOAN_REPAY_LINE"
+msgstr "元本返済 {repaid} / {orig} · 利息回収 {interest} · {elapsed}/{term}日目"
+
+msgid "UI_LOAN_BTN_WRITEOFF"
+msgstr "貸倒償却"
+
+msgid "UI_LOAN_WRITEOFF_OK"
+msgstr "延滞融資の貸倒償却と担保回収を計上しました！"
+
+msgid "UI_TOPBAR_ACTION_NEXT_MONTH"
+msgstr "翌月へ進む"
+
+msgid "UI_REPORT_MONTHLY_TITLE"
+msgstr "{year}年{month}月 · 月次決算報告（{days}日経過）"
+
+msgid "POLICY_FLEXIBLE_REPAYMENT_NAME"
+msgstr "柔軟返済商品ポリシー"
+
+msgid "POLICY_FLEXIBLE_REPAYMENT_DESC"
+msgstr "融資の「利息優先」および「元本優先」返済方式を解放し、資金回収と利回り戦略を最適化します。"
+
+msgid "ERR_REPAYMENT_POLICY_REQUIRED"
+msgstr "「柔軟返済商品ポリシー」を採用するとこの返済方式を選択できます！"
+
+msgid "ERR_INVALID_REPAYMENT_MODE"
+msgstr "無効な返済方式です。"
+
+msgid "UI_FINANCE_REPAY_MODE_HEADER"
+msgstr "融資返済方式"
+
+msgid "UI_FINANCE_REPAY_UNLOCKED_HINT"
+msgstr "柔軟返済ポリシー有効：新規融資に選択方式が適用されます。"
+
+msgid "UI_FINANCE_REPAY_LOCKED_HINT"
+msgstr "標準は毎日元本+利息を回収。「柔軟返済商品ポリシー」で利息優先・元本優先を解放。"
+
+msgid "UI_REPAY_MODE_EQUAL"
+msgstr "毎日元利均等"
+
+msgid "UI_REPAY_MODE_INT_FIRST"
+msgstr "利息優先"
+
+msgid "UI_REPAY_MODE_PRIN_FIRST"
+msgstr "元本優先"
+
+msgid "WORLD_SPEECH_CUST_GUIDED_ATM"
+msgstr "ありがとう、ATMで手続きします！"
+
+msgid "UI_BOTTOM_STUDIO_BTN"
+msgstr "コンソール"
+
+msgid "UI_STUDIO_TITLE"
+msgstr "コンテンツ工房 · ゲームコンソール管理"
+
+msgid "UI_STUDIO_SUBTITLE"
+msgstr "行員タグ・ランダムイベント・装飾設備・リアルタイム会話を追加/編集/削除し即時反映（F9）"
+
+msgid "UI_STUDIO_RESET_ALL"
+msgstr "カスタムをリセット"
+
+msgid "UI_STUDIO_TAB_TRAITS"
+msgstr "行員タグ"
+
+msgid "UI_STUDIO_TAB_EVENTS"
+msgstr "ランダムイベント"
+
+msgid "UI_STUDIO_TAB_PROPS"
+msgstr "装飾・設備"
+
+msgid "UI_STUDIO_TAB_DIALOGUES"
+msgstr "リアルタイム会話"
+
+msgid "UI_STUDIO_NEW_ITEM"
+msgstr "＋ 新規作成"
+
+msgid "UI_STUDIO_STATUS_READY"
+msgstr "準備完了：変更はローカルJSONに保存されゲームへ即時反映されます。"
+
+msgid "UI_STUDIO_EVENT_TRIGGERED"
+msgstr "カスタムイベントを即時発動しました。右上のカードを確認してください！"
+
+msgid "UI_STUDIO_DIALOGUE_TRIGGERED"
+msgstr "ロビーにカスタム会話バブルを即時表示しました！"

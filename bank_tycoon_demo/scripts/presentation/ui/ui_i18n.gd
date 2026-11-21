@@ -7,6 +7,8 @@ extends RefCounted
 ## even before LocalizationService finishes scanning or for dynamic keys, no Label or Button
 ## ever displays a raw "UI_*" or "DEPT_*" key.
 
+const ContentStudioStoreScript := preload("res://scripts/infrastructure/content_studio_store.gd")
+
 static var _disk_cache_loaded: bool = false
 static var _disk_tables: Dictionary = {
 	"zh_CN": {},
@@ -56,6 +58,7 @@ const BUILTIN_FALLBACKS: Dictionary = {
 		"ROLE_LOAN_OFFICER": "信贷专员",
 		"ROLE_MANAGER": "分行经理",
 		"ROLE_ANALYST": "风险分析师",
+		"ROLE_LOBBY_MANAGER": "大堂经理",
 		"EMP_STATE_AVAILABLE": "待命",
 		"EMP_STATE_MOVING": "移动中",
 		"EMP_STATE_WORKING": "办理业务中",
@@ -468,6 +471,8 @@ static func _looks_like_untranslated_key(val: String, orig_key: String) -> bool:
 static func tr_key(key: String, params: Dictionary = {}) -> String:
 	if key.is_empty():
 		return ""
+	if key.begins_with("RAW:"):
+		return _format_params(key.substr(4), params)
 	_ensure_disk_cache()
 	var locale: String = get_locale()
 	var tree: SceneTree = Engine.get_main_loop() as SceneTree
@@ -567,6 +572,22 @@ static func tr_service_type(service_id: String) -> String:
 	return tr_key("SERVICE_" + service_id.to_upper())
 
 
+static func tr_cust_state(state_enum: int) -> String:
+	match state_enum:
+		Enums.CustomerState.SPAWNING, Enums.CustomerState.FINDING_SERVICE:
+			return tr_key("CUST_STATE_APPROACHING")
+		Enums.CustomerState.WAITING:
+			return tr_key("CUST_STATE_WAITING")
+		Enums.CustomerState.IN_SERVICE:
+			return tr_key("CUST_STATE_IN_SERVICE")
+		Enums.CustomerState.COMPLETED:
+			return tr_key("CUST_STATE_COMPLETED")
+		Enums.CustomerState.LEAVING:
+			return tr_key("CUST_STATE_LEAVING")
+		_:
+			return tr_key("CUST_STATE_WAITING")
+
+
 static func tr_customer_type(cust_type: String) -> String:
 	return tr_key("CUSTOMER_" + cust_type.to_upper() + "_NAME")
 
@@ -638,33 +659,37 @@ static func load_avatar(avatar_id: String) -> Texture2D:
 
 
 static func get_effective_content_defs(sim_host: Node = null) -> Dictionary:
+	var base_defs: Dictionary = {}
 	if sim_host != null:
 		var host_defs: Variant = sim_host.get("content_defs")
 		if host_defs is Dictionary and not (host_defs as Dictionary).is_empty():
 			var hd: Dictionary = host_defs as Dictionary
 			if (hd.get("departments", []) as Array).size() > 0:
-				return hd
+				base_defs = hd
 
-	var tree: SceneTree = Engine.get_main_loop() as SceneTree
-	if tree != null and tree.root != null:
-		var reg: Node = tree.root.get_node_or_null("ContentRegistry")
-		if reg != null:
-			if reg.has_method("get_content_defs"):
-				var cdefs: Variant = reg.call("get_content_defs")
-				if cdefs is Dictionary and ((cdefs as Dictionary).get("departments", []) as Array).size() > 0:
-					return cdefs as Dictionary
-			elif reg.has_method("get_all_by_type"):
-				var depts: Array = reg.call("get_all_by_type", &"departments") as Array
-				if not depts.is_empty():
-					return {
-						"departments": depts,
-						"policies": reg.call("get_all_by_type", &"policies"),
-						"events": reg.call("get_all_by_type", &"events"),
-						"traits": reg.call("get_all_by_type", &"traits"),
-						"customers": reg.call("get_all_by_type", &"customers"),
-					}
+	if base_defs.is_empty():
+		var tree: SceneTree = Engine.get_main_loop() as SceneTree
+		if tree != null and tree.root != null:
+			var reg: Node = tree.root.get_node_or_null("ContentRegistry")
+			if reg != null:
+				if reg.has_method("get_content_defs"):
+					var cdefs: Variant = reg.call("get_content_defs")
+					if cdefs is Dictionary and ((cdefs as Dictionary).get("departments", []) as Array).size() > 0:
+						base_defs = cdefs as Dictionary
+				elif reg.has_method("get_all_by_type"):
+					var depts: Array = reg.call("get_all_by_type", &"departments") as Array
+					if not depts.is_empty():
+						base_defs = {
+							"departments": depts,
+							"policies": reg.call("get_all_by_type", &"policies"),
+							"events": reg.call("get_all_by_type", &"events"),
+							"traits": reg.call("get_all_by_type", &"traits"),
+							"customers": reg.call("get_all_by_type", &"customers"),
+						}
 
-	return get_fallback_content_defs()
+	if base_defs.is_empty():
+		base_defs = get_fallback_content_defs()
+	return ContentStudioStoreScript.merge_into_content_defs(base_defs)
 
 
 static func get_fallback_content_defs() -> Dictionary:

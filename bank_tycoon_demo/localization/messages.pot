@@ -1721,3 +1721,837 @@ msgstr ""
 
 msgid "UI_REPORT_BTN_NEXT_DAY"
 msgstr ""
+
+msgid "WORLD_SPEECH_CUST_ENTER_DEPOSIT"
+msgstr ""
+
+msgid "WORLD_SPEECH_CUST_ENTER_WITHDRAW"
+msgstr ""
+
+msgid "WORLD_SPEECH_CUST_ENTER_TRANSFER"
+msgstr ""
+
+msgid "WORLD_SPEECH_CUST_ENTER_LOAN"
+msgstr ""
+
+msgid "WORLD_SPEECH_CUST_ENTER_MEETING"
+msgstr ""
+
+msgid "WORLD_SPEECH_CUST_ENTER_COMPLAINT"
+msgstr ""
+
+msgid "WORLD_SPEECH_CUST_SERVING"
+msgstr ""
+
+msgid "WORLD_SPEECH_CUST_THANKS"
+msgstr ""
+
+msgid "WORLD_SPEECH_CUST_TIMEOUT"
+msgstr ""
+
+msgid "WORLD_SPEECH_EMP_GREET"
+msgstr ""
+
+msgid "WORLD_SPEECH_EMP_LOAN"
+msgstr ""
+
+msgid "WORLD_SPEECH_EMP_DONE"
+msgstr ""
+
+msgid "WORLD_SPEECH_EMP_COMPLEX"
+msgstr ""
+
+msgid "WORLD_SPEECH_CUST_COMPLEX"
+msgstr ""
+
+msgid "WORLD_SPEECH_CUST_SOFA"
+msgstr ""
+
+msgid "WORLD_SPEECH_EMP_TIRED_1"
+msgstr ""
+
+msgid "WORLD_SPEECH_EMP_TIRED_2"
+msgstr ""
+
+msgid "WORLD_SPEECH_EMP_SLACK_1"
+msgstr ""
+
+msgid "WORLD_SPEECH_EMP_SLACK_2"
+msgstr ""
+
+msgid "WORLD_SPEECH_LM_ATM"
+msgstr ""
+
+msgid "WORLD_SPEECH_LM_SOOTHE"
+msgstr ""
+
+msgid "WORLD_SPEECH_LM_COMPLAINT"
+msgstr ""
+
+msgid "ROLE_LOBBY_MANAGER"
+msgstr ""
+
+msgid "UI_EMP_BTN_HIRE_LOBBY_MGR"
+msgstr ""
+
+msgid "UI_EMP_POST_UNASSIGNED"
+msgstr ""
+
+msgid "UI_DEPT_STAFF_ACTIVE"
+msgstr ""
+
+msgid "UI_DEPT_STAFF_INACTIVE"
+msgstr ""
+
+msgid "UI_DEPT_BTN_DEMOLISH"
+msgstr ""
+
+msgid "UI_DEPT_BTN_MOVE"
+msgstr ""
+
+msgid "UI_BOTTOM_LAYOUT_BTN"
+msgstr ""
+
+msgid "UI_BOTTOM_LAYOUT_EXIT"
+msgstr ""
+
+msgid "UI_LAYOUT_MODE_HINT"
+msgstr ""
+
+msgid "UI_LAYOUT_MOVE_DEPT_HINT"
+msgstr ""
+
+msgid "UI_LAYOUT_MOVE_OK"
+msgstr ""
+
+msgid "UI_BUILD_MODE_MOVE"
+msgstr ""
+
+msgid "UI_BUILD_SUCCESS"
+msgstr ""
+
+msgid "UI_BUILD_ITEM_TELLER"
+msgstr ""
+
+msgid "UI_BUILD_ITEM_LOAN_DESK"
+msgstr ""
+
+msgid "UI_BUILD_ITEM_ATM"
+msgstr ""
+
+msgid "UI_BUILD_ITEM_SOFA"
+msgstr ""
+
+msgid "UI_BUILD_ITEM_COFFEE_BAR"
+msgstr ""
+
+msgid "UI_BUILD_ITEM_AQUARIUM"
+msgstr ""
+
+msgid "UI_BUILD_ITEM_GOLD_BULL"
+msgstr ""
+
+msgid "UI_BUILD_ITEM_BOOKSHELF"
+msgstr ""
+
+msgid "UI_BUILD_ITEM_PLANT"
+msgstr ""
+
+msgid "WORLD_FX_DEPOSIT_DONE"
+msgstr ""
+
+msgid "WORLD_FX_WITHDRAW_DONE"
+msgstr ""
+
+msgid "WORLD_SPEECH_CUST_ENTER_ACCOUNT"
+msgstr ""
+
+msgid "WORLD_SPEECH_CUST_ENTER_WEALTH"
+msgstr ""
+
+msgid "SERVICE_ACCOUNT_OPENING"
+msgstr ""
+
+msgid "SERVICE_WEALTH_ADVISORY"
+msgstr ""
+
+msgid "UI_NOTIF_LOAN_TITLE"
+msgstr ""
+
+msgid "UI_NOTIF_LOAN_BODY"
+msgstr ""
+
+msgid "UI_NOTIF_EVENT_TITLE"
+msgstr ""
+
+msgid "UI_NOTIF_EVENT_BODY"
+msgstr ""
+
+msgid "EMP_DEPT_OPS_LEAD"
+msgstr ""
+
+msgid "EMP_DEPT_HR_LEAD"
+msgstr ""
+
+msgid "EMP_DEPT_CREDIT_LEAD"
+msgstr ""
+
+msgid "EMP_DEPT_RISK_LEAD"
+msgstr ""
+
+msgid "UI_EVENT_CHAIN_ARC"
+msgstr ""
+
+msgid "UI_EVENT_CHAIN_FOLLOWUP"
+msgstr ""
+
+msgid "UI_EVENT_SENTIMENT_POS"
+msgstr ""
+
+msgid "UI_EVENT_SENTIMENT_NEG"
+msgstr ""
+
+msgid "UI_EVENT_SENTIMENT_MIXED"
+msgstr ""
+
+msgid "UI_EVENT_EFF_CASH"
+msgstr ""
+
+msgid "UI_EVENT_EFF_SAT"
+msgstr ""
+
+msgid "UI_EVENT_EFF_SP"
+msgstr ""
+
+msgid "UI_EVENT_EFF_REP"
+msgstr ""
+
+msgid "UI_EVENT_EFF_DEP"
+msgstr ""
+
+msgid "UI_EVENT_EFF_RISK"
+msgstr ""
+
+msgid "UI_EVENT_EFF_PROD"
+msgstr ""
+
+msgid "UI_EVENT_EFF_SPEED"
+msgstr ""
+
+msgid "UI_EVENT_EFF_LIQ"
+msgstr ""
+
+msgid "UI_EVENT_EFF_CHAIN"
+msgstr ""
+
+msgid "UI_EVENT_RESULT_BANNER"
+msgstr ""
+
+msgid "EVENT_VIP_SYNDICATE_TITLE"
+msgstr ""
+
+msgid "EVENT_VIP_SYNDICATE_DESC"
+msgstr ""
+
+msgid "EVENT_VIP_SYNDICATE_OPT_LEAD"
+msgstr ""
+
+msgid "EVENT_VIP_SYNDICATE_OPT_ADVISE"
+msgstr ""
+
+msgid "EVENT_COMMUNITY_WAVE_TITLE"
+msgstr ""
+
+msgid "EVENT_COMMUNITY_WAVE_DESC"
+msgstr ""
+
+msgid "EVENT_COMMUNITY_WAVE_OPT_CLUB"
+msgstr ""
+
+msgid "EVENT_COMMUNITY_WAVE_OPT_ORGANIC"
+msgstr ""
+
+msgid "EVENT_FINTECH_CYBER_TITLE"
+msgstr ""
+
+msgid "EVENT_FINTECH_CYBER_DESC"
+msgstr ""
+
+msgid "EVENT_FINTECH_CYBER_OPT_UPGRADE"
+msgstr ""
+
+msgid "EVENT_FINTECH_CYBER_OPT_BASIC"
+msgstr ""
+
+msgid "EVENT_OUTCOME_RE_BOOM_WINDFALL"
+msgstr ""
+
+msgid "EVENT_OUTCOME_RE_BOOM_OVERHEAT"
+msgstr ""
+
+msgid "EVENT_OUTCOME_RE_PRUDENT_PRAISED"
+msgstr ""
+
+msgid "EVENT_OUTCOME_RE_PRUDENT_MISSED"
+msgstr ""
+
+msgid "EVENT_OUTCOME_RE_COOL_SOFT"
+msgstr ""
+
+msgid "EVENT_OUTCOME_RE_COOL_PUSHBACK"
+msgstr ""
+
+msgid "EVENT_OUTCOME_RE_HOLD_YIELD"
+msgstr ""
+
+msgid "EVENT_OUTCOME_RE_HOLD_SPIKE"
+msgstr ""
+
+msgid "EVENT_OUTCOME_STRESS_CONTAINED"
+msgstr ""
+
+msgid "EVENT_OUTCOME_STRESS_RUMORS"
+msgstr ""
+
+msgid "EVENT_OUTCOME_RESTRUCTURE_CLEAN"
+msgstr ""
+
+msgid "EVENT_OUTCOME_RESTRUCTURE_COSTLY"
+msgstr ""
+
+msgid "EVENT_OUTCOME_VIP_DELIGHTED"
+msgstr ""
+
+msgid "EVENT_OUTCOME_VIP_OVERBUDGET"
+msgstr ""
+
+msgid "EVENT_OUTCOME_VIP_STEADY"
+msgstr ""
+
+msgid "EVENT_OUTCOME_VIP_COLD"
+msgstr ""
+
+msgid "EVENT_OUTCOME_SYNDICATE_WIN"
+msgstr ""
+
+msgid "EVENT_OUTCOME_SYNDICATE_RISK"
+msgstr ""
+
+msgid "EVENT_OUTCOME_SYNDICATE_FEE"
+msgstr ""
+
+msgid "EVENT_OUTCOME_SYNDICATE_DECLINE"
+msgstr ""
+
+msgid "EVENT_OUTCOME_HOTFIX_SMOOTH"
+msgstr ""
+
+msgid "EVENT_OUTCOME_HOTFIX_ROLLBACK"
+msgstr ""
+
+msgid "EVENT_OUTCOME_MANUAL_STABLE"
+msgstr ""
+
+msgid "EVENT_OUTCOME_MANUAL_JAM"
+msgstr ""
+
+msgid "EVENT_OUTCOME_POACH_SURGE"
+msgstr ""
+
+msgid "EVENT_OUTCOME_POACH_COST"
+msgstr ""
+
+msgid "EVENT_OUTCOME_POACH_LOYAL"
+msgstr ""
+
+msgid "EVENT_OUTCOME_POACH_DIP"
+msgstr ""
+
+msgid "EVENT_OUTCOME_COMM_HIT"
+msgstr ""
+
+msgid "EVENT_OUTCOME_COMM_RAIN"
+msgstr ""
+
+msgid "EVENT_OUTCOME_COMM_SAVED"
+msgstr ""
+
+msgid "EVENT_OUTCOME_COMM_COLD"
+msgstr ""
+
+msgid "EVENT_OUTCOME_WAVE_BOOM"
+msgstr ""
+
+msgid "EVENT_OUTCOME_WAVE_CROWD"
+msgstr ""
+
+msgid "EVENT_OUTCOME_WAVE_STEADY"
+msgstr ""
+
+msgid "EVENT_OUTCOME_WAVE_RIVAL"
+msgstr ""
+
+msgid "EVENT_OUTCOME_AUDIT_PASS"
+msgstr ""
+
+msgid "EVENT_OUTCOME_AUDIT_MINOR"
+msgstr ""
+
+msgid "EVENT_OUTCOME_AUDIT_FAST"
+msgstr ""
+
+msgid "EVENT_OUTCOME_AUDIT_FINE"
+msgstr ""
+
+msgid "EVENT_OUTCOME_FINTECH_WIN"
+msgstr ""
+
+msgid "EVENT_OUTCOME_FINTECH_BUG"
+msgstr ""
+
+msgid "EVENT_OUTCOME_LEGACY_SOLID"
+msgstr ""
+
+msgid "EVENT_OUTCOME_LEGACY_SLOW"
+msgstr ""
+
+msgid "EVENT_OUTCOME_CYBER_PASS"
+msgstr ""
+
+msgid "EVENT_OUTCOME_CYBER_COST"
+msgstr ""
+
+msgid "EVENT_OUTCOME_CYBER_OK"
+msgstr ""
+
+msgid "EVENT_OUTCOME_CYBER_BREACH"
+msgstr ""
+
+msgid "EVENT_OUTCOME_RATE_HEDGED"
+msgstr ""
+
+msgid "EVENT_OUTCOME_RATE_DRAG"
+msgstr ""
+
+msgid "EVENT_OUTCOME_RATE_INFLOW"
+msgstr ""
+
+msgid "EVENT_OUTCOME_RATE_EXPENSE"
+msgstr ""
+
+msgid "UI_BUILD_CAT_ALL"
+msgstr ""
+
+msgid "UI_BUILD_CAT_COUNTERS"
+msgstr ""
+
+msgid "UI_BUILD_CAT_FACILITIES"
+msgstr ""
+
+msgid "UI_BUILD_CAT_DECOR"
+msgstr ""
+
+msgid "UI_BUILD_SEARCH_PLACEHOLDER"
+msgstr ""
+
+msgid "UI_CARD_LOAN_TITLE"
+msgstr ""
+
+msgid "UI_CARD_EVENT_BADGE"
+msgstr ""
+
+msgid "WORLD_SPEECH_CUST_ATM"
+msgstr ""
+
+msgid "WORLD_SPEECH_CUST_ATM_WITHDRAW"
+msgstr ""
+
+msgid "UI_EVENT_TIMER_HM"
+msgstr ""
+
+msgid "UI_EVENT_TIMER_M"
+msgstr ""
+
+msgid "UI_EVENT_EXPIRED_TOAST"
+msgstr ""
+
+msgid "UI_EVENT_EXPIRED_FOLLOWUP_TOAST"
+msgstr ""
+
+msgid "UI_RADAR_PROF"
+msgstr ""
+
+msgid "UI_RADAR_EFF"
+msgstr ""
+
+msgid "UI_RADAR_SOC"
+msgstr ""
+
+msgid "UI_RADAR_RISK"
+msgstr ""
+
+msgid "UI_RADAR_MGMT"
+msgstr ""
+
+msgid "UI_RADAR_LOYAL"
+msgstr ""
+
+msgid "UI_RADAR_POT"
+msgstr ""
+
+msgid "UI_EMP_NO_TRAITS"
+msgstr ""
+
+msgid "UI_EMP_BTN_TRAIN_STATS"
+msgstr ""
+
+msgid "UI_EMP_BTN_REFRESH_TRAIT"
+msgstr ""
+
+msgid "TRAIT_VIP_WHISPERER_NAME"
+msgstr ""
+
+msgid "TRAIT_VIP_WHISPERER_DESC"
+msgstr ""
+
+msgid "TRAIT_FAST_HANDS_NAME"
+msgstr ""
+
+msgid "TRAIT_FAST_HANDS_DESC"
+msgstr ""
+
+msgid "TRAIT_COMPLIANCE_SHIELD_NAME"
+msgstr ""
+
+msgid "TRAIT_COMPLIANCE_SHIELD_DESC"
+msgstr ""
+
+msgid "TRAIT_RISING_STAR_NAME"
+msgstr ""
+
+msgid "TRAIT_RISING_STAR_DESC"
+msgstr ""
+
+msgid "UI_TOPBAR_AWARENESS"
+msgstr ""
+
+msgid "UI_BUILD_MODE_DELETE"
+msgstr ""
+
+msgid "UI_BUILD_DELETE_HINT"
+msgstr ""
+
+msgid "UI_BUILD_DELETE_OK"
+msgstr ""
+
+msgid "ERR_CANNOT_DELETE_LAST_TELLER"
+msgstr ""
+
+msgid "ERR_PROP_NOT_FOUND"
+msgstr ""
+
+msgid "WORLD_SPEECH_CUST_DECOR_COFFEE"
+msgstr ""
+
+msgid "WORLD_SPEECH_CUST_DECOR_BULL"
+msgstr ""
+
+msgid "WORLD_SPEECH_CUST_DECOR_GENERIC"
+msgstr ""
+
+msgid "WORLD_SPEECH_CUST_ANGRY_LEAVE"
+msgstr ""
+
+msgid "WORLD_FX_ANGRY_COMPLAINT"
+msgstr ""
+
+msgid "UI_TOAST_ANGRY_COMPLAINT"
+msgstr ""
+
+msgid "UI_DELETE_CONFIRM_TITLE"
+msgstr ""
+
+msgid "UI_DELETE_CONFIRM_BODY"
+msgstr ""
+
+msgid "UI_DELETE_CONFIRM_YES"
+msgstr ""
+
+msgid "UI_DELETE_CONFIRM_NO"
+msgstr ""
+
+msgid "UI_CARD_TAG_COMPLEX"
+msgstr ""
+
+msgid "UI_CARD_TAG_ATM"
+msgstr ""
+
+msgid "UI_CARD_TAG_BROWSING"
+msgstr ""
+
+msgid "UI_CARD_CUST_META"
+msgstr ""
+
+msgid "UI_CARD_CUST_PATIENCE"
+msgstr ""
+
+msgid "UI_CARD_CUST_DISSAT"
+msgstr ""
+
+msgid "UI_CARD_STATION_EFFECT_TELLER"
+msgstr ""
+
+msgid "UI_CARD_STATION_EFFECT_LOAN"
+msgstr ""
+
+msgid "UI_STATION_OPEN"
+msgstr ""
+
+msgid "UI_STATION_CLOSED"
+msgstr ""
+
+msgid "UI_STATION_BTN_OPEN"
+msgstr ""
+
+msgid "UI_STATION_BTN_CLOSE"
+msgstr ""
+
+msgid "UI_CARD_PROP_EFFECT_LUXURY"
+msgstr ""
+
+msgid "UI_CARD_PROP_EFFECT_ATM"
+msgstr ""
+
+msgid "UI_CARD_PROP_EFFECT_AMENITY"
+msgstr ""
+
+msgid "UI_PROP_NAME_FOUNTAIN"
+msgstr ""
+
+msgid "CUST_STATE_APPROACHING"
+msgstr ""
+
+msgid "TRAIT_PROCRASTINATOR_NAME"
+msgstr ""
+
+msgid "TRAIT_PROCRASTINATOR_DESC"
+msgstr ""
+
+msgid "TRAIT_IMPATIENT_NAME"
+msgstr ""
+
+msgid "TRAIT_IMPATIENT_DESC"
+msgstr ""
+
+msgid "TRAIT_CARELESS_NAME"
+msgstr ""
+
+msgid "TRAIT_CARELESS_DESC"
+msgstr ""
+
+msgid "TRAIT_BURNOUT_PRONE_NAME"
+msgstr ""
+
+msgid "TRAIT_BURNOUT_PRONE_DESC"
+msgstr ""
+
+msgid "UI_EMP_STAT_CAP_SHORT"
+msgstr ""
+
+msgid "UI_EMP_BTN_PROMOTE"
+msgstr ""
+
+msgid "UI_EMP_MAX_LEVEL_BTN"
+msgstr ""
+
+msgid "UI_EMP_PROMOTE_OK"
+msgstr ""
+
+msgid "ERR_EMPLOYEE_MAX_LEVEL"
+msgstr ""
+
+msgid "UI_RESIGN_CARD_TITLE"
+msgstr ""
+
+msgid "UI_RESIGN_CARD_BODY"
+msgstr ""
+
+msgid "UI_RESIGN_BTN_RETAIN"
+msgstr ""
+
+msgid "UI_RESIGN_BTN_ACCEPT"
+msgstr ""
+
+msgid "UI_RESIGN_RETAIN_OK"
+msgstr ""
+
+msgid "UI_RESIGN_ACCEPT_DONE"
+msgstr ""
+
+msgid "UI_PROP_LORE_ATM"
+msgstr ""
+
+msgid "UI_PROP_STATS_ATM"
+msgstr ""
+
+msgid "UI_PROP_LORE_GOLD_BULL"
+msgstr ""
+
+msgid "UI_PROP_STATS_GOLD_BULL"
+msgstr ""
+
+msgid "UI_PROP_LORE_COFFEE_BAR"
+msgstr ""
+
+msgid "UI_PROP_STATS_COFFEE_BAR"
+msgstr ""
+
+msgid "UI_PROP_LORE_AQUARIUM"
+msgstr ""
+
+msgid "UI_PROP_STATS_AQUARIUM"
+msgstr ""
+
+msgid "UI_PROP_LORE_BOOKSHELF"
+msgstr ""
+
+msgid "UI_PROP_STATS_BOOKSHELF"
+msgstr ""
+
+msgid "UI_PROP_LORE_FOUNTAIN"
+msgstr ""
+
+msgid "UI_PROP_STATS_FOUNTAIN"
+msgstr ""
+
+msgid "UI_PROP_LORE_SOFA"
+msgstr ""
+
+msgid "UI_PROP_STATS_SOFA"
+msgstr ""
+
+msgid "UI_PROP_LORE_PLANT"
+msgstr ""
+
+msgid "UI_PROP_STATS_PLANT"
+msgstr ""
+
+msgid "ERR_EMPLOYEE_XP_NOT_FULL"
+msgstr ""
+
+msgid "UI_EMP_XP_PROG"
+msgstr ""
+
+msgid "UI_EMP_XP_READY"
+msgstr ""
+
+msgid "UI_EMP_XP_MAX"
+msgstr ""
+
+msgid "UI_EMP_XP_LOCKED_BTN"
+msgstr ""
+
+msgid "ERR_LOAN_NOT_OVERDUE"
+msgstr ""
+
+msgid "UI_FINANCE_LOAN_LEDGER_HEADER"
+msgstr ""
+
+msgid "UI_FINANCE_LOAN_LEDGER_EMPTY"
+msgstr ""
+
+msgid "UI_LOAN_STATUS_ACTIVE"
+msgstr ""
+
+msgid "UI_LOAN_STATUS_REPAID"
+msgstr ""
+
+msgid "UI_LOAN_STATUS_OVERDUE"
+msgstr ""
+
+msgid "UI_LOAN_STATUS_WRITTEN_OFF"
+msgstr ""
+
+msgid "UI_FINANCE_LOAN_REPAY_LINE"
+msgstr ""
+
+msgid "UI_LOAN_BTN_WRITEOFF"
+msgstr ""
+
+msgid "UI_LOAN_WRITEOFF_OK"
+msgstr ""
+
+msgid "UI_TOPBAR_ACTION_NEXT_MONTH"
+msgstr ""
+
+msgid "UI_REPORT_MONTHLY_TITLE"
+msgstr ""
+
+msgid "POLICY_FLEXIBLE_REPAYMENT_NAME"
+msgstr ""
+
+msgid "POLICY_FLEXIBLE_REPAYMENT_DESC"
+msgstr ""
+
+msgid "ERR_REPAYMENT_POLICY_REQUIRED"
+msgstr ""
+
+msgid "ERR_INVALID_REPAYMENT_MODE"
+msgstr ""
+
+msgid "UI_FINANCE_REPAY_MODE_HEADER"
+msgstr ""
+
+msgid "UI_FINANCE_REPAY_UNLOCKED_HINT"
+msgstr ""
+
+msgid "UI_FINANCE_REPAY_LOCKED_HINT"
+msgstr ""
+
+msgid "UI_REPAY_MODE_EQUAL"
+msgstr ""
+
+msgid "UI_REPAY_MODE_INT_FIRST"
+msgstr ""
+
+msgid "UI_REPAY_MODE_PRIN_FIRST"
+msgstr ""
+
+msgid "WORLD_SPEECH_CUST_GUIDED_ATM"
+msgstr ""
+
+msgid "UI_BOTTOM_STUDIO_BTN"
+msgstr ""
+
+msgid "UI_STUDIO_TITLE"
+msgstr ""
+
+msgid "UI_STUDIO_SUBTITLE"
+msgstr ""
+
+msgid "UI_STUDIO_RESET_ALL"
+msgstr ""
+
+msgid "UI_STUDIO_TAB_TRAITS"
+msgstr ""
+
+msgid "UI_STUDIO_TAB_EVENTS"
+msgstr ""
+
+msgid "UI_STUDIO_TAB_PROPS"
+msgstr ""
+
+msgid "UI_STUDIO_TAB_DIALOGUES"
+msgstr ""
+
+msgid "UI_STUDIO_NEW_ITEM"
+msgstr ""
+
+msgid "UI_STUDIO_STATUS_READY"
+msgstr ""
+
+msgid "UI_STUDIO_EVENT_TRIGGERED"
+msgstr ""
+
+msgid "UI_STUDIO_DIALOGUE_TRIGGERED"
+msgstr ""

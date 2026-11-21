@@ -101,5 +101,133 @@
         "scope": "global"
       }
     ]
+  },
+  {
+    "id": "core:trait.vip_whisperer",
+    "name_key": "TRAIT_VIP_WHISPERER_NAME",
+    "description_key": "TRAIT_VIP_WHISPERER_DESC",
+    "attribute_bonuses": {
+      "sociability": 15,
+      "professionalism": 8
+    },
+    "effects": [
+      {
+        "target": "customer.deposit_growth_bps",
+        "operation": "add",
+        "value": 400,
+        "scope": "global"
+      }
+    ]
+  },
+  {
+    "id": "core:trait.fast_hands",
+    "name_key": "TRAIT_FAST_HANDS_NAME",
+    "description_key": "TRAIT_FAST_HANDS_DESC",
+    "attribute_bonuses": {
+      "efficiency": 16,
+      "professionalism": 5
+    },
+    "effects": [
+      {
+        "target": "service.teller_duration_bps",
+        "operation": "add",
+        "value": -400,
+        "scope": "global"
+      }
+    ]
+  },
+  {
+    "id": "core:trait.compliance_shield",
+    "name_key": "TRAIT_COMPLIANCE_SHIELD_NAME",
+    "description_key": "TRAIT_COMPLIANCE_SHIELD_DESC",
+    "attribute_bonuses": {
+      "risk_awareness": 14,
+      "loyalty": 10
+    },
+    "effects": [
+      {
+        "target": "loan.default_risk_bps",
+        "operation": "add",
+        "value": -350,
+        "scope": "global"
+      }
+    ]
+  },
+  {
+    "id": "core:trait.rising_star",
+    "name_key": "TRAIT_RISING_STAR_NAME",
+    "description_key": "TRAIT_RISING_STAR_DESC",
+    "attribute_bonuses": {
+      "efficiency": 8,
+      "sociability": 8,
+      "management": 8,
+      "potential": 12
+    },
+    "effects": [
+      {
+        "target": "staff.productivity_bps",
+        "operation": "add",
+        "value": 300,
+        "scope": "global"
+      }
+    ]
+  },
+  {
+    "id": "core:trait.procrastinator",
+    "polarity": "negative",
+    "name_key": "TRAIT_PROCRASTINATOR_NAME",
+    "description_key": "TRAIT_PROCRASTINATOR_DESC",
+    "attribute_bonuses": {
+      "efficiency": -12,
+      "professionalism": -4
+    },
+    "effects": [
+      {
+        "target": "staff.productivity_bps",
+        "operation": "add",
+        "value": -350,
+        "scope": "global"
+      }
+    ]
+  },
+  {
+    "id": "core:trait.impatient",
+    "polarity": "negative",
+    "name_key": "TRAIT_IMPATIENT_NAME",
+    "description_key": "TRAIT_IMPATIENT_DESC",
+    "attribute_bonuses": {
+      "sociability": -12,
+      "loyalty": -6
+    },
+    "effects": []
+  },
+  {
+    "id": "core:trait.careless",
+    "polarity": "negative",
+    "name_key": "TRAIT_CARELESS_NAME",
+    "description_key": "TRAIT_CARELESS_DESC",
+    "attribute_bonuses": {
+      "risk_awareness": -14,
+      "professionalism": -6
+    },
+    "effects": [
+      {
+        "target": "loan.default_risk_bps",
+        "operation": "add",
+        "value": 250,
+        "scope": "global"
+      }
+    ]
+  },
+  {
+    "id": "core:trait.burnout_prone",
+    "polarity": "negative",
+    "name_key": "TRAIT_BURNOUT_PRONE_NAME",
+    "description_key": "TRAIT_BURNOUT_PRONE_DESC",
+    "attribute_bonuses": {
+      "loyalty": -10,
+      "management": -8
+    },
+    "effects": []
   }
 ]

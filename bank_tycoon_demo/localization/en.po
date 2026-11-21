@@ -539,7 +539,7 @@ msgid "CUST_STATE_FINDING_SERVICE"
 msgstr "Routing"
 
 msgid "CUST_STATE_WAITING"
-msgstr "Waiting"
+msgstr "Waiting in Queue"
 
 msgid "CUST_STATE_IN_SERVICE"
 msgstr "In Service"
@@ -1722,3 +1722,837 @@ msgstr "Key Performance Drivers & Outlook"
 
 msgid "UI_REPORT_BTN_NEXT_DAY"
 msgstr "Advance to Next Day (Autosave)"
+
+msgid "WORLD_SPEECH_CUST_ENTER_DEPOSIT"
+msgstr "I'd like to make a deposit."
+
+msgid "WORLD_SPEECH_CUST_ENTER_WITHDRAW"
+msgstr "Where do I queue to withdraw?"
+
+msgid "WORLD_SPEECH_CUST_ENTER_TRANSFER"
+msgstr "Need a quick wire transfer."
+
+msgid "WORLD_SPEECH_CUST_ENTER_LOAN"
+msgstr "I'd like to apply for a loan."
+
+msgid "WORLD_SPEECH_CUST_ENTER_MEETING"
+msgstr "Here for a VIP consultation."
+
+msgid "WORLD_SPEECH_CUST_ENTER_COMPLAINT"
+msgstr "I have an issue to resolve..."
+
+msgid "WORLD_SPEECH_CUST_SERVING"
+msgstr "Sure, here is my ID."
+
+msgid "WORLD_SPEECH_CUST_THANKS"
+msgstr "Thanks, great service!"
+
+msgid "WORLD_SPEECH_CUST_TIMEOUT"
+msgstr "Too long a wait, I'm leaving..."
+
+msgid "WORLD_SPEECH_EMP_GREET"
+msgstr "Welcome! How can I help?"
+
+msgid "WORLD_SPEECH_EMP_LOAN"
+msgstr "Reviewing your loan file now."
+
+msgid "WORLD_SPEECH_EMP_DONE"
+msgstr "All set! Have a great day!"
+
+msgid "WORLD_SPEECH_EMP_COMPLEX"
+msgstr "Complex case—verifying details carefully."
+
+msgid "WORLD_SPEECH_CUST_COMPLEX"
+msgstr "This cross-bank case is tricky, please check."
+
+msgid "WORLD_SPEECH_CUST_SOFA"
+msgstr "Such a long wait... I'll sit on the sofa."
+
+msgid "WORLD_SPEECH_EMP_TIRED_1"
+msgstr "So exhausted from back-to-back shifts..."
+
+msgid "WORLD_SPEECH_EMP_TIRED_2"
+msgstr "Really need a break to catch my breath..."
+
+msgid "WORLD_SPEECH_EMP_SLACK_1"
+msgstr "Quiet hour—time for a quick chat~"
+
+msgid "WORLD_SPEECH_EMP_SLACK_2"
+msgstr "What are we grabbing for lunch today?"
+
+msgid "WORLD_SPEECH_LM_ATM"
+msgstr "Small cash job? Follow me to the ATM!"
+
+msgid "WORLD_SPEECH_LM_SOOTHE"
+msgstr "Sorry for the wait—your turn is coming up!"
+
+msgid "WORLD_SPEECH_LM_COMPLAINT"
+msgstr "Don't worry, I'll resolve this right away!"
+
+msgid "ROLE_LOBBY_MANAGER"
+msgstr "Lobby Manager"
+
+msgid "UI_EMP_BTN_HIRE_LOBBY_MGR"
+msgstr "Hire Lobby Mgr"
+
+msgid "UI_EMP_POST_UNASSIGNED"
+msgstr "Unassigned"
+
+msgid "UI_DEPT_STAFF_ACTIVE"
+msgstr "{count} Staff · Active"
+
+msgid "UI_DEPT_STAFF_INACTIVE"
+msgstr "0 Staff · Inactive"
+
+msgid "UI_DEPT_BTN_DEMOLISH"
+msgstr "Demolish"
+
+msgid "UI_DEPT_BTN_MOVE"
+msgstr "Relocate"
+
+msgid "UI_BOTTOM_LAYOUT_BTN"
+msgstr "Layout Mode"
+
+msgid "UI_BOTTOM_LAYOUT_EXIT"
+msgstr "Exit Layout"
+
+msgid "UI_LAYOUT_MODE_HINT"
+msgstr "Layout Mode: Click any counter, decor, or department to pick up, then click to place (RMB/Esc to exit)"
+
+msgid "UI_LAYOUT_MOVE_DEPT_HINT"
+msgstr "Click a valid perimeter spot to relocate the department (RMB/Esc to cancel)"
+
+msgid "UI_LAYOUT_MOVE_OK"
+msgstr "Layout updated!"
+
+msgid "UI_BUILD_MODE_MOVE"
+msgstr "Move Existing"
+
+msgid "UI_BUILD_SUCCESS"
+msgstr "Built & saved to branch layout!"
+
+msgid "UI_BUILD_ITEM_TELLER"
+msgstr "+Teller Counter"
+
+msgid "UI_BUILD_ITEM_LOAN_DESK"
+msgstr "+Loan Desk"
+
+msgid "UI_BUILD_ITEM_ATM"
+msgstr "+ATM Kiosk"
+
+msgid "UI_BUILD_ITEM_SOFA"
+msgstr "+Lobby Sofa"
+
+msgid "UI_BUILD_ITEM_COFFEE_BAR"
+msgstr "+Coffee Bar"
+
+msgid "UI_BUILD_ITEM_AQUARIUM"
+msgstr "+Aquarium"
+
+msgid "UI_BUILD_ITEM_GOLD_BULL"
+msgstr "+Gold Bull"
+
+msgid "UI_BUILD_ITEM_BOOKSHELF"
+msgstr "+Magazine Rack"
+
+msgid "UI_BUILD_ITEM_PLANT"
+msgstr "+Potted Plant"
+
+msgid "WORLD_FX_DEPOSIT_DONE"
+msgstr "Deposit +{amount}"
+
+msgid "WORLD_FX_WITHDRAW_DONE"
+msgstr "Withdraw -{amount}"
+
+msgid "WORLD_SPEECH_CUST_ENTER_ACCOUNT"
+msgstr "I'd like to open a corporate account."
+
+msgid "WORLD_SPEECH_CUST_ENTER_WEALTH"
+msgstr "Looking for wealth advisory."
+
+msgid "SERVICE_ACCOUNT_OPENING"
+msgstr "Account Opening"
+
+msgid "SERVICE_WEALTH_ADVISORY"
+msgstr "Wealth Advisory"
+
+msgid "UI_NOTIF_LOAN_TITLE"
+msgstr "[Loan Pending] New Credit Request"
+
+msgid "UI_NOTIF_LOAN_BODY"
+msgstr "Amount {amount} · Click to review"
+
+msgid "UI_NOTIF_EVENT_TITLE"
+msgstr "[Branch Event] Decision Needed"
+
+msgid "UI_NOTIF_EVENT_BODY"
+msgstr "{title} · Click to decide"
+
+msgid "EMP_DEPT_OPS_LEAD"
+msgstr "M. Shen (Ops Lead)"
+
+msgid "EMP_DEPT_HR_LEAD"
+msgstr "Z. Lu (HR Lead)"
+
+msgid "EMP_DEPT_CREDIT_LEAD"
+msgstr "J. Han (Credit Lead)"
+
+msgid "EMP_DEPT_RISK_LEAD"
+msgstr "Q. Xu (Risk Lead)"
+
+msgid "UI_EVENT_CHAIN_ARC"
+msgstr "[Storyline Chain]"
+
+msgid "UI_EVENT_CHAIN_FOLLOWUP"
+msgstr "[Follow-up Event]"
+
+msgid "UI_EVENT_SENTIMENT_POS"
+msgstr "Positive"
+
+msgid "UI_EVENT_SENTIMENT_NEG"
+msgstr "Negative"
+
+msgid "UI_EVENT_SENTIMENT_MIXED"
+msgstr "Mixed"
+
+msgid "UI_EVENT_EFF_CASH"
+msgstr "Cash {val}"
+
+msgid "UI_EVENT_EFF_SAT"
+msgstr "Satisfaction {val}"
+
+msgid "UI_EVENT_EFF_SP"
+msgstr "Strategy Pts {val}"
+
+msgid "UI_EVENT_EFF_REP"
+msgstr "Reputation {val}"
+
+msgid "UI_EVENT_EFF_DEP"
+msgstr "Deposit Growth {val}"
+
+msgid "UI_EVENT_EFF_RISK"
+msgstr "Default Risk {val}"
+
+msgid "UI_EVENT_EFF_PROD"
+msgstr "Productivity {val}"
+
+msgid "UI_EVENT_EFF_SPEED"
+msgstr "Counter Speed {val}"
+
+msgid "UI_EVENT_EFF_LIQ"
+msgstr "Liquidity Buffer {val}"
+
+msgid "UI_EVENT_EFF_CHAIN"
+msgstr "-> Triggers: {next}"
+
+msgid "UI_EVENT_RESULT_BANNER"
+msgstr "[Outcome Rolled ({pct}%)] {outcome}"
+
+msgid "EVENT_VIP_SYNDICATE_TITLE"
+msgstr "VIP Syndicate Credit Invitation"
+
+msgid "EVENT_VIP_SYNDICATE_DESC"
+msgstr "Impressed by your concierge hospitality, the VIP client introduces a local business syndicate seeking a flagship banking package."
+
+msgid "EVENT_VIP_SYNDICATE_OPT_LEAD"
+msgstr "Lead the syndicate package (High reward, default risk)"
+
+msgid "EVENT_VIP_SYNDICATE_OPT_ADVISE"
+msgstr "Act as advisor only (Safe fee income)"
+
+msgid "EVENT_COMMUNITY_WAVE_TITLE"
+msgstr "Community Buzz & Savings Wave"
+
+msgid "EVENT_COMMUNITY_WAVE_DESC"
+msgstr "Following the festival sponsorship, local residents are eager to open accounts, though rival banks are handing out competing flyers."
+
+msgid "EVENT_COMMUNITY_WAVE_OPT_CLUB"
+msgstr "Launch Starway Neighborhood Savings Club"
+
+msgid "EVENT_COMMUNITY_WAVE_OPT_ORGANIC"
+msgstr "Rely on organic word-of-mouth retention"
+
+msgid "EVENT_FINTECH_CYBER_TITLE"
+msgstr "FinTech API Stress & Security Test"
+
+msgid "EVENT_FINTECH_CYBER_DESC"
+msgstr "Your newly integrated automation API faces its first peak traffic surge. Security auditors ask whether to upgrade the firewall now."
+
+msgid "EVENT_FINTECH_CYBER_OPT_UPGRADE"
+msgstr "Full enterprise firewall & load upgrade"
+
+msgid "EVENT_FINTECH_CYBER_OPT_BASIC"
+msgstr "Apply basic patch only to save budget"
+
+msgid "EVENT_OUTCOME_RE_BOOM_WINDFALL"
+msgstr "Booming demand boosts fees and spread"
+
+msgid "EVENT_OUTCOME_RE_BOOM_OVERHEAT"
+msgstr "Tight developer cashflow raises compliance costs"
+
+msgid "EVENT_OUTCOME_RE_PRUDENT_PRAISED"
+msgstr "Prudent discipline wins major depositors"
+
+msgid "EVENT_OUTCOME_RE_PRUDENT_MISSED"
+msgstr "Missed some short-term high-yield clients"
+
+msgid "EVENT_OUTCOME_RE_COOL_SOFT"
+msgstr "Early tightening secures a soft landing"
+
+msgid "EVENT_OUTCOME_RE_COOL_PUSHBACK"
+msgstr "Borrowers push back on stricter checks"
+
+msgid "EVENT_OUTCOME_RE_HOLD_YIELD"
+msgstr "Captured high-yield window for extra profit"
+
+msgid "EVENT_OUTCOME_RE_HOLD_SPIKE"
+msgstr "Early delinquencies raise collection costs"
+
+msgid "EVENT_OUTCOME_STRESS_CONTAINED"
+msgstr "Proactive reserves calm market nerves"
+
+msgid "EVENT_OUTCOME_STRESS_RUMORS"
+msgstr "Asset quality rumors dampen satisfaction"
+
+msgid "EVENT_OUTCOME_RESTRUCTURE_CLEAN"
+msgstr "Orderly workout recovers collateral cash"
+
+msgid "EVENT_OUTCOME_RESTRUCTURE_COSTLY"
+msgstr "Legal workout fees exceed estimates"
+
+msgid "EVENT_OUTCOME_VIP_DELIGHTED"
+msgstr "VIP delighted and adds major custody funds"
+
+msgid "EVENT_OUTCOME_VIP_OVERBUDGET"
+msgstr "Hospitality ran over budget with no deal yet"
+
+msgid "EVENT_OUTCOME_VIP_STEADY"
+msgstr "Professional service closes a steady deposit"
+
+msgid "EVENT_OUTCOME_VIP_COLD"
+msgstr "VIP felt underwhelmed by standard reception"
+
+msgid "EVENT_OUTCOME_SYNDICATE_WIN"
+msgstr "Syndicate signs! Major fee & reputation boost"
+
+msgid "EVENT_OUTCOME_SYNDICATE_RISK"
+msgstr "Covenant flaw triggers remediation cost"
+
+msgid "EVENT_OUTCOME_SYNDICATE_FEE"
+msgstr "Clean advisory fee earned with zero credit risk"
+
+msgid "EVENT_OUTCOME_SYNDICATE_DECLINE"
+msgstr "Syndicate moves to a larger full-service bank"
+
+msgid "EVENT_OUTCOME_HOTFIX_SMOOTH"
+msgstr "Hotfix restores service instantly; clients cheer"
+
+msgid "EVENT_OUTCOME_HOTFIX_ROLLBACK"
+msgstr "Patch conflict forces a costly rollback"
+
+msgid "EVENT_OUTCOME_MANUAL_STABLE"
+msgstr "Zero-error manual fallback builds ops mastery"
+
+msgid "EVENT_OUTCOME_MANUAL_JAM"
+msgstr "Longer queues frustrate waiting customers"
+
+msgid "EVENT_OUTCOME_POACH_SURGE"
+msgstr "Retention bonus energizes the whole team"
+
+msgid "EVENT_OUTCOME_POACH_COST"
+msgstr "Rival counter-offers inflate bonus cost"
+
+msgid "EVENT_OUTCOME_POACH_LOYAL"
+msgstr "Core staff stay loyal to Starway culture"
+
+msgid "EVENT_OUTCOME_POACH_DIP"
+msgstr "Poaching rumors dampen team morale"
+
+msgid "EVENT_OUTCOME_COMM_HIT"
+msgstr "Festival hit brings strong new deposit inflow"
+
+msgid "EVENT_OUTCOME_COMM_RAIN"
+msgstr "Rainy turnout leaves sponsorship slightly short"
+
+msgid "EVENT_OUTCOME_COMM_SAVED"
+msgstr "Budget preserved and strategy insights gained"
+
+msgid "EVENT_OUTCOME_COMM_COLD"
+msgstr "Community organizers feel slightly disappointed"
+
+msgid "EVENT_OUTCOME_WAVE_BOOM"
+msgstr "Savings club thrives; deposits & reputation soar"
+
+msgid "EVENT_OUTCOME_WAVE_CROWD"
+msgstr "Crowded launch drives up supply expenses"
+
+msgid "EVENT_OUTCOME_WAVE_STEADY"
+msgstr "Steady organic growth with zero extra risk"
+
+msgid "EVENT_OUTCOME_WAVE_RIVAL"
+msgstr "Rival promo draws away some newcomers"
+
+msgid "EVENT_OUTCOME_AUDIT_PASS"
+msgstr "Regulatory commendation & compliance grant"
+
+msgid "EVENT_OUTCOME_AUDIT_MINOR"
+msgstr "Minor ledger note incurs a small correction fee"
+
+msgid "EVENT_OUTCOME_AUDIT_FAST"
+msgstr "Audit wraps up quickly with minimal disruption"
+
+msgid "EVENT_OUTCOME_AUDIT_FINE"
+msgstr "Insufficient disclosure triggers compliance fine"
+
+msgid "EVENT_OUTCOME_FINTECH_WIN"
+msgstr "API shines and wins digital innovation grant"
+
+msgid "EVENT_OUTCOME_FINTECH_BUG"
+msgstr "Initial retry glitches add tuning costs"
+
+msgid "EVENT_OUTCOME_LEGACY_SOLID"
+msgstr "Legacy core runs rock-solid with zero downtime"
+
+msgid "EVENT_OUTCOME_LEGACY_SLOW"
+msgstr "Younger clients wish the flow felt more modern"
+
+msgid "EVENT_OUTCOME_CYBER_PASS"
+msgstr "Security certification earned with industry award"
+
+msgid "EVENT_OUTCOME_CYBER_COST"
+msgstr "Cutover downtime adds overtime & compensation"
+
+msgid "EVENT_OUTCOME_CYBER_OK"
+msgstr "Basic patch holds steady through peak load"
+
+msgid "EVENT_OUTCOME_CYBER_BREACH"
+msgstr "Traffic anomaly forces costly emergency response"
+
+msgid "EVENT_OUTCOME_RATE_HEDGED"
+msgstr "Low-cost funding locked in; net margin widens"
+
+msgid "EVENT_OUTCOME_RATE_DRAG"
+msgstr "Idle reserve cash slightly trims short-term yield"
+
+msgid "EVENT_OUTCOME_RATE_INFLOW"
+msgstr "Deposit campaign succeeds with strong inflow"
+
+msgid "EVENT_OUTCOME_RATE_EXPENSE"
+msgstr "Promo rebates cost more than projected"
+
+msgid "UI_BUILD_CAT_ALL"
+msgstr "All"
+
+msgid "UI_BUILD_CAT_COUNTERS"
+msgstr "Counters"
+
+msgid "UI_BUILD_CAT_FACILITIES"
+msgstr "Facilities"
+
+msgid "UI_BUILD_CAT_DECOR"
+msgstr "Luxury Decor"
+
+msgid "UI_BUILD_SEARCH_PLACEHOLDER"
+msgstr "Search build items..."
+
+msgid "UI_CARD_LOAN_TITLE"
+msgstr "Loan Request"
+
+msgid "UI_CARD_EVENT_BADGE"
+msgstr "[Event]"
+
+msgid "WORLD_SPEECH_CUST_ATM"
+msgstr "Using ATM self-service..."
+
+msgid "WORLD_SPEECH_CUST_ATM_WITHDRAW"
+msgstr "Withdrawing cash at ATM..."
+
+msgid "UI_EVENT_TIMER_HM"
+msgstr "{h}h {m}m left"
+
+msgid "UI_EVENT_TIMER_M"
+msgstr "{m}m left"
+
+msgid "UI_EVENT_EXPIRED_TOAST"
+msgstr "Event '{title}' expired and was abandoned."
+
+msgid "UI_EVENT_EXPIRED_FOLLOWUP_TOAST"
+msgstr "Event '{title}' expired, triggering a follow-up event!"
+
+msgid "UI_RADAR_PROF"
+msgstr "Prof"
+
+msgid "UI_RADAR_EFF"
+msgstr "Eff"
+
+msgid "UI_RADAR_SOC"
+msgstr "Soc"
+
+msgid "UI_RADAR_RISK"
+msgstr "Risk"
+
+msgid "UI_RADAR_MGMT"
+msgstr "Mgmt"
+
+msgid "UI_RADAR_LOYAL"
+msgstr "Loyal"
+
+msgid "UI_RADAR_POT"
+msgstr "Pot"
+
+msgid "UI_EMP_NO_TRAITS"
+msgstr "No ability tags yet"
+
+msgid "UI_EMP_BTN_TRAIN_STATS"
+msgstr "Train Skills"
+
+msgid "UI_EMP_BTN_REFRESH_TRAIT"
+msgstr "Refresh Tag"
+
+msgid "TRAIT_VIP_WHISPERER_NAME"
+msgstr "VIP Advisor"
+
+msgid "TRAIT_VIP_WHISPERER_DESC"
+msgstr "Excels at VIP relationships, boosting sociability and deposits."
+
+msgid "TRAIT_FAST_HANDS_NAME"
+msgstr "Fast Hands"
+
+msgid "TRAIT_FAST_HANDS_DESC"
+msgstr "Rapid counter handling with superior efficiency."
+
+msgid "TRAIT_COMPLIANCE_SHIELD_NAME"
+msgstr "Compliance Shield"
+
+msgid "TRAIT_COMPLIANCE_SHIELD_DESC"
+msgstr "Strict risk discipline that lowers loan default risk."
+
+msgid "TRAIT_RISING_STAR_NAME"
+msgstr "Rising Star"
+
+msgid "TRAIT_RISING_STAR_DESC"
+msgstr "All-around talent with balanced multi-axis growth."
+
+msgid "UI_TOPBAR_AWARENESS"
+msgstr "Fame"
+
+msgid "UI_BUILD_MODE_DELETE"
+msgstr "Demolish"
+
+msgid "UI_BUILD_DELETE_HINT"
+msgstr "Delete Mode: Click any counter, prop, or department to remove (Right-click/Esc to exit)"
+
+msgid "UI_BUILD_DELETE_OK"
+msgstr "Facility removed!"
+
+msgid "ERR_CANNOT_DELETE_LAST_TELLER"
+msgstr "At least 1 teller counter must remain open!"
+
+msgid "ERR_PROP_NOT_FOUND"
+msgstr "Target prop not found."
+
+msgid "WORLD_SPEECH_CUST_DECOR_COFFEE"
+msgstr "Nice coffee bar! Waiting here feels relaxing~"
+
+msgid "WORLD_SPEECH_CUST_DECOR_BULL"
+msgstr "That golden bull looks impressive!"
+
+msgid "WORLD_SPEECH_CUST_DECOR_GENERIC"
+msgstr "Lovely lobby decor to admire while waiting~"
+
+msgid "WORLD_SPEECH_CUST_ANGRY_LEAVE"
+msgstr "Waited forever with nothing to do! Filing a complaint!"
+
+msgid "WORLD_FX_ANGRY_COMPLAINT"
+msgstr "Angry Complaint! Sat -5"
+
+msgid "UI_TOAST_ANGRY_COMPLAINT"
+msgstr "A waiting customer left angrily and filed a formal complaint (Satisfaction -5)!"
+
+msgid "UI_DELETE_CONFIRM_TITLE"
+msgstr "Confirm Demolish"
+
+msgid "UI_DELETE_CONFIRM_BODY"
+msgstr "Remove '{name}'? Construction cost is non-refundable."
+
+msgid "UI_DELETE_CONFIRM_YES"
+msgstr "Confirm Delete"
+
+msgid "UI_DELETE_CONFIRM_NO"
+msgstr "Cancel"
+
+msgid "UI_CARD_TAG_COMPLEX"
+msgstr "Complex Case"
+
+msgid "UI_CARD_TAG_ATM"
+msgstr "ATM Self-Service"
+
+msgid "UI_CARD_TAG_BROWSING"
+msgstr "Admiring: {prop}"
+
+msgid "UI_CARD_CUST_META"
+msgstr "Waiting {wait}m · Credit {score}"
+
+msgid "UI_CARD_CUST_PATIENCE"
+msgstr "Patience: {cur} / {max}"
+
+msgid "UI_CARD_CUST_DISSAT"
+msgstr "Dissatisfaction: {val} / 100"
+
+msgid "UI_CARD_STATION_EFFECT_TELLER"
+msgstr "Effect: Handles cash deposits, withdrawals, transfers, account opening & complaints."
+
+msgid "UI_CARD_STATION_EFFECT_LOAN"
+msgstr "Effect: Handles loan applications, wealth advisory & business meetings."
+
+msgid "UI_STATION_OPEN"
+msgstr "Open"
+
+msgid "UI_STATION_CLOSED"
+msgstr "Closed"
+
+msgid "UI_STATION_BTN_OPEN"
+msgstr "Open Counter"
+
+msgid "UI_STATION_BTN_CLOSE"
+msgstr "Close Counter"
+
+msgid "UI_CARD_PROP_EFFECT_LUXURY"
+msgstr "Luxury Decor: Waiting clients browse it to reduce dissatisfaction, recover patience, boost satisfaction, and grow daily bank fame."
+
+msgid "UI_CARD_PROP_EFFECT_ATM"
+msgstr "Self-Service: Offloads small cash deposits, withdrawals & transfers from teller queues."
+
+msgid "UI_CARD_PROP_EFFECT_AMENITY"
+msgstr "Lobby Amenity: Improves lobby comfort and slows dissatisfaction buildup while waiting."
+
+msgid "UI_PROP_NAME_FOUNTAIN"
+msgstr "Center Fountain"
+
+msgid "CUST_STATE_APPROACHING"
+msgstr "Entering Lobby"
+
+msgid "TRAIT_PROCRASTINATOR_NAME"
+msgstr "Procrastinator"
+
+msgid "TRAIT_PROCRASTINATOR_DESC"
+msgstr "Works at a sluggish pace, lowering efficiency and professionalism."
+
+msgid "TRAIT_IMPATIENT_NAME"
+msgstr "Short-Tempered"
+
+msgid "TRAIT_IMPATIENT_DESC"
+msgstr "Gets irritable during rush hours, lowering sociability and loyalty."
+
+msgid "TRAIT_CARELESS_NAME"
+msgstr "Careless"
+
+msgid "TRAIT_CARELESS_DESC"
+msgstr "Occasionally misses underwriting details, lowering risk awareness."
+
+msgid "TRAIT_BURNOUT_PRONE_NAME"
+msgstr "Fragile Morale"
+
+msgid "TRAIT_BURNOUT_PRONE_DESC"
+msgstr "Struggles under heavy pressure, lowering loyalty and management."
+
+msgid "UI_EMP_STAT_CAP_SHORT"
+msgstr "Cap"
+
+msgid "UI_EMP_BTN_PROMOTE"
+msgstr "Promote Lv.{lv} ({cost})"
+
+msgid "UI_EMP_MAX_LEVEL_BTN"
+msgstr "Max Lv.3"
+
+msgid "UI_EMP_PROMOTE_OK"
+msgstr "Employee promoted! Attribute cap unlocked."
+
+msgid "ERR_EMPLOYEE_MAX_LEVEL"
+msgstr "Employee is already at max level Lv.3!"
+
+msgid "UI_RESIGN_CARD_TITLE"
+msgstr "[Resignation Risk] {name}"
+
+msgid "UI_RESIGN_CARD_BODY"
+msgstr "Fatigue {fatigue}/100 · Loyalty {loyalty}. Overworked and dissatisfied, this staff member wants to resign. Letting them leave hurts bank fame, satisfaction & reputation."
+
+msgid "UI_RESIGN_BTN_RETAIN"
+msgstr "Retain Bonus ({cost})"
+
+msgid "UI_RESIGN_BTN_ACCEPT"
+msgstr "Accept Resignation"
+
+msgid "UI_RESIGN_RETAIN_OK"
+msgstr "Retention bonus paid! Employee stays with renewed loyalty."
+
+msgid "UI_RESIGN_ACCEPT_DONE"
+msgstr "Staff resigned in dissatisfaction: Fame -3 · Sat -5 · Rep -4"
+
+msgid "UI_PROP_LORE_ATM"
+msgstr "24/7 automated banking kiosk for fast small deposits, withdrawals, and transfers."
+
+msgid "UI_PROP_STATS_ATM"
+msgstr "Stats: Max ¥2,500/tx · +5% self-service rate per unit (up to 50%) · Lobby Manager guided offload."
+
+msgid "UI_PROP_LORE_GOLD_BULL"
+msgstr "Iconic luxury sculpture inspired by the Wall Street Charging Bull, symbolizing bull-market strength and institutional prestige."
+
+msgid "UI_PROP_STATS_GOLD_BULL"
+msgstr "Stats: Luxury Decor · Waiting clients admire it (-1 dissatisfaction/min, patience recovery) & boosts daily Fame."
+
+msgid "UI_PROP_LORE_COFFEE_BAR"
+msgstr "Artisan espresso and refreshment bar offering first-class hospitality while clients wait."
+
+msgid "UI_PROP_STATS_COFFEE_BAR"
+msgstr "Stats: Luxury Decor · Calms waiting clients (-1 dissatisfaction/min, patience recovery) & boosts satisfaction."
+
+msgid "UI_PROP_LORE_AQUARIUM"
+msgstr "Tranquil deep-sea panoramic aquarium that eases lobby queue tension."
+
+msgid "UI_PROP_STATS_AQUARIUM"
+msgstr "Stats: Luxury Decor · Attracts waiting clients (-1 dissatisfaction/min, patience recovery) & grows daily Fame."
+
+msgid "UI_PROP_LORE_BOOKSHELF"
+msgstr "Curated financial press and wealth quarterly lounge stand elevating branch sophistication."
+
+msgid "UI_PROP_STATS_BOOKSHELF"
+msgstr "Stats: Luxury Decor · Keeps waiting clients engaged (-1 dissatisfaction/min, patience recovery) & boosts Fame."
+
+msgid "UI_PROP_LORE_FOUNTAIN"
+msgstr "Starway Bank's signature crystal-blue centerpiece fountain symbolizing flowing prosperity."
+
+msgid "UI_PROP_STATS_FOUNTAIN"
+msgstr "Stats: Landmark Luxury Decor · Waiting clients admire it (-1 dissatisfaction/min, patience recovery)."
+
+msgid "UI_PROP_LORE_SOFA"
+msgstr "Plush leather waiting lounge sofa for tired customers during busy hours."
+
+msgid "UI_PROP_STATS_SOFA"
+msgstr "Stats: Lobby Amenity · Low-patience clients sit here to slow dissatisfaction buildup."
+
+msgid "UI_PROP_LORE_PLANT"
+msgstr "Lush evergreen indoor potted plant that freshens and softens the banking hall."
+
+msgid "UI_PROP_STATS_PLANT"
+msgstr "Stats: Lobby Amenity · Enhances ambiance and slows waiting dissatisfaction."
+
+msgid "ERR_EMPLOYEE_XP_NOT_FULL"
+msgstr "Employee XP is not full yet ({xp}/{required}). Work or train to fill XP before promoting!"
+
+msgid "UI_EMP_XP_PROG"
+msgstr "XP {xp}/{req}"
+
+msgid "UI_EMP_XP_READY"
+msgstr "XP Full {xp}/{req} · Ready!"
+
+msgid "UI_EMP_XP_MAX"
+msgstr "XP Max · Lv.3"
+
+msgid "UI_EMP_XP_LOCKED_BTN"
+msgstr "Need XP ({xp}/{req})"
+
+msgid "ERR_LOAN_NOT_OVERDUE"
+msgstr "Loan is not overdue and cannot be written off as bad debt."
+
+msgid "UI_FINANCE_LOAN_LEDGER_HEADER"
+msgstr "Loan Portfolio & Bad Debt Write-Off ({count})"
+
+msgid "UI_FINANCE_LOAN_LEDGER_EMPTY"
+msgstr "No active or historical loans yet."
+
+msgid "UI_LOAN_STATUS_ACTIVE"
+msgstr "Repaying Daily"
+
+msgid "UI_LOAN_STATUS_REPAID"
+msgstr "Paid in Full"
+
+msgid "UI_LOAN_STATUS_OVERDUE"
+msgstr "Overdue {days}d · Write-Off"
+
+msgid "UI_LOAN_STATUS_WRITTEN_OFF"
+msgstr "Written Off"
+
+msgid "UI_FINANCE_LOAN_REPAY_LINE"
+msgstr "Principal {repaid} / {orig} · Interest {interest} · Day {elapsed}/{term}"
+
+msgid "UI_LOAN_BTN_WRITEOFF"
+msgstr "Write Off Bad Debt"
+
+msgid "UI_LOAN_WRITEOFF_OK"
+msgstr "Overdue loan written off and collateral salvage booked!"
+
+msgid "UI_TOPBAR_ACTION_NEXT_MONTH"
+msgstr "Next Month"
+
+msgid "UI_REPORT_MONTHLY_TITLE"
+msgstr "{year}/{month} Monthly Settlement ({days} days)"
+
+msgid "POLICY_FLEXIBLE_REPAYMENT_NAME"
+msgstr "Flexible Repayment Products"
+
+msgid "POLICY_FLEXIBLE_REPAYMENT_DESC"
+msgstr "Unlocks Interest-First and Principal-First loan repayment structures to balance cash recovery and yield."
+
+msgid "ERR_REPAYMENT_POLICY_REQUIRED"
+msgstr "Adopt 'Flexible Repayment Products' policy first to unlock this repayment mode!"
+
+msgid "ERR_INVALID_REPAYMENT_MODE"
+msgstr "Invalid repayment mode."
+
+msgid "UI_FINANCE_REPAY_MODE_HEADER"
+msgstr "Loan Repayment Mode"
+
+msgid "UI_FINANCE_REPAY_UNLOCKED_HINT"
+msgstr "Flexible policy active: new loans use the selected repayment structure."
+
+msgid "UI_FINANCE_REPAY_LOCKED_HINT"
+msgstr "Default recovers daily principal + interest. Adopt 'Flexible Repayment Products' to unlock other modes."
+
+msgid "UI_REPAY_MODE_EQUAL"
+msgstr "Daily P+I"
+
+msgid "UI_REPAY_MODE_INT_FIRST"
+msgstr "Interest-First"
+
+msgid "UI_REPAY_MODE_PRIN_FIRST"
+msgstr "Principal-First"
+
+msgid "WORLD_SPEECH_CUST_GUIDED_ATM"
+msgstr "Thanks! Heading to the ATM now!"
+
+msgid "UI_BOTTOM_STUDIO_BTN"
+msgstr "Studio"
+
+msgid "UI_STUDIO_TITLE"
+msgstr "Content Studio · Game Console Manager"
+
+msgid "UI_STUDIO_SUBTITLE"
+msgstr "Create, edit, and delete employee traits, random events, decor/facilities, and live NPC dialogues with instant hot-reload (F9)"
+
+msgid "UI_STUDIO_RESET_ALL"
+msgstr "Reset Custom Data"
+
+msgid "UI_STUDIO_TAB_TRAITS"
+msgstr "Staff Traits"
+
+msgid "UI_STUDIO_TAB_EVENTS"
+msgstr "Random Events"
+
+msgid "UI_STUDIO_TAB_PROPS"
+msgstr "Decor & Props"
+
+msgid "UI_STUDIO_TAB_DIALOGUES"
+msgstr "Live Dialogues"
+
+msgid "UI_STUDIO_NEW_ITEM"
+msgstr "+ New Item"
+
+msgid "UI_STUDIO_STATUS_READY"
+msgstr "Ready: changes persist to JSON and hot-reload into the active game."
+
+msgid "UI_STUDIO_EVENT_TRIGGERED"
+msgstr "Custom random event triggered live on the top-right action cards!"
+
+msgid "UI_STUDIO_DIALOGUE_TRIGGERED"
+msgstr "Custom dialogue bubble popped live in the bank lobby!"

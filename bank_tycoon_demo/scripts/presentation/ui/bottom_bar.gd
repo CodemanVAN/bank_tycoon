@@ -5,12 +5,17 @@ extends PanelContainer
 signal loan_modal_requested()
 signal event_modal_requested()
 signal zoom_step_requested(step: int)
+signal layout_mode_toggled()
+signal content_studio_requested()
 
 var _sim_host: Node = null
 var _lbl_feed_title: Label = null
 var _lbl_feed_text: Label = null
 var _btn_loans: Button = null
 var _btn_events: Button = null
+var _btn_layout: Button = null
+var _btn_studio: Button = null
+var _layout_active: bool = false
 var _lbl_zoom: Label = null
 var _btn_zoom_1: Button = null
 var _btn_zoom_2: Button = null
@@ -63,6 +68,22 @@ func _build_ui() -> void:
 	)
 	row.add_child(_btn_events)
 
+	_btn_layout = Button.new()
+	_btn_layout.icon = UiI18n.load_icon("icon_facilities")
+	_btn_layout.pressed.connect(func() -> void:
+		UiI18n.play_sfx("sfx_ui_click")
+		layout_mode_toggled.emit()
+	)
+	row.add_child(_btn_layout)
+
+	_btn_studio = Button.new()
+	_btn_studio.icon = UiI18n.load_icon("icon_policy")
+	_btn_studio.pressed.connect(func() -> void:
+		UiI18n.play_sfx("sfx_ui_click")
+		content_studio_requested.emit()
+	)
+	row.add_child(_btn_studio)
+
 	row.add_child(VSeparator.new())
 
 	_lbl_zoom = Label.new()
@@ -102,7 +123,19 @@ func refresh() -> void:
 	_btn_events.text = UiI18n.tr_key("UI_BOTTOM_EVENT_BADGE", {"count": ev_cnt})
 	_btn_events.theme_type_variation = &"ButtonPrimary" if ev_cnt > 0 else &""
 
+	if _btn_layout != null:
+		_btn_layout.text = UiI18n.tr_key("UI_BOTTOM_LAYOUT_EXIT" if _layout_active else "UI_BOTTOM_LAYOUT_BTN")
+		_btn_layout.theme_type_variation = &"ButtonGold" if _layout_active else &""
+
+	if _btn_studio != null:
+		_btn_studio.text = UiI18n.tr_key("UI_BOTTOM_STUDIO_BTN")
+
 	_lbl_zoom.text = UiI18n.tr_key("UI_BOTTOM_ZOOM_LABEL")
 	_btn_zoom_1.text = UiI18n.tr_key("UI_BOTTOM_ZOOM_1X")
 	_btn_zoom_2.text = UiI18n.tr_key("UI_BOTTOM_ZOOM_2X")
 	_btn_zoom_3.text = UiI18n.tr_key("UI_BOTTOM_ZOOM_3X")
+
+
+func set_layout_mode_active(active: bool) -> void:
+	_layout_active = active
+	refresh()

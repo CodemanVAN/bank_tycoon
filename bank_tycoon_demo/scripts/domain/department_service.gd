@@ -9,6 +9,7 @@ class DepartmentInstance extends RefCounted:
 	var created_day: int = 1
 	var daily_cost_minor: int = 0
 	var staff_ids: Array[String] = []
+	var requires_staff: bool = false
 	## Top-left logical lobby cell of the room. (-1, -1) = legacy/unplaced department.
 	var grid_pos: Vector2i = Vector2i(-1, -1)
 	## Room footprint in cells (width, height). (1, 1) = legacy single-tile marker.
@@ -27,6 +28,7 @@ class DepartmentInstance extends RefCounted:
 			"created_day": created_day,
 			"daily_cost_minor": daily_cost_minor,
 			"staff_ids": staff_copy,
+			"requires_staff": requires_staff,
 			"grid_pos": [grid_pos.x, grid_pos.y],
 			"room_size": [room_size.x, room_size.y],
 		}
@@ -37,6 +39,7 @@ class DepartmentInstance extends RefCounted:
 		inst.level = maxi(1, int(data.get("level", 1)))
 		inst.created_day = maxi(1, int(data.get("created_day", 1)))
 		inst.daily_cost_minor = maxi(0, int(data.get("daily_cost_minor", 0)))
+		inst.requires_staff = bool(data.get("requires_staff", false))
 		inst.grid_pos = _parse_grid_pos(data.get("grid_pos", null))
 		inst.room_size = _parse_room_size(data.get("room_size", null))
 		inst.staff_ids = []
@@ -158,12 +161,13 @@ func create_department(
 	if bank_state.departments.has(dept_id):
 		return Result.fail(&"DEPT_ALREADY_EXISTS", "ERR_DEPT_ALREADY_EXISTS", {"department_id": dept_id})
 
-	# Plot is optional for backward compatibility (tests / auto placement), but a partially
-	# negative cell is a bug at the call site and is rejected instead of silently ignored.
-	var has_plot: bool = grid_pos.x >= 0 and grid_pos.y >= 0
-	if (grid_pos.x >= 0) != (grid_pos.y >= 0):
-		return Result.fail(&"DEPT_PLOT_INVALID", "ERR_DEPT_PLOT_INVALID", {"x": grid_pos.x, "y": grid_pos.y})
+	# Multi-cell rooms (width >= 2 or height >= 2) may expand into negative coordinates on the
+	# west/north side of the initial lobby. Legacy 1x1 plots keep the non-negative guard.
 	var room: Vector2i = Vector2i(maxi(1, room_size.x), maxi(1, room_size.y))
+	var is_room_expansion: bool = room.x >= 2 or room.y >= 2
+	var has_plot: bool = is_room_expansion or (grid_pos.x >= 0 and grid_pos.y >= 0)
+	if not is_room_expansion and (grid_pos.x >= 0) != (grid_pos.y >= 0):
+		return Result.fail(&"DEPT_PLOT_INVALID", "ERR_DEPT_PLOT_INVALID", {"x": grid_pos.x, "y": grid_pos.y})
 	if has_plot and not is_room_free(bank_state, Rect2i(grid_pos, room), dept_id):
 		return Result.fail(&"DEPT_PLOT_OCCUPIED", "ERR_DEPT_PLOT_OCCUPIED", {
 			"x": grid_pos.x, "y": grid_pos.y, "w": room.x, "h": room.y,
@@ -253,8 +257,6 @@ static func is_plot_free(bank_state: BankState, cell: Vector2i, ignore_dept_id: 
 
 static func _entry_room_rect(entry: Variant) -> Rect2i:
 	var origin: Vector2i = _entry_grid_pos(entry)
-	if origin.x < 0 or origin.y < 0:
-		return Rect2i()
 	var size := Vector2i(1, 1)
 	if entry is Object:
 		var raw_size: Variant = (entry as Object).get("room_size")
@@ -263,6 +265,8 @@ static func _entry_room_rect(entry: Variant) -> Rect2i:
 	elif entry is Dictionary:
 		size = DepartmentInstance._parse_room_size((entry as Dictionary).get("room_size", null))
 	size = Vector2i(maxi(1, size.x), maxi(1, size.y))
+	if size.x <= 1 and size.y <= 1 and (origin.x < 0 or origin.y < 0):
+		return Rect2i()
 	return Rect2i(origin, size)
 
 
@@ -327,14 +331,112 @@ func upgrade_department(
 	})
 
 
+func demolish_department(bank_state: BankState, dept_id: String) -> Result:
+	if bank_state == null:
+		return Result.fail(&"INVALID_BANK_STATE", "ERR_INVALID_BANK_STATE", {})
+	if not bank_state.departments.has(dept_id):
+		return Result.fail(&"DEPT_NOT_CREATED", "ERR_DEPT_NOT_CREATED", {"department_id": dept_id})
+
+	# Dismiss all employees assigned to this department (no construction refund).
+	var dismissed: Array[String] = get_department_staff_ids(bank_state, dept_id)
+	for eid in dismissed:
+		for sid: Variant in bank_state.stations.keys():
+			var st_v: Variant = bank_state.stations[sid]
+			if st_v is Dictionary and str((st_v as Dictionary).get("assigned_employee_id", "")) == eid:
+				(st_v as Dictionary)["assigned_employee_id"] = ""
+		for req in bank_state.service_requests:
+			if req != null and req.assigned_employee_id == eid and not req.is_terminal():
+				req.release_to_queue()
+		bank_state.employees.erase(eid)
+
+	bank_state.departments.erase(dept_id)
+	return Result.succeed({
+		"department_id": dept_id,
+		"dismissed_employee_ids": dismissed,
+		"refund_minor": 0,
+	})
+
+
+func move_department(bank_state: BankState, dept_id: String, new_grid_pos: Vector2i) -> Result:
+	if bank_state == null:
+		return Result.fail(&"INVALID_BANK_STATE", "ERR_INVALID_BANK_STATE", {})
+	if not bank_state.departments.has(dept_id):
+		return Result.fail(&"DEPT_NOT_CREATED", "ERR_DEPT_NOT_CREATED", {"department_id": dept_id})
+	var cur_rect: Rect2i = get_department_room_rect(bank_state, dept_id)
+	var size: Vector2i = cur_rect.size if cur_rect.size.x > 0 else Vector2i(3, 3)
+	var new_rect := Rect2i(new_grid_pos, size)
+	if not is_room_free(bank_state, new_rect, dept_id):
+		return Result.fail(&"DEPT_PLOT_OCCUPIED", "ERR_DEPT_PLOT_OCCUPIED", {
+			"x": new_grid_pos.x, "y": new_grid_pos.y, "w": size.x, "h": size.y,
+		})
+	var entry: Variant = bank_state.departments[dept_id]
+	if entry is Object:
+		(entry as Object).set("grid_pos", new_grid_pos)
+		(entry as Object).set("room_size", size)
+	elif entry is Dictionary:
+		(entry as Dictionary)["grid_pos"] = [new_grid_pos.x, new_grid_pos.y]
+		(entry as Dictionary)["room_size"] = [size.x, size.y]
+	var desk_cell := Vector2i(new_grid_pos.x + size.x / 2, new_grid_pos.y + size.y / 2)
+	for eid in get_department_staff_ids(bank_state, dept_id):
+		var ev: Variant = bank_state.employees.get(eid, null)
+		if ev is EmployeeInstance:
+			(ev as EmployeeInstance).grid_pos = desk_cell
+			(ev as EmployeeInstance).target_grid_pos = desk_cell
+	return Result.succeed({
+		"department_id": dept_id,
+		"grid_pos": [new_grid_pos.x, new_grid_pos.y],
+		"room_size": [size.x, size.y],
+	})
+
+
 func get_department_level(bank_state: BankState, dept_id: String) -> int:
 	if bank_state == null or not bank_state.departments.has(dept_id):
 		return 0
 	return _extract_level(bank_state.departments[dept_id])
 
 
+static func get_department_staff_ids(bank_state: BankState, dept_id: String) -> Array[String]:
+	var active_ids: Array[String] = []
+	if bank_state == null or not bank_state.departments.has(dept_id):
+		return active_ids
+	var seen: Dictionary = {}
+	for eid_v: Variant in bank_state.employees.keys():
+		var eid: String = str(eid_v)
+		var emp_v: Variant = bank_state.employees[eid_v]
+		if emp_v is EmployeeInstance and (emp_v as EmployeeInstance).department_id == dept_id:
+			active_ids.append(eid)
+			seen[eid] = true
+	var entry: Variant = bank_state.departments[dept_id]
+	var raw_staff: Variant = (entry as Object).get("staff_ids") if entry is Object else ((entry as Dictionary).get("staff_ids", []) if entry is Dictionary else [])
+	if raw_staff is Array:
+		for sid_v in (raw_staff as Array):
+			var sid: String = str(sid_v)
+			if not seen.has(sid) and bank_state.employees.has(sid):
+				active_ids.append(sid)
+				seen[sid] = true
+	return active_ids
+
+
+static func is_department_staffed(bank_state: BankState, dept_id: String) -> bool:
+	if bank_state == null or not bank_state.departments.has(dept_id):
+		return false
+	var entry: Variant = bank_state.departments[dept_id]
+	var req_staff: bool = false
+	if entry is Object:
+		req_staff = bool((entry as Object).get("requires_staff"))
+	elif entry is Dictionary:
+		req_staff = bool((entry as Dictionary).get("requires_staff", false))
+	if not req_staff:
+		return true
+	return not get_department_staff_ids(bank_state, dept_id).is_empty()
+
+
+func is_department_active(bank_state: BankState, dept_id: String) -> bool:
+	return get_department_level(bank_state, dept_id) > 0 and is_department_staffed(bank_state, dept_id)
+
+
 func has_department(bank_state: BankState, dept_id: String, min_level: int = 1) -> bool:
-	return get_department_level(bank_state, dept_id) >= min_level
+	return get_department_level(bank_state, dept_id) >= min_level and is_department_staffed(bank_state, dept_id)
 
 
 func is_capability_unlocked(bank_state: BankState, capability_id: String) -> bool:
@@ -385,6 +487,10 @@ func get_total_daily_cost_minor(bank_state: BankState, content_defs: Dictionary)
 	for did: Variant in bank_state.departments.keys():
 		var dept_id: String = str(did)
 		if get_department_level(bank_state, dept_id) <= 0:
+			continue
+		# When a department has its own salaried staff (whose salary covers base maintenance),
+		# do not double-charge daily_cost_minor on top of payroll.
+		if not get_department_staff_ids(bank_state, dept_id).is_empty():
 			continue
 		var ddef: Dictionary = _find_dept_def(dept_id, content_defs)
 		if not ddef.is_empty():

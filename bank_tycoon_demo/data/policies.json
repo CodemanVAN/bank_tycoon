@@ -138,5 +138,21 @@
         "scope": "global"
       }
     ]
+  },
+  {
+    "id": "core:policy.flexible_repayment",
+    "name_key": "POLICY_FLEXIBLE_REPAYMENT_NAME",
+    "description_key": "POLICY_FLEXIBLE_REPAYMENT_DESC",
+    "cost_strategy_points": 2,
+    "exclusive_group": "",
+    "prerequisites": [],
+    "effects": [
+      {
+        "target": "bank.reputation_points",
+        "operation": "add",
+        "value": 2,
+        "scope": "global"
+      }
+    ]
   }
 ]

@@ -76,7 +76,7 @@ static func _test_iso_grid_coords() -> void:
 	_check_eq(IsoGrid.GRID_WIDTH, 18, "IsoGrid width must be 18")
 	_check_eq(IsoGrid.GRID_HEIGHT, 12, "IsoGrid height must be 12")
 	_check_eq(IsoGrid.TILE_WIDTH, 32, "IsoGrid tile width must be 32")
-	_check_eq(IsoGrid.TILE_HEIGHT, 16, "IsoGrid tile height must be 16")
+	_check_eq(IsoGrid.TILE_HEIGHT, 20, "IsoGrid tile height must be 20")
 
 	for y in range(IsoGrid.GRID_HEIGHT):
 		for x in range(IsoGrid.GRID_WIDTH):

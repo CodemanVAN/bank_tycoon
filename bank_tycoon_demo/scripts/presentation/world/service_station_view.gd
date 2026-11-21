@@ -180,32 +180,14 @@ func _on_locale_changed(_new_locale: String) -> void:
 
 
 func _draw() -> void:
-	# Isometric ground shadow polygon
-	var shadow_pts := PackedVector2Array([
-		Vector2(0.0, -9.0),
-		Vector2(20.0, 1.0),
-		Vector2(0.0, 11.0),
-		Vector2(-20.0, 1.0),
-	])
-	draw_colored_polygon(shadow_pts, Color(0.0, 0.04, 0.1, 0.28))
+	# Orthogonal ground contact shadow
+	draw_rect(Rect2(-22.0, 2.0, 44.0, 8.0), Color(0.0, 0.04, 0.1, 0.28), true)
 
-	# Selection cyan glow diamond
+	# Selection cyan glow frame
 	if is_selected:
-		var sel_outer := PackedVector2Array([
-			Vector2(0.0, -12.0),
-			Vector2(24.0, 0.0),
-			Vector2(0.0, 12.0),
-			Vector2(-24.0, 0.0),
-			Vector2(0.0, -12.0),
-		])
-		var sel_fill := PackedVector2Array([
-			Vector2(0.0, -11.0),
-			Vector2(22.0, 0.0),
-			Vector2(0.0, 11.0),
-			Vector2(-22.0, 0.0),
-		])
-		draw_colored_polygon(sel_fill, Color(0.0, 0.776, 1.0, 0.22))
-		draw_polyline(sel_outer, COLOR_CYAN_GLOW, 1.5, false)
+		var sel_rect := Rect2(-24.0, -9.0, 48.0, 20.0)
+		draw_rect(sel_rect, Color(0.0, 0.776, 1.0, 0.22), true)
+		draw_rect(sel_rect, COLOR_CYAN_GLOW, false, 1.5)
 
 	# Overhead status badge + tag are hover-only so room walls never clip them at rest.
 	if is_hovered or is_selected:

@@ -5,6 +5,8 @@ extends RefCounted
 
 var loan_id: String = ""
 var customer_id: String = ""
+var borrower_name: String = ""
+var customer_type: String = "borrower"
 var principal_original: int = 0
 var principal_outstanding: int = 0
 var annual_rate_bps: int = 650
@@ -20,6 +22,8 @@ var last_accrued_day: int = 0
 var total_interest_paid_minor: int = 0
 var total_principal_repaid_minor: int = 0
 var written_off_minor: int = 0
+var repayment_mode: String = "equal_installment"
+var accrued_unpaid_interest_minor: int = 0
 
 
 func is_active() -> bool:
@@ -38,6 +42,28 @@ func is_npl() -> bool:
 
 func get_risk_grade_code() -> String:
 	return Enums.risk_grade_to_string(risk_grade)
+
+
+func get_daily_principal_installment() -> int:
+	if principal_outstanding <= 0:
+		return 0
+	if days_elapsed >= term_days:
+		return principal_outstanding
+	var base_step: int = maxi(1, int((principal_original + maxi(1, term_days) / 2) / maxi(1, term_days)))
+	return mini(principal_outstanding, base_step)
+
+
+static func generate_borrower_name(p_customer_id: String, p_customer_type: String) -> String:
+	var h: int = absi(p_customer_id.hash())
+	if p_customer_type == "smb":
+		var corp_names: Array[String] = [
+			"星辰商贸有限公司", "宏远建材集团", "海川精密制造", "鼎盛物流科技", "蓝鲸食品工坊", "华瑞新能源科技",
+		]
+		return corp_names[h % corp_names.size()]
+	var person_names: Array[String] = [
+		"陈志远", "林婉清", "周建国", "苏晓彤", "赵明辉", "许嘉豪", "唐思琪", "吴海峰",
+	]
+	return person_names[h % person_names.size()]
 
 
 func apply_repayment(amount_minor: int) -> Result:
@@ -91,6 +117,8 @@ func to_dict() -> Dictionary:
 	return {
 		"loan_id": loan_id,
 		"customer_id": customer_id,
+		"borrower_name": borrower_name,
+		"customer_type": customer_type,
 		"principal_original": principal_original,
 		"principal_outstanding": principal_outstanding,
 		"annual_rate_bps": annual_rate_bps,
@@ -106,6 +134,8 @@ func to_dict() -> Dictionary:
 		"total_interest_paid_minor": total_interest_paid_minor,
 		"total_principal_repaid_minor": total_principal_repaid_minor,
 		"written_off_minor": written_off_minor,
+		"repayment_mode": repayment_mode,
+		"accrued_unpaid_interest_minor": accrued_unpaid_interest_minor,
 	}
 
 
@@ -115,6 +145,10 @@ static func from_dict(data: Dictionary) -> Result:
 	if loan.loan_id.is_empty():
 		return Result.fail(&"INVALID_LOAN_ID", "ERR_INVALID_LOAN_ID", {})
 	loan.customer_id = str(data.get("customer_id", ""))
+	loan.customer_type = str(data.get("customer_type", "borrower"))
+	loan.borrower_name = str(data.get("borrower_name", ""))
+	if loan.borrower_name.is_empty():
+		loan.borrower_name = generate_borrower_name(loan.customer_id, loan.customer_type)
 	loan.principal_original = maxi(0, int(data.get("principal_original", 0)))
 	loan.principal_outstanding = maxi(0, int(data.get("principal_outstanding", 0)))
 	loan.annual_rate_bps = maxi(0, int(data.get("annual_rate_bps", 650)))
@@ -134,4 +168,6 @@ static func from_dict(data: Dictionary) -> Result:
 	loan.total_interest_paid_minor = maxi(0, int(data.get("total_interest_paid_minor", 0)))
 	loan.total_principal_repaid_minor = maxi(0, int(data.get("total_principal_repaid_minor", 0)))
 	loan.written_off_minor = maxi(0, int(data.get("written_off_minor", 0)))
+	loan.repayment_mode = str(data.get("repayment_mode", "equal_installment"))
+	loan.accrued_unpaid_interest_minor = maxi(0, int(data.get("accrued_unpaid_interest_minor", 0)))
 	return Result.succeed(loan)

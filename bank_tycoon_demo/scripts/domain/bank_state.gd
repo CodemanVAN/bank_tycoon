@@ -20,6 +20,7 @@ var active_customers: Dictionary = {}
 var service_requests: Array[ServiceRequest] = []
 var loans: Dictionary = {}
 var pending_loan_approvals: Array[Dictionary] = []
+var pending_resignations: Array[Dictionary] = []
 
 var departments: Dictionary = {}
 var adopted_policies: Array[String] = []
@@ -33,12 +34,15 @@ var settled_days: Array[int] = []
 var last_settled_day: int = 0
 
 var stations: Dictionary = {}
+var lobby_props: Dictionary = {}
 
 var reputation: int = BalanceConfig.INITIAL_REPUTATION
 var satisfaction: int = BalanceConfig.INITIAL_SATISFACTION
+var awareness: int = BalanceConfig.INITIAL_AWARENESS
 var strategy_points: int = BalanceConfig.INITIAL_STRATEGY_POINTS
 var deposit_rate_bps: int = BalanceConfig.DEFAULT_DEPOSIT_RATE_BPS
 var loan_base_rate_bps: int = BalanceConfig.DEFAULT_LOAN_BASE_RATE_BPS
+var loan_repayment_mode: String = "equal_installment"
 
 var mod_dependencies: Array[Dictionary] = []
 var next_entity_seq: int = 1
@@ -95,7 +99,7 @@ func initialize_starter_branch() -> void:
 				"is_open": true,
 				"assigned_employee_id": "",
 				"grid_pos": Vector2i(4, 4),
-				"allowed_services": ["cash_deposit", "cash_withdrawal", "transfer", "complaint"],
+				"allowed_services": ["cash_deposit", "cash_withdrawal", "transfer", "account_opening", "complaint"],
 			},
 			"teller_2": {
 				"station_id": "teller_2",
@@ -103,7 +107,7 @@ func initialize_starter_branch() -> void:
 				"is_open": true,
 				"assigned_employee_id": "",
 				"grid_pos": Vector2i(6, 4),
-				"allowed_services": ["cash_deposit", "cash_withdrawal", "transfer", "complaint"],
+				"allowed_services": ["cash_deposit", "cash_withdrawal", "transfer", "account_opening", "complaint"],
 			},
 			"teller_3": {
 				"station_id": "teller_3",
@@ -111,7 +115,7 @@ func initialize_starter_branch() -> void:
 				"is_open": false,
 				"assigned_employee_id": "",
 				"grid_pos": Vector2i(8, 4),
-				"allowed_services": ["cash_deposit", "cash_withdrawal", "transfer", "complaint"],
+				"allowed_services": ["cash_deposit", "cash_withdrawal", "transfer", "account_opening", "complaint"],
 			},
 			"loan_1": {
 				"station_id": "loan_1",
@@ -119,7 +123,7 @@ func initialize_starter_branch() -> void:
 				"is_open": true,
 				"assigned_employee_id": "",
 				"grid_pos": Vector2i(11, 4),
-				"allowed_services": ["personal_loan_application", "business_meeting"],
+				"allowed_services": ["personal_loan_application", "business_meeting", "wealth_advisory"],
 			},
 		}
 
@@ -142,12 +146,30 @@ func initialize_starter_branch() -> void:
 			64, 56, 60, 62, 48, 72, 68,
 			25_000
 		)
+		e1.assigned_station_id = "teller_1"
+		e1.traits = ["core:trait.fast_hands"]
+		e2.assigned_station_id = "loan_1"
+		e2.traits = ["core:trait.risk_expert"]
+		if stations.has("teller_1") and stations["teller_1"] is Dictionary:
+			(stations["teller_1"] as Dictionary)["assigned_employee_id"] = e1.id
+		if stations.has("loan_1") and stations["loan_1"] is Dictionary:
+			(stations["loan_1"] as Dictionary)["assigned_employee_id"] = e2.id
 		employees[e1.id] = e1
 		employees[e2.id] = e2
+
+	if lobby_props.is_empty():
+		lobby_props = default_lobby_props()
 
 	if candidates.is_empty():
 		var roles: Array[String] = ["teller", "loan_officer", "analyst"]
 		var avatars: Array[String] = ["emp_teller_m", "emp_credit", "emp_risk"]
+		var starter_traits: Array[String] = [
+			"core:trait.sales_prodigy",
+			"core:trait.procrastinator",
+			"core:trait.vip_whisperer",
+		]
+		var starter_levels: Array[int] = [1, 2, 3]
+		var starter_salaries: Array[int] = [18_000, 29_000, 44_000]
 		var crng: RandomNumberGenerator = rng_streams.candidate_rng
 		for i in range(3):
 			var c := _make_generated_employee(
@@ -163,10 +185,38 @@ func initialize_starter_branch() -> void:
 				crng.randi_range(35, 70),
 				crng.randi_range(50, 80),
 				crng.randi_range(45, 85),
-				18_000 + i * 3_000
+				starter_salaries[i % starter_salaries.size()]
 			)
+			c.level = starter_levels[i % starter_levels.size()]
+			var c_cap: int = c.get_stat_cap()
+			c.professionalism = mini(c.professionalism, c_cap)
+			c.efficiency = mini(c.efficiency, c_cap)
+			c.sociability = mini(c.sociability, c_cap)
+			c.risk_awareness = mini(c.risk_awareness, c_cap)
+			c.management = mini(c.management, c_cap)
+			c.loyalty = mini(c.loyalty, c_cap)
+			c.traits = [starter_traits[i % starter_traits.size()]]
 			c.state = Enums.EmployeeState.OFF_DUTY
 			candidates.append(c)
+
+
+static func default_lobby_props() -> Dictionary:
+	return {
+		"fountain_1": {"prop_id": "fountain_1", "prop_type": "fountain", "grid_pos": Vector2i(9, 7), "solid": true},
+		"sofa_1": {"prop_id": "sofa_1", "prop_type": "sofa", "grid_pos": Vector2i(3, 8), "solid": false},
+		"sofa_2": {"prop_id": "sofa_2", "prop_type": "sofa", "grid_pos": Vector2i(14, 8), "solid": false},
+		"atm_1": {"prop_id": "atm_1", "prop_type": "atm", "grid_pos": Vector2i(1, 5), "solid": false},
+		"atm_2": {"prop_id": "atm_2", "prop_type": "atm", "grid_pos": Vector2i(1, 7), "solid": false},
+		"plant_1": {"prop_id": "plant_1", "prop_type": "plant", "grid_pos": Vector2i(1, 1), "solid": false},
+		"plant_2": {"prop_id": "plant_2", "prop_type": "plant", "grid_pos": Vector2i(16, 1), "solid": false},
+		"plant_3": {"prop_id": "plant_3", "prop_type": "plant", "grid_pos": Vector2i(1, 10), "solid": false},
+		"plant_4": {"prop_id": "plant_4", "prop_type": "plant", "grid_pos": Vector2i(16, 10), "solid": false},
+		"plant_5": {"prop_id": "plant_5", "prop_type": "plant", "grid_pos": Vector2i(10, 4), "solid": false},
+		"queue_1": {"prop_id": "queue_1", "prop_type": "queue_post", "grid_pos": Vector2i(4, 6), "solid": false},
+		"queue_2": {"prop_id": "queue_2", "prop_type": "queue_post", "grid_pos": Vector2i(6, 6), "solid": false},
+		"queue_3": {"prop_id": "queue_3", "prop_type": "queue_post", "grid_pos": Vector2i(8, 6), "solid": false},
+		"queue_4": {"prop_id": "queue_4", "prop_type": "queue_post", "grid_pos": Vector2i(11, 6), "solid": false},
+	}
 
 
 static func _make_generated_employee(
@@ -269,6 +319,17 @@ func to_dict() -> Dictionary:
 	for sd in settled_days:
 		settled_copy.append(sd)
 
+	var ser_props: Dictionary = {}
+	for pid: Variant in lobby_props.keys():
+		var pr: Variant = lobby_props[pid]
+		if pr is Dictionary:
+			var prd: Dictionary = (pr as Dictionary).duplicate(true)
+			var pgp: Variant = prd.get("grid_pos", Vector2i.ZERO)
+			if pgp is Vector2i:
+				var pgp2: Vector2i = pgp as Vector2i
+				prd["grid_pos"] = [pgp2.x, pgp2.y]
+			ser_props[str(pid)] = prd
+
 	return {
 		"world_seed": str(world_seed),
 		"bank_name": bank_name,
@@ -285,6 +346,7 @@ func to_dict() -> Dictionary:
 		"service_requests": ser_reqs,
 		"loans": ser_loans,
 		"pending_loan_approvals": pending_loan_approvals.duplicate(true),
+		"pending_resignations": pending_resignations.duplicate(true),
 		"departments": ser_depts,
 		"adopted_policies": pol_copy,
 		"active_events": active_events.duplicate(true),
@@ -295,11 +357,14 @@ func to_dict() -> Dictionary:
 		"settled_days": settled_copy,
 		"last_settled_day": last_settled_day,
 		"stations": ser_stations,
+		"lobby_props": ser_props,
 		"reputation": reputation,
 		"satisfaction": satisfaction,
+		"awareness": awareness,
 		"strategy_points": strategy_points,
 		"deposit_rate_bps": deposit_rate_bps,
 		"loan_base_rate_bps": loan_base_rate_bps,
+		"loan_repayment_mode": loan_repayment_mode,
 		"mod_dependencies": mod_dependencies.duplicate(true),
 		"next_entity_seq": next_entity_seq,
 	}
@@ -463,6 +528,13 @@ static func from_dict(data: Dictionary) -> Result:
 			if item is Dictionary:
 				state.active_events.append(_coerce_json_numbers(item) as Dictionary)
 
+	state.pending_resignations = []
+	var raw_pr: Variant = data.get("pending_resignations", [])
+	if raw_pr is Array:
+		for item in (raw_pr as Array):
+			if item is Dictionary:
+				state.pending_resignations.append(_coerce_json_numbers(item) as Dictionary)
+
 	state.event_history = []
 	var raw_eh: Variant = data.get("event_history", [])
 	if raw_eh is Array:
@@ -522,8 +594,20 @@ static func from_dict(data: Dictionary) -> Result:
 				std["allowed_services"] = allowed_srv
 				state.stations[str(sid)] = std
 
+	var raw_props: Variant = data.get("lobby_props", {})
+	if raw_props is Dictionary and not (raw_props as Dictionary).is_empty():
+		for pid: Variant in (raw_props as Dictionary).keys():
+			var pr: Variant = (raw_props as Dictionary)[pid]
+			if pr is Dictionary:
+				var prd: Dictionary = _coerce_json_numbers(pr) as Dictionary
+				prd["grid_pos"] = _parse_vec2i(prd.get("grid_pos", [0, 0]))
+				state.lobby_props[str(pid)] = prd
+	else:
+		state.lobby_props = default_lobby_props()
+
 	state.reputation = clampi(int(data.get("reputation", BalanceConfig.INITIAL_REPUTATION)), 0, 100)
 	state.satisfaction = clampi(int(data.get("satisfaction", BalanceConfig.INITIAL_SATISFACTION)), 0, 100)
+	state.awareness = clampi(int(data.get("awareness", BalanceConfig.INITIAL_AWARENESS)), 0, 100)
 	state.strategy_points = maxi(0, int(data.get("strategy_points", BalanceConfig.INITIAL_STRATEGY_POINTS)))
 	state.deposit_rate_bps = clampi(
 		int(data.get("deposit_rate_bps", BalanceConfig.DEFAULT_DEPOSIT_RATE_BPS)),
@@ -535,6 +619,7 @@ static func from_dict(data: Dictionary) -> Result:
 		BalanceConfig.MIN_LOAN_RATE_BPS,
 		BalanceConfig.MAX_LOAN_RATE_BPS
 	)
+	state.loan_repayment_mode = str(data.get("loan_repayment_mode", "equal_installment"))
 
 	state.mod_dependencies = []
 	var raw_mods: Variant = data.get("mod_dependencies", [])

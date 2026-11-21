@@ -5,7 +5,7 @@
 | ADR-001 | 使用 Godot 4.7.2 Stable | Accepted | 当前稳定版；避免使用 4.8 Beta |
 | ADR-002 | GDScript 静态类型优先 | Accepted | 降低跨模块耦合和 AI 生成代码错误 |
 | ADR-003 | 2D 16-bit inspired Pixel Art | Accepted | 用户选择像素风作为正式风格基准 |
-| ADR-004 | 俯视轻等距/银行剖面视图 | Accepted | 保留大厅空间可读性，方便观察员工和排队 |
+| ADR-004 | 正视角 3/4 俯视银行剖面视图（32×20 正交矩形网格） | Accepted (Updated) | 统一所有正视角像素家具/墙面/角色与地板透视（替代早期 45° 斜菱形地板），保留大厅空间可读性与直观的水平/垂直扩建手感 |
 | ADR-005 | 正式视觉与 UI 采用「星海银行 Starway Bank」现代科技蓝配色体系，搭配暖木/米白像素大厅 | Accepted (Updated) | UI 采用深空海军蓝（`#081B36`）、暗夜面板（`#0B2D5B`）、科技蓝（`#1F6FEB`）、青色高光（`#00C6FF`）与金融金/成长绿/警示红语义色（`#FFC857`/`#35C978`/`#E74C3C`），场景室内以暖木/米白/绿植平衡冷色 UI（参考 `art/01_visual/starway_bank_modern_tech_blue_master_reference.png`、`art/02_tokens/` 与 `art/03_guidelines/art_direction.md`） |
 | ADR-006 | 1280×720 逻辑分辨率 + `canvas_items` (`expand`) + `World` 层 `CanvasItem.TEXTURE_FILTER_NEAREST` 与 `PixelCamera2D` 1x/2x/3x 整数缩放 | Accepted (Updated) | 在 1080p/2K 显示器上同时保证中英日现代 HUD 高密度可读性与 2.5D 像素大厅锐利颗粒感（UI 流畅缩放，`World` 层独立保持 `TEXTURE_FILTER_NEAREST` 与 1x/2x/3x 整数倍相机缩放） |
 | ADR-007 | 固定步长模拟，与渲染帧率分离 | Accepted | 保证暂停/加速和确定性测试 |
