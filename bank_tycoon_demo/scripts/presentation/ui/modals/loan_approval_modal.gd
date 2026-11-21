@@ -11,6 +11,9 @@ var _lbl_title: Label = null
 var _btn_close: Button = null
 var _list_box: VBoxContainer = null
 
+var _list_signature: String = ""
+var _rebuild_pending: bool = false
+
 
 func _ready() -> void:
 	theme_type_variation = &"PanelLarge"
@@ -75,16 +78,35 @@ func refresh() -> void:
 	_lbl_title.text = UiI18n.tr_key("UI_LOAN_MODAL_TITLE")
 	_btn_close.text = UiI18n.tr_key("UI_COMMON_CLOSE")
 
-	for c in _list_box.get_children():
-		_list_box.remove_child(c)
-		c.free()
-
 	var bs: BankState = _sim_host.get("bank_state") as BankState if _sim_host != null else null
 	var pending: Array = bs.pending_loan_approvals if bs != null else []
 	var dept_svc := DepartmentService.new()
 	var exact_unlocked: bool = dept_svc.is_capability_unlocked(bs, "exact_credit_score") if bs != null else false
 	var lc: String = UiI18n.get_locale()
 	var ccy: String = bs.currency_code if bs != null else "CNY"
+
+	# Only rebuild when the pending queue really changed; a rebuild between press and
+	# release destroyed the pressed Button and swallowed the first click.
+	var sig_parts: Array = [lc, ccy, exact_unlocked]
+	for raw_app_sig: Variant in pending:
+		if raw_app_sig is Dictionary:
+			var app_sig: Dictionary = raw_app_sig as Dictionary
+			sig_parts.append("%s:%d:%d:%d:%d:%s" % [
+				str(app_sig.get("approval_id", app_sig.get("id", ""))),
+				int(app_sig.get("principal_minor", 0)),
+				int(app_sig.get("annual_rate_bps", 0)),
+				int(app_sig.get("term_days", 0)),
+				int(app_sig.get("credit_score", 0)),
+				str(app_sig.get("risk_grade", "")),
+			])
+	var new_sig: String = UiListRefresh.signature(sig_parts)
+	if new_sig == _list_signature and _list_box.get_child_count() > 0:
+		return
+	if UiListRefresh.any_button_held(_list_box):
+		_rebuild_pending = true
+		return
+	_list_signature = new_sig
+	UiListRefresh.clear_children(_list_box)
 
 	if pending.is_empty():
 		var empty_l := Label.new()
@@ -154,6 +176,7 @@ func refresh() -> void:
 			UiI18n.play_sfx("sfx_loan_approve")
 			_exec_cmd("approve_loan", [aid_copy], "UI_LOAN_BTN_APPROVE")
 		)
+		UiListRefresh.watch_release(btn_app, _on_list_button_up)
 		btn_row.add_child(btn_app)
 
 		var btn_rej := Button.new()
@@ -163,7 +186,15 @@ func refresh() -> void:
 			UiI18n.play_sfx("sfx_loan_reject")
 			_exec_cmd("reject_loan", [aid_copy], "UI_LOAN_BTN_REJECT")
 		)
+		UiListRefresh.watch_release(btn_rej, _on_list_button_up)
 		btn_row.add_child(btn_rej)
+
+
+func _on_list_button_up() -> void:
+	if not _rebuild_pending:
+		return
+	_rebuild_pending = false
+	refresh.call_deferred()
 
 
 func _exec_cmd(method_name: String, args: Array, action_key: String) -> void:
@@ -173,4 +204,4 @@ func _exec_cmd(method_name: String, args: Array, action_key: String) -> void:
 	if cmd != null and (cmd as Object).has_method(method_name):
 		var r: Variant = (cmd as Object).callv(method_name, args)
 		command_executed.emit(r, action_key)
-		refresh()
+		refresh.call_deferred()

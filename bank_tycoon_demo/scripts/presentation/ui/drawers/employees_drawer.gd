@@ -14,6 +14,8 @@ var _active_list_box: VBoxContainer = null
 var _lbl_cand_hdr: Label = null
 var _cand_list_box: VBoxContainer = null
 
+var _rebuild_pending: bool = false
+
 
 func _ready() -> void:
 	theme_type_variation = &"PanelLarge"
@@ -97,12 +99,11 @@ func refresh() -> void:
 	_lbl_subtitle.text = UiI18n.tr_key("UI_DRAWER_EMPLOYEES_SUBTITLE")
 	_btn_close.text = UiI18n.tr_key("UI_COMMON_CLOSE")
 
-	for c in _active_list_box.get_children():
-		_active_list_box.remove_child(c)
-		c.free()
-	for c in _cand_list_box.get_children():
-		_cand_list_box.remove_child(c)
-		c.free()
+	if UiListRefresh.any_button_held(_active_list_box) or UiListRefresh.any_button_held(_cand_list_box):
+		_rebuild_pending = true
+		return
+	UiListRefresh.clear_children(_active_list_box)
+	UiListRefresh.clear_children(_cand_list_box)
 
 	var bs: BankState = _sim_host.get("bank_state") as BankState if _sim_host != null else null
 	var lc: String = UiI18n.get_locale()
@@ -265,6 +266,16 @@ func refresh() -> void:
 				)
 				row.add_child(hbtn)
 
+	UiListRefresh.watch_tree(_active_list_box, _on_list_button_up)
+	UiListRefresh.watch_tree(_cand_list_box, _on_list_button_up)
+
+
+func _on_list_button_up() -> void:
+	if not _rebuild_pending:
+		return
+	_rebuild_pending = false
+	refresh.call_deferred()
+
 
 func _exec_cmd(method_name: String, args: Array, action_key: String) -> void:
 	if _sim_host == null:
@@ -273,4 +284,4 @@ func _exec_cmd(method_name: String, args: Array, action_key: String) -> void:
 	if cmd != null and (cmd as Object).has_method(method_name):
 		var r: Variant = (cmd as Object).callv(method_name, args)
 		command_executed.emit(r, action_key)
-		refresh()
+		refresh.call_deferred()

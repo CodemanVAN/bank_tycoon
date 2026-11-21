@@ -201,9 +201,7 @@ func refresh() -> void:
 	_lbl_dep_rate.text = UiI18n.tr_key("UI_FINANCE_DEPOSIT_RATE", {"rate": FormatService.format_bps(_pending_dep_bps)})
 	_lbl_loan_rate.text = UiI18n.tr_key("UI_FINANCE_LOAN_RATE", {"rate": FormatService.format_bps(_pending_loan_bps)})
 
-	for c in _bs_rows_box.get_children():
-		_bs_rows_box.remove_child(c)
-		c.free()
+	UiListRefresh.clear_children(_bs_rows_box)
 
 	var snap_bs: Dictionary = bs.ledger.get_balance_sheet_snapshot() if (bs != null and bs.ledger != null) else {
 		"assets": 20_000_000,

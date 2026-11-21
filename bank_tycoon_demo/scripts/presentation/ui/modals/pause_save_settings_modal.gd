@@ -193,9 +193,7 @@ func refresh() -> void:
 	_lbl_save_hdr.text = UiI18n.tr_key("UI_SAVE_TITLE")
 	_btn_return_menu.text = UiI18n.tr_key("UI_SAVE_BTN_RETURN_MENU")
 
-	for c in _slots_box.get_children():
-		_slots_box.remove_child(c)
-		c.free()
+	UiListRefresh.clear_children(_slots_box)
 
 	var save_svc: Node = get_node_or_null("/root/SaveService")
 	var sess: Node = get_node_or_null("/root/GameSession")

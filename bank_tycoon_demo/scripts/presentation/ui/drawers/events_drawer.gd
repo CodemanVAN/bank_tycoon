@@ -112,9 +112,7 @@ func refresh() -> void:
 	_lbl_loans_hdr.text = UiI18n.tr_key("UI_LOAN_MODAL_TITLE")
 
 	for box in [_events_box, _loans_box, _hist_box]:
-		for c in box.get_children():
-			box.remove_child(c)
-			c.free()
+		UiListRefresh.clear_children(box)
 
 	var bs: BankState = _sim_host.get("bank_state") as BankState if _sim_host != null else null
 	var defs: Dictionary = UiI18n.get_effective_content_defs(_sim_host)

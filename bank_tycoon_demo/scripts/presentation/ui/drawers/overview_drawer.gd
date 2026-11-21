@@ -77,9 +77,7 @@ func refresh() -> void:
 	_lbl_subtitle.text = UiI18n.tr_key("UI_DRAWER_OVERVIEW_SUBTITLE")
 	_btn_close.text = UiI18n.tr_key("UI_COMMON_CLOSE")
 
-	for c in _metrics_box.get_children():
-		_metrics_box.remove_child(c)
-		c.free()
+	UiListRefresh.clear_children(_metrics_box)
 
 	var snap: Dictionary = {}
 	if _sim_host != null and _sim_host.has_method("get_snapshot"):
@@ -98,9 +96,7 @@ func refresh() -> void:
 	_add_metric_row(UiI18n.tr_key("UI_INSPECTOR_LIQUIDITY"), UiI18n.tr_liquidity_status(liq_s), StarwayTheme.GREEN_500 if liq_s == Enums.LiquidityStatus.SAFE else StarwayTheme.RED_500)
 	_add_metric_row(UiI18n.tr_key("UI_INSPECTOR_NPL"), FormatService.format_bps(int(snap.get("npl_ratio_bps", 0))), StarwayTheme.ICE_100)
 
-	for c in _quick_nav_box.get_children():
-		_quick_nav_box.remove_child(c)
-		c.free()
+	UiListRefresh.clear_children(_quick_nav_box)
 
 	for pair in [
 		[&"finance", "UI_NAV_FINANCE"],

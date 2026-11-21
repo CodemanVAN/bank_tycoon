@@ -4,6 +4,7 @@ extends PanelContainer
 
 signal close_requested()
 signal command_executed(res: Variant, action_key: String)
+signal placement_requested(dept_id: String)
 
 var _sim_host: Node = null
 var _lbl_title: Label = null
@@ -13,6 +14,9 @@ var _lbl_syn_hdr: Label = null
 var _lbl_syn_hr_ops: Label = null
 var _lbl_syn_cred_risk: Label = null
 var _dept_grid: GridContainer = null
+
+var _grid_signature: String = ""
+var _rebuild_pending: bool = false
 
 
 func _ready() -> void:
@@ -116,14 +120,34 @@ func refresh() -> void:
 	]
 	_lbl_syn_cred_risk.add_theme_color_override("font_color", StarwayTheme.GREEN_500 if syn_cred_risk else StarwayTheme.ICE_100)
 
-	for c in _dept_grid.get_children():
-		_dept_grid.remove_child(c)
-		c.free()
-
 	var defs: Dictionary = UiI18n.get_effective_content_defs(_sim_host)
 	var dept_defs: Array = defs.get("departments", []) as Array
 	var lc: String = UiI18n.get_locale()
 	var ccy: String = bs.currency_code if bs != null else "CNY"
+
+	# Rebuilding rows on every snapshot destroyed the pressed Button between press and
+	# release (the "needs several clicks" defect). Only rebuild when the structure changed,
+	# and never while a row button is held.
+	var sig_parts: Array = [lc, ccy]
+	for raw_d in dept_defs:
+		if raw_d is Dictionary:
+			var ddef_sig: Dictionary = raw_d as Dictionary
+			var did_sig: String = str(ddef_sig.get("id", ""))
+			var lvl_sig: int = dept_svc.get_department_level(bs, did_sig) if bs != null else 0
+			sig_parts.append("%s:%d:%d:%d" % [
+				did_sig,
+				lvl_sig,
+				int(ddef_sig.get("initial_cost_minor", 0)),
+				int(ddef_sig.get("daily_cost_minor", 0)),
+			])
+	var new_sig: String = UiListRefresh.signature(sig_parts)
+	if new_sig == _grid_signature and _dept_grid.get_child_count() > 0:
+		return
+	if UiListRefresh.any_button_held(_dept_grid):
+		_rebuild_pending = true
+		return
+	_grid_signature = new_sig
+	UiListRefresh.clear_children(_dept_grid)
 
 	for raw_d in dept_defs:
 		if not (raw_d is Dictionary):
@@ -194,6 +218,7 @@ func refresh() -> void:
 		else:
 			btn.text = UiI18n.tr_key("UI_DEPT_BTN_MAX_LEVEL")
 			btn.disabled = true
+		UiListRefresh.watch_release(btn, _on_list_button_up)
 		cv.add_child(btn)
 
 
@@ -213,6 +238,13 @@ static func _get_dept_unlock_keys(dept_id: String, ddef: Dictionary) -> Array:
 			return []
 
 
+func _on_list_button_up() -> void:
+	if not _rebuild_pending:
+		return
+	_rebuild_pending = false
+	refresh.call_deferred()
+
+
 func _exec_cmd(method_name: String, args: Array, action_key: String) -> void:
 	if _sim_host == null:
 		return
@@ -222,4 +254,4 @@ func _exec_cmd(method_name: String, args: Array, action_key: String) -> void:
 		if r is Result and (r as Result).ok:
 			UiI18n.play_sfx("sfx_upgrade_success")
 		command_executed.emit(r, action_key)
-		refresh()
+		refresh.call_deferred()

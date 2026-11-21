@@ -98,6 +98,7 @@ func run_suite_async(harness: RefCounted, on_complete: Callable) -> void:
 	await _case_06_drawer_inner_button()
 	await _case_07_interceptor_guard()
 	await _case_08_structural_transparency_guard()
+	await _case_09_dynamic_list_single_click()
 
 	await _teardown()
 	on_complete.call(_results)
@@ -737,6 +738,176 @@ func _case_08_structural_transparency_guard() -> void:
 	await _settle()
 
 	_end_case()
+
+
+# ---------------------------------------------------------------------------
+# E2E_T5_09 — one click is enough on snapshot-driven list buttons.
+#
+# Regression: drawers/modals rebuilt every row on `snapshot_changed` (a few times per
+# second). A real click spans press -> release across frames; if a rebuild landed between
+# them the pressed Button was freed and `pressed` never fired, so the player had to click
+# 2-3 times. A tick is forced between press and release to make that window deterministic.
+# ---------------------------------------------------------------------------
+
+func _case_09_dynamic_list_single_click() -> void:
+	_begin_case("E2E_T5_09")
+	await _reset_ui_state()
+
+	var bs: Variant = _bank_state()
+	if not _h.assert_not_null(bs, "GameRoot 未能绑定 BankState"):
+		_end_case()
+		return
+	var cmd: Variant = _sim_host.get("command_service")
+	if not _h.assert_not_null(cmd, "command_service 缺失"):
+		_end_case()
+		return
+
+	# --- 9a. loan approval: one press/tick/release must approve ---
+	var pending: Array = (bs as Object).get("pending_loan_approvals") as Array
+	var loans_before: int = ((bs as Object).get("loans") as Dictionary).size()
+	pending.append({
+		"approval_id": "t5_single_click_appr",
+		"customer_id": "cust_t5",
+		"customer_type": "borrower",
+		"principal_minor": 600_000,
+		"annual_rate_bps": 680,
+		"term_days": 30,
+		"credit_score": 72,
+		"risk_grade": "B",
+		"estimated_pd_bps": 260,
+	})
+	_game.call("open_loan_modal", "t5_single_click_appr")
+	await _settle(3)
+	if not _h.assert_true(_loan_modal.visible, "贷款审批弹窗应已打开"):
+		_end_case()
+		return
+
+	var approve_btn: Button = _find_button_by_key(_loan_modal, "UI_LOAN_BTN_APPROVE")
+	if not _h.assert_not_null(approve_btn, "贷款审批弹窗缺少批准按钮"):
+		_end_case()
+		return
+
+	await _click_across_tick(approve_btn)
+	var still_pending: bool = false
+	for item: Variant in ((bs as Object).get("pending_loan_approvals") as Array):
+		if item is Dictionary and str((item as Dictionary).get("approval_id", "")) == "t5_single_click_appr":
+			still_pending = true
+	_h.assert_false(still_pending, "单次真实点击（按压跨一次模拟 tick 后抬起）必须完成审批，不得要求重复点击")
+	_h.assert_eq(
+		((bs as Object).get("loans") as Dictionary).size(),
+		loans_before + 1,
+		"审批通过后应新增 1 笔贷款（单次点击）"
+	)
+	_loan_modal.visible = false
+	await _settle()
+
+	# --- 9b. department upgrade: one press/tick/release must upgrade ---
+	cmd.call("create_department", "core:department.operations")
+	await _settle()
+	var level_before: int = _department_level("core:department.operations")
+	if not _h.assert_ge(level_before, 1, "前置状态：运营部应已成立"):
+		_end_case()
+		return
+
+	_game.call("open_drawer", &"departments")
+	await _settle(3)
+	var drawer: Control = _drawer_node("DepartmentsDrawer")
+	if not _h.assert_not_null(drawer, "DepartmentsDrawer 缺失"):
+		_end_case()
+		return
+	var upgrade_btn: Button = _find_button_by_key_prefix(drawer, "UI_DEPT_BTN_UPGRADE")
+	if not _h.assert_not_null(upgrade_btn, "部门抽屉缺少升级按钮"):
+		_end_case()
+		return
+
+	await _click_across_tick(upgrade_btn)
+	_h.assert_eq(
+		_department_level("core:department.operations"),
+		level_before + 1,
+		"单次真实点击（按压跨一次模拟 tick 后抬起）必须完成部门升级，不得要求重复点击"
+	)
+
+	_game.call("close_drawer")
+	await _settle()
+	_end_case()
+
+
+func _click_across_tick(control: Control) -> void:
+	if control == null:
+		return
+	await _settle()
+	var press_pos: Vector2 = control.get_global_rect().get_center()
+	_move_mouse(press_pos)
+	await _settle()
+	_last_click_pos = control.get_global_rect().get_center()
+	_last_hovered = _hovered()
+	_press_release_press_only(_last_click_pos)
+	await _settle(1)
+	# Force a snapshot (the old code rebuilt the whole list here and destroyed the button).
+	_sim_host.call("step_simulation", 0.35)
+	await _settle(1)
+	_press_release_release_only(_last_click_pos)
+	await _settle()
+
+
+func _press_release_press_only(pos: Vector2) -> void:
+	var press := InputEventMouseButton.new()
+	press.button_index = MOUSE_BUTTON_LEFT
+	press.button_mask = MOUSE_BUTTON_MASK_LEFT
+	press.pressed = true
+	press.position = pos
+	press.global_position = pos
+	_root.push_input(press, true)
+
+
+func _press_release_release_only(pos: Vector2) -> void:
+	var release := InputEventMouseButton.new()
+	release.button_index = MOUSE_BUTTON_LEFT
+	release.pressed = false
+	release.position = pos
+	release.global_position = pos
+	_root.push_input(release, true)
+
+
+func _find_button_by_key(container: Node, key: String) -> Button:
+	var want: String = UiI18n.tr_key(key)
+	for b in _buttons_under(container):
+		if b.text == want:
+			return b
+	return null
+
+
+func _find_button_by_key_prefix(container: Node, key: String) -> Button:
+	var want: String = UiI18n.tr_key(key)
+	var prefix: String = want.split("{")[0]
+	for b in _buttons_under(container):
+		if prefix != "" and b.text.begins_with(prefix):
+			return b
+	return null
+
+
+func _buttons_under(n: Node) -> Array[Button]:
+	var out: Array[Button] = []
+	if n == null:
+		return out
+	if n is Button:
+		out.append(n as Button)
+	for c in n.get_children():
+		out.append_array(_buttons_under(c))
+	return out
+
+
+func _department_level(dept_id: String) -> int:
+	var bs: Variant = _bank_state()
+	if bs == null:
+		return 0
+	var depts: Dictionary = (bs as Object).get("departments") as Dictionary
+	if not depts.has(dept_id):
+		return 0
+	var entry: Variant = depts[dept_id]
+	if entry is Object:
+		return int((entry as Object).get("level"))
+	return int((entry as Dictionary).get("level", 0))
 
 
 # ---------------------------------------------------------------------------

@@ -15,6 +15,9 @@ var _cons_box: VBoxContainer = null
 var _lbl_aggr_hdr: Label = null
 var _aggr_box: VBoxContainer = null
 
+var _policies_signature: String = ""
+var _rebuild_pending: bool = false
+
 
 func _ready() -> void:
 	theme_type_variation = &"PanelLarge"
@@ -119,15 +122,26 @@ func refresh() -> void:
 	_lbl_cons_hdr.text = UiI18n.tr_key("UI_POLICY_BRANCH_CONSERVATIVE")
 	_lbl_aggr_hdr.text = UiI18n.tr_key("UI_POLICY_BRANCH_AGGRESSIVE")
 
-	for c in _cons_box.get_children():
-		_cons_box.remove_child(c)
-		c.free()
-	for c in _aggr_box.get_children():
-		_aggr_box.remove_child(c)
-		c.free()
-
 	var defs: Dictionary = UiI18n.get_effective_content_defs(_sim_host)
 	var policies: Array = defs.get("policies", []) as Array
+
+	# Rebuild only on structural change, never while a button is held (lost first click).
+	var sig_parts: Array = [UiI18n.get_locale(), sp]
+	if bs != null:
+		for ap: Variant in bs.adopted_policies:
+			sig_parts.append(str(ap))
+	for raw_sig_p: Variant in policies:
+		if raw_sig_p is Dictionary:
+			sig_parts.append(str((raw_sig_p as Dictionary).get("id", "")))
+	var new_sig: String = UiListRefresh.signature(sig_parts)
+	if new_sig == _policies_signature and _cons_box.get_child_count() > 0:
+		return
+	if UiListRefresh.any_button_held(_cons_box) or UiListRefresh.any_button_held(_aggr_box):
+		_rebuild_pending = true
+		return
+	_policies_signature = new_sig
+	UiListRefresh.clear_children(_cons_box)
+	UiListRefresh.clear_children(_aggr_box)
 	var name_by_id: Dictionary = {}
 	for raw_p in policies:
 		if raw_p is Dictionary:
@@ -189,7 +203,15 @@ func _build_policy_card(parent: Node, bs: BankState, pdef: Dictionary, name_by_i
 			UiI18n.play_sfx("sfx_ui_click")
 			_exec_cmd("adopt_policy", [pid], "UI_POLICY_BTN_ADOPT")
 		)
+	UiListRefresh.watch_release(btn, _on_list_button_up)
 	cv.add_child(btn)
+
+
+func _on_list_button_up() -> void:
+	if not _rebuild_pending:
+		return
+	_rebuild_pending = false
+	refresh.call_deferred()
 
 
 func _exec_cmd(method_name: String, args: Array, action_key: String) -> void:
@@ -201,4 +223,4 @@ func _exec_cmd(method_name: String, args: Array, action_key: String) -> void:
 		if r is Result and (r as Result).ok:
 			UiI18n.play_sfx("sfx_upgrade_success")
 		command_executed.emit(r, action_key)
-		refresh()
+		refresh.call_deferred()

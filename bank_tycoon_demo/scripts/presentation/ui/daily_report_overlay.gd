@@ -184,9 +184,7 @@ func refresh() -> void:
 static func _clear_box(box: Node) -> void:
 	if box == null:
 		return
-	for c in box.get_children():
-		box.remove_child(c)
-		c.free()
+	UiListRefresh.clear_children(box)
 
 
 static func _add_kv_row(parent: Node, label_txt: String, val_txt: String, val_color: Color) -> void:
