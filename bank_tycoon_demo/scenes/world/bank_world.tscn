@@ -1,42 +1,42 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3 uid="uid://bye4252is85ld"]
 
-[ext_resource type="Script" path="res://scripts/presentation/world/bank_world.gd" id="1_bank_world"]
-[ext_resource type="Script" path="res://scripts/presentation/world/pixel_camera_2d.gd" id="2_pixel_camera"]
+[ext_resource type="Script" uid="uid://dfkyg01df6bkf" path="res://scripts/presentation/world/bank_world.gd" id="1_bank_world"]
+[ext_resource type="Script" uid="uid://dva08t74krxjb" path="res://scripts/presentation/world/pixel_camera_2d.gd" id="2_pixel_camera"]
 
-[node name="BankWorld" type="Node2D"]
+[node name="BankWorld" type="Node2D" unique_id=2116268220]
 texture_filter = 1
 script = ExtResource("1_bank_world")
 
-[node name="FloorLayer" type="Node2D" parent="."]
+[node name="FloorLayer" type="Node2D" parent="." unique_id=588822936]
 texture_filter = 1
 
-[node name="WallLayer" type="Node2D" parent="."]
+[node name="WallLayer" type="Node2D" parent="." unique_id=1049676140]
 texture_filter = 1
 
-[node name="YSortedLayer" type="Node2D" parent="."]
-texture_filter = 1
+[node name="YSortedLayer" type="Node2D" parent="." unique_id=1875773460]
 y_sort_enabled = true
-
-[node name="PropsContainer" type="Node2D" parent="YSortedLayer"]
 texture_filter = 1
+
+[node name="PropsContainer" type="Node2D" parent="YSortedLayer" unique_id=2123149706]
 y_sort_enabled = true
-
-[node name="DepartmentsContainer" type="Node2D" parent="YSortedLayer"]
 texture_filter = 1
+
+[node name="DepartmentsContainer" type="Node2D" parent="YSortedLayer" unique_id=1025514041]
 y_sort_enabled = true
-
-[node name="StationsContainer" type="Node2D" parent="YSortedLayer"]
 texture_filter = 1
+
+[node name="StationsContainer" type="Node2D" parent="YSortedLayer" unique_id=1793894788]
 y_sort_enabled = true
-
-[node name="ActorsContainer" type="Node2D" parent="YSortedLayer"]
 texture_filter = 1
+
+[node name="ActorsContainer" type="Node2D" parent="YSortedLayer" unique_id=2084547208]
 y_sort_enabled = true
-
-[node name="EffectsLayer" type="Node2D" parent="."]
 texture_filter = 1
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="EffectsLayer" type="Node2D" parent="." unique_id=1432558109]
+texture_filter = 1
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=298402523]
 texture_filter = 1
 position = Vector2(604, 338)
 zoom = Vector2(2, 2)

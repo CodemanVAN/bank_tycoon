@@ -1,9 +1,20 @@
 class_name BankWorld
 extends Node2D
 
-## 2.5D Isometric Bank Lobby World presentation root (18x12 IsoGrid, Y-Sorted props/stations/actors, PixelCamera2D).
+## Front-view (axis-aligned orthographic) Bank Lobby World presentation root.
+## Every art asset in this project is a front-facing rectangle except the floor, which
+## is a 32x16 isometric diamond. We un-project that diamond into a 32x32 square tile
+## with an affine transform so floor, walls, props and characters share ONE projection.
+## No new art assets are generated; only existing textures are re-projected.
 
 signal entity_selected(entity_type: StringName, entity_id: String)
+
+## Un-projection of the 32x16 diamond floor art into a 32x32 axis-aligned square.
+## Inverse of the classic 2:1 iso map x=(u-v)/2, y=(u+v)/4 gives u=tx+2*ty,
+## v=-tx+2*ty, so the diamond tips (16,0),(0,8),(-16,0),(0,-8) land exactly on
+## the square corners (16,-16),(16,16),(-16,16),(-16,-16).
+const FLOOR_X_AXIS: Vector2 = Vector2(1.0, -1.0)
+const FLOOR_Y_AXIS: Vector2 = Vector2(2.0, 2.0)
 signal department_placement_confirmed(dept_id: String, room: Rect2i)
 signal department_placement_cancelled()
 
@@ -580,7 +591,8 @@ func _update_placement_preview(rect: Rect2i) -> void:
 		if _ghost_label != null:
 			_ghost_label.text = _tr("WORLD_DEPT_PLACE_GHOST", {"name": _tr(_placement_short_key)})
 			var top_pos: Vector2 = iso_grid.grid_to_screen(rect.position).round()
-			_ghost_label.position = top_pos + Vector2(-100.0, -38.0)
+			# Above the 48px north wall of the previewed room.
+			_ghost_label.position = top_pos + Vector2(-100.0, -76.0)
 	_placement_ghost.visible = true
 
 
@@ -594,21 +606,26 @@ func _rebuild_ghost_tiles(rect: Rect2i, valid: bool) -> void:
 	var tex_desk: Texture2D = _load_tex("res://assets/environment/prop_desk_office.png")
 	var tint: Color = Color(col.r, col.g, col.b, 0.55)
 
+	# Square footprint matching the axis-aligned orthographic floor tiles.
+	var square := PackedVector2Array([
+		Vector2(-16.0, -16.0), Vector2(16.0, -16.0),
+		Vector2(16.0, 16.0), Vector2(-16.0, 16.0),
+	])
+	var square_outline := PackedVector2Array([
+		Vector2(-16.0, -16.0), Vector2(16.0, -16.0),
+		Vector2(16.0, 16.0), Vector2(-16.0, 16.0), Vector2(-16.0, -16.0),
+	])
 	for y in range(rect.position.y, rect.position.y + rect.size.y):
 		for x in range(rect.position.x, rect.position.x + rect.size.x):
 			var cell := Vector2i(x, y)
 			var tile := Polygon2D.new()
-			tile.polygon = PackedVector2Array([
-				Vector2(0.0, -8.0), Vector2(16.0, 0.0), Vector2(0.0, 8.0), Vector2(-16.0, 0.0),
-			])
+			tile.polygon = square
 			tile.color = Color(col.r, col.g, col.b, 0.30)
 			tile.position = iso_grid.grid_to_screen(cell).round()
 			_ghost_tiles.add_child(tile)
 
 			var edge := Line2D.new()
-			edge.points = PackedVector2Array([
-				Vector2(0.0, -8.0), Vector2(16.0, 0.0), Vector2(0.0, 8.0), Vector2(-16.0, 0.0), Vector2(0.0, -8.0),
-			])
+			edge.points = square_outline
 			edge.width = 1.0
 			edge.default_color = Color(col.r, col.g, col.b, 0.70)
 			edge.position = tile.position
@@ -616,14 +633,15 @@ func _rebuild_ghost_tiles(rect: Rect2i, valid: bool) -> void:
 			if cell == door_cell:
 				var opening_tile := Polygon2D.new()
 				opening_tile.polygon = PackedVector2Array([
-					Vector2(0.0, -6.0), Vector2(12.0, 0.0), Vector2(0.0, 6.0), Vector2(-12.0, 0.0),
+					Vector2(-11.0, -11.0), Vector2(11.0, -11.0),
+					Vector2(11.0, 11.0), Vector2(-11.0, 11.0),
 				])
 				opening_tile.color = Color("#FFC857") if valid else Color(col.r, col.g, col.b, 0.55)
 				opening_tile.position = tile.position
 				_ghost_tiles.add_child(opening_tile)
 
-	# Preview the actual room shell (walls on the visible back edges + a desk inside),
-	# so the player sees the result before committing.
+	# Preview the real room shell: continuous axis-aligned front walls on the
+	# visible back/left edges plus an office desk, so the player sees the result.
 	for x in range(rect.position.x, rect.position.x + rect.size.x):
 		var cell_n := Vector2i(x, rect.position.y)
 		if cell_n != door_cell:
@@ -631,9 +649,9 @@ func _rebuild_ghost_tiles(rect: Rect2i, valid: bool) -> void:
 			wall.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 			wall.texture = tex_wall
 			wall.centered = true
-			wall.offset = Vector2(0.0, -32.0)
+			wall.offset = Vector2(0.0, -24.0)
 			wall.modulate = tint
-			wall.position = iso_grid.grid_to_screen(cell_n).round()
+			wall.position = iso_grid.grid_to_screen(cell_n).round() + Vector2(0.0, -16.0)
 			_ghost_tiles.add_child(wall)
 	for y in range(rect.position.y, rect.position.y + rect.size.y):
 		var cell_w := Vector2i(rect.position.x, y)
@@ -643,16 +661,17 @@ func _rebuild_ghost_tiles(rect: Rect2i, valid: bool) -> void:
 			wall_w.texture = tex_wall
 			wall_w.centered = true
 			wall_w.flip_h = true
-			wall_w.offset = Vector2(0.0, -32.0)
+			wall_w.scale = Vector2(0.5, 1.0)
+			wall_w.offset = Vector2(0.0, -24.0)
 			wall_w.modulate = tint
-			wall_w.position = iso_grid.grid_to_screen(cell_w).round()
+			wall_w.position = iso_grid.grid_to_screen(cell_w).round() + Vector2(-16.0, 0.0)
 			_ghost_tiles.add_child(wall_w)
 
 	var desk := Sprite2D.new()
 	desk.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	desk.texture = tex_desk
 	desk.centered = true
-	desk.offset = Vector2(0.0, -9.0)
+	desk.offset = Vector2(0.0, -15.0)
 	desk.modulate = Color(1.0, 1.0, 1.0, 0.72)
 	var desk_cell := Vector2i(
 		rect.position.x + rect.size.x / 2,
@@ -789,14 +808,16 @@ func _build_static_environment() -> void:
 	var tex_carpet: Texture2D = _load_tex("res://assets/environment/tile_floor_carpet_blue.png")
 	var tex_vip: Texture2D = _load_tex("res://assets/environment/tile_floor_vip.png")
 
-	# 1. Build 18x12 Isometric Floor Layer
+	# 1. Build 18x12 axis-aligned square floor layer
 	for y in range(IsoGrid.GRID_HEIGHT):
 		for x in range(IsoGrid.GRID_WIDTH):
 			var cell := Vector2i(x, y)
 			var spr := Sprite2D.new()
 			spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 			spr.centered = true
-			spr.position = iso_grid.grid_to_screen(cell).round()
+			# Un-project the existing 32x16 diamond art into a 32x32 axis-aligned square.
+			# The transform origin is the cell centre, so adjacent squares tile seamlessly.
+			spr.transform = _floor_transform(iso_grid.grid_to_screen(cell).round())
 
 			var is_border: bool = (x == 0 or x == IsoGrid.GRID_WIDTH - 1 or y == 0 or y == IsoGrid.GRID_HEIGHT - 1)
 			var is_back_office: bool = (y <= 2 and x >= 1 and x <= 16)
@@ -825,8 +846,9 @@ func _build_static_environment() -> void:
 	logo_spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	logo_spr.texture = tex_wall_logo
 	logo_spr.centered = true
-	logo_spr.offset = Vector2(0.0, -30.0)
-	logo_spr.position = iso_grid.grid_to_screen(Vector2i(8, 0)).round()
+	# 64x48 front panel seated on the north wall base (cell top edge).
+	logo_spr.offset = Vector2(0.0, -24.0)
+	logo_spr.position = iso_grid.grid_to_screen(Vector2i(8, 0)).round() + Vector2(0.0, -16.0)
 	_wall_layer.add_child(logo_spr)
 
 	var vault_spr := Sprite2D.new()
@@ -834,8 +856,9 @@ func _build_static_environment() -> void:
 	vault_spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	vault_spr.texture = tex_vault
 	vault_spr.centered = true
-	vault_spr.offset = Vector2(0.0, -28.0)
-	vault_spr.position = iso_grid.grid_to_screen(Vector2i(14, 0)).round()
+	# 40x48 front panel seated on the north wall base.
+	vault_spr.offset = Vector2(0.0, -24.0)
+	vault_spr.position = iso_grid.grid_to_screen(Vector2i(14, 0)).round() + Vector2(0.0, -16.0)
 	_wall_layer.add_child(vault_spr)
 
 	# 3. Build Y-Sorted Lobby Props (Animated Fountain, Sofas, Queue Posts, Plants, ATMs)
@@ -846,21 +869,24 @@ func _build_static_environment() -> void:
 	_fountain_sprite.centered = true
 	_fountain_sprite.hframes = 4
 	_fountain_sprite.vframes = 1
-	_fountain_sprite.offset = Vector2(0.0, -14.0)
+	# 48x48 front-facing fountain frame: base seated on the square tile centre.
+	_fountain_sprite.offset = Vector2(0.0, -24.0)
 	_fountain_sprite.position = iso_grid.grid_to_screen(FOUNTAIN_CELL).round()
 	_props_container.add_child(_fountain_sprite)
 
-	_add_prop_sprite("res://assets/environment/prop_sofa.png", Vector2i(3, 8), Vector2(0.0, -8.0))
-	_add_prop_sprite("res://assets/environment/prop_sofa.png", Vector2i(14, 8), Vector2(0.0, -8.0))
+	# Each prop is a front-facing rectangle; offset.y = -height/2 seats its base
+	# exactly on the cell centre of the axis-aligned square grid.
+	_add_prop_sprite("res://assets/environment/prop_sofa.png", Vector2i(3, 8), Vector2(0.0, -14.0))       # 40x28
+	_add_prop_sprite("res://assets/environment/prop_sofa.png", Vector2i(14, 8), Vector2(0.0, -14.0))
 
 	for qcell in [Vector2i(4, 6), Vector2i(6, 6), Vector2i(8, 6), Vector2i(11, 6)]:
-		_add_prop_sprite("res://assets/environment/prop_queue_post.png", qcell, Vector2(0.0, -8.0))
+		_add_prop_sprite("res://assets/environment/prop_queue_post.png", qcell, Vector2(0.0, -12.0))  # 16x24
 
 	for pcell in [Vector2i(1, 1), Vector2i(16, 1), Vector2i(1, 10), Vector2i(16, 10), Vector2i(10, 4)]:
-		_add_prop_sprite("res://assets/environment/prop_plant.png", pcell, Vector2(0.0, -12.0))
+		_add_prop_sprite("res://assets/environment/prop_plant.png", pcell, Vector2(0.0, -16.0))      # 24x32
 
 	for acell in [Vector2i(1, 5), Vector2i(1, 7)]:
-		_add_prop_sprite("res://assets/environment/prop_atm.png", acell, Vector2(0.0, -14.0))
+		_add_prop_sprite("res://assets/environment/prop_atm.png", acell, Vector2(0.0, -18.0))        # 24x36
 
 	# 4. Department rooms are spawned from BankState by _sync_departments() at the plot
 	# the player chose (no fixed zones any more).
@@ -905,7 +931,8 @@ func _create_department_room(dept_id: String, rect: Rect2i) -> void:
 			tile.texture = tex_floor
 			tile.centered = true
 			tile.modulate = Color(1.0, 1.0, 1.0, 1.0) if cell != door_cell else Color(1.15, 1.1, 0.85, 1.0)
-			tile.position = iso_grid.grid_to_screen(cell).round() - root.position
+			# Room floor uses the same un-projected square tile as the lobby.
+			tile.transform = _floor_transform(iso_grid.grid_to_screen(cell).round() - root.position)
 			root.add_child(tile)
 
 	# Auto-generated door at the connection with the existing building.
@@ -914,7 +941,8 @@ func _create_department_room(dept_id: String, rect: Rect2i) -> void:
 		var door_mark := Polygon2D.new()
 		door_mark.name = "DoorMark"
 		door_mark.polygon = PackedVector2Array([
-			Vector2(0.0, -7.0), Vector2(13.0, 0.0), Vector2(0.0, 7.0), Vector2(-13.0, 0.0),
+			Vector2(-12.0, -12.0), Vector2(12.0, -12.0),
+			Vector2(12.0, 12.0), Vector2(-12.0, 12.0),
 		])
 		door_mark.color = Color(1.0, 0.78, 0.34, 0.55)
 		door_mark.position = door_pos
@@ -922,7 +950,8 @@ func _create_department_room(dept_id: String, rect: Rect2i) -> void:
 		var door_frame := Line2D.new()
 		door_frame.name = "DoorFrame"
 		door_frame.points = PackedVector2Array([
-			Vector2(0.0, -7.0), Vector2(13.0, 0.0), Vector2(0.0, 7.0), Vector2(-13.0, 0.0), Vector2(0.0, -7.0),
+			Vector2(-12.0, -12.0), Vector2(12.0, -12.0),
+			Vector2(12.0, 12.0), Vector2(-12.0, 12.0), Vector2(-12.0, -12.0),
 		])
 		door_frame.width = 1.5
 		door_frame.default_color = Color("#FFC857")
@@ -930,7 +959,7 @@ func _create_department_room(dept_id: String, rect: Rect2i) -> void:
 		root.add_child(door_frame)
 
 	var sign_anchor := Vector2i(rect.position.x + rect.size.x / 2, rect.position.y)
-	var sign_pos: Vector2 = iso_grid.grid_to_screen(sign_anchor).round() - root.position + Vector2(-64.0, -50.0)
+	var sign_pos: Vector2 = iso_grid.grid_to_screen(sign_anchor).round() - root.position + Vector2(-64.0, -76.0)
 	var sign_bg := ColorRect.new()
 	sign_bg.name = "RoomSignBg"
 	sign_bg.color = Color(0.03, 0.09, 0.16, 0.85)
@@ -959,7 +988,7 @@ func _create_department_room(dept_id: String, rect: Rect2i) -> void:
 	desk.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	desk.texture = tex_desk
 	desk.centered = true
-	desk.offset = Vector2(0.0, -9.0)
+	desk.offset = Vector2(0.0, -15.0)
 	desk.position = iso_grid.grid_to_screen(desk_cell).round() - root.position
 	root.add_child(desk)
 
@@ -968,7 +997,7 @@ func _create_department_room(dept_id: String, rect: Rect2i) -> void:
 	banner.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	banner.texture = tex_banner
 	banner.centered = true
-	banner.offset = Vector2(15.0, -15.0)
+	banner.offset = Vector2(15.0, -18.0)
 	banner.position = iso_grid.grid_to_screen(Vector2i(rect.position.x, rect.position.y)).round() - root.position
 	root.add_child(banner)
 
@@ -980,7 +1009,7 @@ func _create_department_room(dept_id: String, rect: Rect2i) -> void:
 	badge.scale = Vector2(0.75, 0.75)
 	badge.add_theme_font_size_override("font_size", 11)
 	badge.add_theme_color_override("font_color", accent)
-	badge.position = iso_grid.grid_to_screen(Vector2i(rect.position.x, rect.position.y)).round() - root.position + Vector2(-48.0, -34.0)
+	badge.position = iso_grid.grid_to_screen(Vector2i(rect.position.x, rect.position.y)).round() - root.position + Vector2(-48.0, -56.0)
 	badge.visible = false
 	root.add_child(badge)
 
@@ -1012,7 +1041,8 @@ func _create_legacy_department_node(dept_id: String, cell: Vector2i) -> void:
 	var mat := Polygon2D.new()
 	mat.name = "FloorMat"
 	mat.polygon = PackedVector2Array([
-		Vector2(0.0, -8.0), Vector2(16.0, 0.0), Vector2(0.0, 8.0), Vector2(-16.0, 0.0),
+		Vector2(-16.0, -16.0), Vector2(16.0, -16.0),
+		Vector2(16.0, 16.0), Vector2(-16.0, 16.0),
 	])
 	mat.color = Color(accent.r, accent.g, accent.b, 0.16)
 	root.add_child(mat)
@@ -1022,7 +1052,7 @@ func _create_legacy_department_node(dept_id: String, cell: Vector2i) -> void:
 	desk.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	desk.texture = _load_tex("res://assets/environment/prop_desk_office.png")
 	desk.centered = true
-	desk.offset = Vector2(0.0, -9.0)
+	desk.offset = Vector2(0.0, -15.0)
 	root.add_child(desk)
 
 	var banner := Sprite2D.new()
@@ -1030,14 +1060,14 @@ func _create_legacy_department_node(dept_id: String, cell: Vector2i) -> void:
 	banner.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	banner.texture = _load_tex("res://assets/environment/prop_dept_banner.png")
 	banner.centered = true
-	banner.offset = Vector2(15.0, -15.0)
+	banner.offset = Vector2(15.0, -18.0)
 	root.add_child(banner)
 
 	var badge := Label.new()
 	badge.name = "LevelBadge"
 	badge.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	badge.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	badge.position = Vector2(-24.0, -34.0)
+	badge.position = Vector2(-24.0, -46.0)
 	badge.size = Vector2(64.0, 14.0)
 	badge.scale = Vector2(0.75, 0.75)
 	badge.add_theme_font_size_override("font_size", 11)
@@ -1092,18 +1122,20 @@ func _sync_exterior_walls(bs_obj: Object) -> void:
 
 	var tex_wall: Texture2D = _load_tex("res://assets/environment/wall_section_back.png")
 	for c: Vector2i in built.keys():
-		# North-facing wall segment when the cell above is empty land.
+		# North-facing wall: a 32x48 front panel seated on the cell's top edge.
+		# Consecutive cells are exactly one panel width apart, so a run of north
+		# walls is a continuous, gap-free wall (not a staggered iso picket fence).
 		if not built.has(Vector2i(c.x, c.y - 1)):
 			var wall := Sprite2D.new()
 			wall.name = "ExtWallN_%d_%d" % [c.x, c.y]
 			wall.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 			wall.texture = tex_wall
 			wall.centered = true
-			# Base of the 48px panel sits on the tile's top vertex (0,-8).
-			wall.offset = Vector2(0.0, -32.0)
-			wall.position = iso_grid.grid_to_screen(c).round()
+			wall.offset = Vector2(0.0, -24.0)
+			wall.position = iso_grid.grid_to_screen(c).round() + Vector2(0.0, -16.0)
 			_exterior_walls.add_child(wall)
-		# West-facing wall segment (mirrored) when the cell to the left is empty land.
+		# West-facing wall: the same front panel squeezed into a narrow vertical
+		# strip on the cell's left edge, so the side boundary reads as a side wall.
 		if not built.has(Vector2i(c.x - 1, c.y)):
 			var wall_w := Sprite2D.new()
 			wall_w.name = "ExtWallW_%d_%d" % [c.x, c.y]
@@ -1111,8 +1143,9 @@ func _sync_exterior_walls(bs_obj: Object) -> void:
 			wall_w.texture = tex_wall
 			wall_w.centered = true
 			wall_w.flip_h = true
-			wall_w.offset = Vector2(0.0, -32.0)
-			wall_w.position = iso_grid.grid_to_screen(c).round()
+			wall_w.scale = Vector2(0.5, 1.0)
+			wall_w.offset = Vector2(0.0, -24.0)
+			wall_w.position = iso_grid.grid_to_screen(c).round() + Vector2(-16.0, 0.0)
 			_exterior_walls.add_child(wall_w)
 
 
@@ -1770,13 +1803,18 @@ func _try_pick_entity_at(world_pos: Vector2) -> bool:
 		select_entity(&"station", best_station_id)
 		return true
 
-	# If click is inside the isometric grid floor but missed entities, clear selection
+	# If click is inside the square grid floor but missed entities, clear selection
 	var clicked_cell: Vector2i = iso_grid.screen_to_grid(world_pos)
 	if iso_grid.is_in_bounds(clicked_cell):
 		focus_entity(&"", "")
 		return true
 
 	return false
+
+
+## Pure affine re-projection of an existing diamond floor sprite; zero new assets.
+func _floor_transform(pos: Vector2) -> Transform2D:
+	return Transform2D(FLOOR_X_AXIS, FLOOR_Y_AXIS, pos)
 
 
 func _load_tex(path: String) -> Texture2D:
@@ -1786,33 +1824,20 @@ func _load_tex(path: String) -> Texture2D:
 
 
 func _draw() -> void:
-	# Deep Space Navy surrounding backdrop and architectural podium border beneath the 18x12 iso floor
+	# Deep Space Navy backdrop + rectangular podium slab beneath the 18x12 square grid.
 	draw_rect(Rect2(-400.0, -300.0, 2200.0, 1600.0), Color("#081B36"), true)
 
 	if iso_grid == null:
 		return
 
-	var top_pt: Vector2 = iso_grid.grid_to_screen(Vector2i(0, 0)) + Vector2(0.0, -10.0)
-	var right_pt: Vector2 = iso_grid.grid_to_screen(Vector2i(IsoGrid.GRID_WIDTH - 1, 0)) + Vector2(18.0, 0.0)
-	var bottom_pt: Vector2 = iso_grid.grid_to_screen(Vector2i(IsoGrid.GRID_WIDTH - 1, IsoGrid.GRID_HEIGHT - 1)) + Vector2(0.0, 12.0)
-	var left_pt: Vector2 = iso_grid.grid_to_screen(Vector2i(0, IsoGrid.GRID_HEIGHT - 1)) + Vector2(-18.0, 0.0)
+	var tl: Vector2 = iso_grid.grid_to_screen(Vector2i(0, 0)) + Vector2(-16.0, -16.0)
+	var br: Vector2 = iso_grid.grid_to_screen(Vector2i(IsoGrid.GRID_WIDTH - 1, IsoGrid.GRID_HEIGHT - 1)) + Vector2(16.0, 16.0)
+	var size: Vector2 = br - tl
 
-	# Podium slab thickness under south-west & south-east edges
-	var slab_pts := PackedVector2Array([
-		left_pt,
-		bottom_pt,
-		right_pt,
-		right_pt + Vector2(0.0, 10.0),
-		bottom_pt + Vector2(0.0, 10.0),
-		left_pt + Vector2(0.0, 10.0),
-	])
-	draw_colored_polygon(slab_pts, Color("#0B2D5B"))
-
-	var rim_line := PackedVector2Array([
-		left_pt,
-		bottom_pt,
-		right_pt,
-	])
-	draw_polyline(rim_line, Color("#1F6FEB"), 1.5, false)
-	draw_line(top_pt, right_pt, Color("#263D5C"), 1.0)
-	draw_line(top_pt, left_pt, Color("#263D5C"), 1.0)
+	# 10px podium thickness on the south edge, 6px on the east/west edges.
+	draw_rect(Rect2(tl.x, br.y, size.x, 10.0), Color("#0B2D5B"))
+	draw_rect(Rect2(tl.x - 6.0, tl.y, 6.0, size.y + 10.0), Color("#0B2D5B"))
+	draw_rect(Rect2(br.x, tl.y, 6.0, size.y + 10.0), Color("#0B2D5B"))
+	# Bright south rim, subtle rectangular outline on the other edges.
+	draw_line(Vector2(tl.x, br.y), Vector2(br.x, br.y), Color("#1F6FEB"), 1.5)
+	draw_rect(Rect2(tl, size), Color("#263D5C"), false, 1.0)

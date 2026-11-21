@@ -122,7 +122,8 @@ func _apply_label_visibility() -> void:
 
 
 func get_hit_rect() -> Rect2:
-	return Rect2(-24.0, -32.0, 48.0, 40.0)
+	# Front-view counter: 48x36 sprite with its base seated on the cell centre.
+	return Rect2(-24.0, -36.0, 48.0, 40.0)
 
 
 func _ensure_nodes() -> void:
@@ -139,7 +140,7 @@ func _ensure_nodes() -> void:
 		_tag_label.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		_tag_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		_tag_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		_tag_label.position = Vector2(-12.0, -35.0)
+		_tag_label.position = Vector2(-14.0, -52.0)
 		_tag_label.size = Vector2(28.0, 12.0)
 		_tag_label.scale = Vector2(0.75, 0.75)
 		_tag_label.add_theme_font_size_override("font_size", 11)
@@ -155,7 +156,8 @@ func _refresh_visuals() -> void:
 			var tex_path: String = TEX_DESK_LOAN if station_type == "loan_desk" else TEX_COUNTER_TELLER
 			if ResourceLoader.exists(tex_path):
 				_sprite.texture = load(tex_path) as Texture2D
-			_sprite.offset = Vector2(0.0, -8.0) if station_type == "loan_desk" else Vector2(0.0, -10.0)
+			# Base-seated on the cell centre: half the sprite height (32 / 36 px).
+			_sprite.offset = Vector2(0.0, -16.0) if station_type == "loan_desk" else Vector2(0.0, -18.0)
 		_sprite.modulate = Color(1.0, 1.0, 1.0, 1.0) if is_open else Color(0.72, 0.77, 0.85, 0.92)
 
 	if _tag_label != null:
@@ -180,32 +182,13 @@ func _on_locale_changed(_new_locale: String) -> void:
 
 
 func _draw() -> void:
-	# Isometric ground shadow polygon
-	var shadow_pts := PackedVector2Array([
-		Vector2(0.0, -9.0),
-		Vector2(20.0, 1.0),
-		Vector2(0.0, 11.0),
-		Vector2(-20.0, 1.0),
-	])
-	draw_colored_polygon(shadow_pts, Color(0.0, 0.04, 0.1, 0.28))
+	# Axis-aligned ground shadow: the front-view grid uses square tiles, not diamonds.
+	draw_rect(Rect2(-24.0, -4.0, 48.0, 6.0), Color(0.0, 0.04, 0.1, 0.28))
 
-	# Selection cyan glow diamond
+	# Selection cyan glow: rectangular footprint matching the 32x32 square tile.
 	if is_selected:
-		var sel_outer := PackedVector2Array([
-			Vector2(0.0, -12.0),
-			Vector2(24.0, 0.0),
-			Vector2(0.0, 12.0),
-			Vector2(-24.0, 0.0),
-			Vector2(0.0, -12.0),
-		])
-		var sel_fill := PackedVector2Array([
-			Vector2(0.0, -11.0),
-			Vector2(22.0, 0.0),
-			Vector2(0.0, 11.0),
-			Vector2(-22.0, 0.0),
-		])
-		draw_colored_polygon(sel_fill, Color(0.0, 0.776, 1.0, 0.22))
-		draw_polyline(sel_outer, COLOR_CYAN_GLOW, 1.5, false)
+		draw_rect(Rect2(-15.0, -15.0, 30.0, 30.0), Color(0.0, 0.776, 1.0, 0.22), true)
+		draw_rect(Rect2(-16.0, -16.0, 32.0, 32.0), COLOR_CYAN_GLOW, false, 1.5)
 
 	# Overhead status badge + tag are hover-only so room walls never clip them at rest.
 	if is_hovered or is_selected:

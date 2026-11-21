@@ -119,7 +119,8 @@ func set_selected(selected: bool) -> void:
 
 
 func get_hit_rect() -> Rect2:
-	return Rect2(-12.0, -30.0, 24.0, 32.0)
+	# Front-view 24x32 character frame, base seated on the cell centre.
+	return Rect2(-12.0, -32.0, 24.0, 34.0)
 
 
 func _ensure_sprite() -> void:
@@ -130,7 +131,7 @@ func _ensure_sprite() -> void:
 		_sprite.centered = true
 		_sprite.hframes = 4
 		_sprite.vframes = 4
-		_sprite.offset = Vector2(0.0, -14.0)
+		_sprite.offset = Vector2(0.0, -16.0)
 		add_child(_sprite)
 
 
@@ -206,32 +207,13 @@ func _process(delta: float) -> void:
 
 
 func _draw() -> void:
-	# Foot ground shadow
-	var shadow_pts := PackedVector2Array([
-		Vector2(0.0, -3.0),
-		Vector2(7.0, 0.0),
-		Vector2(0.0, 3.0),
-		Vector2(-7.0, 0.0),
-	])
-	draw_colored_polygon(shadow_pts, Color(0.0, 0.04, 0.1, 0.32))
+	# Axis-aligned foot shadow on the square front-view tile.
+	draw_rect(Rect2(-9.0, -3.0, 18.0, 5.0), Color(0.0, 0.04, 0.1, 0.32))
 
-	# Selection cyan ring
+	# Selection cyan ring: rectangular footprint, no diamond.
 	if is_selected:
-		var sel_ring := PackedVector2Array([
-			Vector2(0.0, -6.0),
-			Vector2(12.0, 0.0),
-			Vector2(0.0, 6.0),
-			Vector2(-12.0, 0.0),
-			Vector2(0.0, -6.0),
-		])
-		var sel_fill := PackedVector2Array([
-			Vector2(0.0, -5.0),
-			Vector2(10.0, 0.0),
-			Vector2(0.0, 5.0),
-			Vector2(-10.0, 0.0),
-		])
-		draw_colored_polygon(sel_fill, Color(0.0, 0.776, 1.0, 0.25))
-		draw_polyline(sel_ring, COLOR_CYAN_GLOW, 1.5, false)
+		draw_rect(Rect2(-11.0, -15.0, 22.0, 30.0), Color(0.0, 0.776, 1.0, 0.25), true)
+		draw_rect(Rect2(-12.0, -16.0, 24.0, 32.0), COLOR_CYAN_GLOW, false, 1.5)
 
 	# Overhead status bubble / bar
 	if actor_kind == &"customer":

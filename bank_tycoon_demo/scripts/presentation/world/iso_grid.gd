@@ -1,7 +1,12 @@
 class_name IsoGrid
 extends RefCounted
 
-## 2:1 isometric logical grid (32x16 tiles) with AStarGrid2D 4-way navigation.
+## Axis-aligned orthographic logical grid (18x12 lobby, 32x32 square tiles) with
+## AStarGrid2D 4-way navigation. The class name is kept for API/save compatibility.
+## The projection is deliberately NOT 2:1 isometric any more: every sprite in this
+## project (floor diamonds, wall panels, ATM/counter/sofa props, characters) is a
+## front-facing rectangle, so the world uses one shared front-view square grid and the
+## 32x16 diamond floor art is un-projected into 32x32 squares at render time.
 ## GRID_WIDTH x GRID_HEIGHT is the initial lobby; the navigable site extends SITE_MARGIN
 ## cells in every direction so departments can be built outside the current floor plan.
 
@@ -16,9 +21,13 @@ const SITE_REGION: Rect2i = Rect2i(
 )
 const TILE_WIDTH: int = 32
 const TILE_HEIGHT: int = 16
+## Orthographic cell pitch. The diamond art is 32x16; un-projecting it yields a
+## 32x32 square, so one logical cell is exactly one square tile wide and tall.
+const TILE_SIZE: int = 32
 const HALF_TILE_W: float = 16.0
 const HALF_TILE_H: float = 8.0
-const DEFAULT_ORIGIN_OFFSET: Vector2 = Vector2(500.0, 230.0)
+## Centres the 18x12 lobby on the default camera (604, 338) at 2x zoom.
+const DEFAULT_ORIGIN_OFFSET: Vector2 = Vector2(332.0, 162.0)
 
 var origin_offset: Vector2 = DEFAULT_ORIGIN_OFFSET
 var _astar: AStarGrid2D = null
@@ -51,17 +60,19 @@ func clamp_to_bounds(cell: Vector2i) -> Vector2i:
 
 
 func grid_to_screen(cell: Vector2i) -> Vector2:
-	var sx: float = float(cell.x - cell.y) * HALF_TILE_W + origin_offset.x
-	var sy: float = float(cell.x + cell.y) * HALF_TILE_H + origin_offset.y
-	return Vector2(sx, sy)
+	# One axis-aligned square per cell; grid_to_screen returns the CELL CENTRE.
+	return Vector2(
+		float(cell.x) * float(TILE_SIZE) + origin_offset.x,
+		float(cell.y) * float(TILE_SIZE) + origin_offset.y
+	)
 
 
 func screen_to_grid(screen_pos: Vector2) -> Vector2i:
-	var dx: float = (screen_pos.x - origin_offset.x) / HALF_TILE_W
-	var dy: float = (screen_pos.y - origin_offset.y) / HALF_TILE_H
-	var gx: float = (dx + dy) * 0.5
-	var gy: float = (dy - dx) * 0.5
-	return Vector2i(roundi(gx), roundi(gy))
+	# Strict inverse of grid_to_screen (round-trip safe for every integer cell).
+	return Vector2i(
+		roundi((screen_pos.x - origin_offset.x) / float(TILE_SIZE)),
+		roundi((screen_pos.y - origin_offset.y) / float(TILE_SIZE))
+	)
 
 
 func set_solid(cell: Vector2i, solid: bool = true) -> void:
