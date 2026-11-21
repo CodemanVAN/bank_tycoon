@@ -181,28 +181,47 @@ separate channel and was not claimed as verified-in-broken-state).
    (e.g. the 480x40 `ToastBar`) is also IGNORE, so it cannot shadow the strip below it. Only real panels are `STOP`
    (default), and they are hidden (`visible = false`) when inactive — a hidden Control never participates in picking.
 3. Modal blocking is owned by exactly one node: `ModalShield` (first child of `ModalContainer`, full-rect, `STOP`,
-   default hidden). `GameRoot._sync_modal_shield()` toggles it from the three modals' `visibility_changed` (not only
-   `closed`), so every close path — close button, `open_pause_modal()` toggle, direct `visible = false` — restores
-   click-through. Keep `ModalShield` **before** the modal siblings (reverse picking order gives panels priority).
-4. `DailyReportOverlay` is intentionally **not** part of the shield set (non-modal report card). Revisit as a product
-   decision before changing it.
+   default hidden). `GameRoot._sync_modal_shield()` toggles it from the four modal-ish panels' `visibility_changed`
+   (not only `closed`), so every close path — close button, `open_pause_modal()` toggle, direct `visible = false` —
+   restores click-through. Keep `ModalShield` **before** the modal siblings (reverse picking order gives panels priority).
+4. `DailyReportOverlay` **is** part of the shield set: the HUD and the lobby are locked while the day report is open
+   (it is shown at settlement, so a stray click must not move money or re-advance the day).
 5. Any new full-screen HUD node must come with a `gui_get_hovered_control()` assertion in
    `tests/e2e/test_tier5_ui_input.gd`; `godot.ps1 --script res://tests/run_tests.gd` must stay green.
 
-### 7.2 Known follow-ups from the HUD input fix (NOT part of that task)
+### 7.2 Snapshot-driven lists (drawers / modals)
 
-- `DailyReportOverlay` is intentionally non-modal; if product wants "report locks the HUD", add it to
-  `GameRoot._any_modal_open()`. Do not change silently — it changes the interaction contract.
-- `GameRoot._on_next_day_requested()` discards both `Result`s (`advance_to_next_day`, `save_to_slot`) and always
-  toasts `UI_TOAST_AUTOSAVE_OK`. Reuse `ToastBar.show_command_result()` so a failed save does not report success.
-- `GameRoot._exit_tree()` writes `SimulationHost.command_service/simulation/event_bus` directly; those fields are
-  owned by `scripts/app/*`, and `SimulationHost._notification` already clears them. Candidate for removal.
-- `GameRoot._bind_runtime_session()` silently creates a starter branch when `GameSession.bank_state == null`,
-  producing a half-started session (`is_active == false`) that can still be saved. Prefer `push_error` + main menu.
-- Deferred test coverage: Tier 5 proves GUI picking (`gui_get_hovered_control`). Arrival of clicks at
-  `BankWorld._unhandled_input` and wheel at `PixelCamera2D._unhandled_input` has no assertion today. When adding it,
-  use the observable API that already exists — `BankWorld.entity_selected` (emitted by a successful pick) and
-  `BankWorld.get_camera_zoom_step()` (bank_world.gd:6 / :214) — instead of reaching into `_unhandled_input`.
+Rows are rebuilt from `snapshot_changed`, which fires several times per second. Destroying a Button between its
+`press` and `release` swallows the click ("needs several clicks"). Rules:
+
+1. Only rebuild when the structural signature changed (`UiListRefresh.signature`); text-only updates must not rebuild.
+2. Never rebuild while a button in the list is held (`UiListRefresh.any_button_held`): set a pending flag and flush it
+   from `UiListRefresh.watch_release` / `watch_tree`.
+3. Clear rows with `UiListRefresh.clear_children` (`queue_free`), never `free()` inside a signal handler.
+4. Command handlers refresh via `refresh.call_deferred()`, not synchronously inside `pressed`.
+
+### 7.3 Department placement (new construction flow)
+
+- `departments_drawer.gd` emits `placement_requested(dept_id)`; it never calls `create_department` itself.
+- `GameRoot` closes the drawer and calls `BankWorld.begin_department_placement(dept_id)`. `BankWorld` emits
+  `department_placement_confirmed(dept_id, cell)` or `department_placement_cancelled()`; `GameRoot` then calls
+  `BankCommandService.create_department(dept_id, cell)` and reports the `Result` via `ToastBar`.
+- `BankWorld.is_valid_department_plot(cell, dept_id)` rejects: out of bounds, entrance / queue lanes
+  (`PLACEMENT_EXTRA_RESERVED_CELLS`), solid cells (walls, stations, existing dept rooms) and plots occupied according
+  to `DepartmentService.is_plot_free` (domain-owned uniqueness).
+- `DepartmentInstance.grid_pos` is the single source of truth; `(-1, -1)` means "unplaced legacy save" and renders at
+  the old `DEPT_ZONES` cell. Rooms are created/removed from `BankState`, not from a fixed list.
+- World input uses the event position (`cell_from_screen_position`, camera-aware), never `get_global_mouse_position()`
+  polling — the latter is not updated by `Viewport.push_input` and makes placement untestable headless.
+
+### 7.4 Known follow-ups (still open)
+
+- Department rooms are one tile. A multi-tile footprint needs an occupancy set shared with `is_plot_free`.
+- `DEPT_ZONES[*].cell` now only serves unplaced legacy saves and mod departments without a style entry; remove it once
+  a save migration has run.
+- Mod-added departments get the default accent and the id as display name until the mod supplies `WORLD_DEPT_*` keys.
+- `PLACEMENT_EXTRA_RESERVED_CELLS` tracks the lobby layout manually; update it together with any floor-plan change.
+
 
 
 Panels contract (panels implements; hud instantiates by path):
