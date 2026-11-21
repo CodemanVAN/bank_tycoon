@@ -212,16 +212,24 @@ current floor plan**, not a tile inside it; the connection between room and buil
   are the single source of truth; rebuilds happen from `BankState`, never from a static list.
 - `departments_drawer.gd` emits `placement_requested(dept_id)`; `GameRoot` closes the drawer and calls
   `BankWorld.begin_department_placement(dept_id)`.
-- Build gesture: press = anchor, drag = live room preview (green/red), release = build; a single click builds the
-  minimum 3x3 room; right click / Esc cancels. Size is clamped to `MIN_ROOM_SIZE (3,3)` .. `MAX_ROOM_SIZE (5,4)`.
+- Build gesture: press = anchor, drag = live room preview (green/red), release = build; right click / Esc cancels.
+  On entering placement mode a `DEFAULT_ROOM_SIZE (4,4)` preview is shown immediately at the first free perimeter
+  spot, and moving the mouse without dragging re-centres that 4x4 preview so the player sees a real room before
+  committing. A single click builds the default (or last previewed) room. Size is clamped to
+  `MIN_ROOM_SIZE (3,3)` .. `MAX_ROOM_SIZE (5,4)`.
 - `is_valid_department_room` requires: every cell inside the site, **no cell already built**, and at least one
   side sharing an edge with the current building. `DepartmentService.is_room_free` still vetoes overlap with
   another room rect or a station.
 - `room_door_cell(rect)` picks the side with the most built neighbours and returns the middle cell of that side;
   `room_wall_cells(rect)` returns the rest of the perimeter. The door cell stays walkable and gets a gold
   `DoorFrame`; every other perimeter cell becomes a navigation solid.
-- Rendering: floor tile per cell, cutaway wall sprites on the perimeter, a door frame at the connection, a
-  department nameplate above and desk/banner/level badge inside.
+- Rendering: floor tile per cell, a door frame at the connection, a department nameplate above and
+  desk/banner/level badge inside. Walls are **not** per-room sprites: `BankWorld._sync_exterior_walls()`
+  derives the built-cell union (lobby + all room rects) and emits one contiguous `wall_section_back.png`
+  panel (`ExtWallN_x_y` / `ExtWallW_x_y`) for every built cell whose north/west neighbour is empty land.
+  A signature of the built-cell set short-circuits rebuilds. Panels sit on the tile's top vertex
+  (`offset = (0,-32)`), replacing the old "every 2nd cell, 10px too low" static loop that left gaps and
+  floating blocks. The shared lobby edge gets no wall, so the auto-generated door stays open.
 - Navigation: all site cells outside the built area are solid. `_sync_navigation_solids` carves the lobby, marks
   stations, then applies `room_wall_cells` per room. Empty land is therefore never walkable.
 - Data: `DepartmentInstance.grid_pos` (top-left) + `room_size` (w,h). `room_size == (1,1)` is the legacy
@@ -242,10 +250,26 @@ current floor plan**, not a tile inside it; the connection between room and buil
 - Do not scale individual layout constants to "look bigger": raise the window size instead, otherwise every
   anchored offset in `game_root.tscn` has to be re-tuned.
 
-### 7.5 Known follow-ups (still open)
+### 7.5 Labels are hover-only (no clipped titles)
+
+Department and counter titles used to be always-on and were clipped by the cutaway walls. They are now hidden by
+default (`visible = false`) and revealed only while the pointer is over the entity (or it is selected):
+
+- `BankWorld` tracks `_hovered_dept_id` / `_hovered_station_id` via `update_hover(screen_pos)`, called from
+  `_unhandled_input` on `InputEventMouseMotion`. It converts to world space with
+  `get_global_transform_with_canvas().affine_inverse()`, hit-tests department rects and
+  `ServiceStationView.get_hit_rect()`, then calls `_apply_entity_labels()`.
+- `_apply_entity_labels()` toggles `RoomSignBg` / `RoomSign` / `LevelBadge` and forwards
+  `ServiceStationView.set_hovered()`, which also gates the `_draw()` overhead status badge and the `TagLabel`.
+- Placement mode suppresses hover updates so the live preview is never interrupted.
+
+### 7.6 Known follow-ups (still open)
 
 - `DEPT_ZONES[*].cell` now only serves unplaced legacy saves; remove it once a save migration has run.
 - Mod-added departments have no `DEPT_ZONES` style entry: they get the default accent and the id as sign text.
-- The lobby's exterior wall art (north wall / south glass) is static; a room attached there gets a door frame but
-  the old wall sprite may still be visible behind it. Replacing lobby walls with a dynamic built-boundary pass is
-  the next visual step.
+- The exterior-wall pass draws one flat 32x48 front-facing panel per built edge cell. Because the source art is a
+  rectangular front elevation (not an isometric parallelogram), long walls still read as a row of stepped panels
+  rather than a seamless surface, and the south/east edges have no visible wall (cutaway view). A dedicated
+  isometric wall-tile/corner asset set would be needed for a fully continuous wall.
+- `E2E_T5_10` asserts the exterior-wall container (`_exterior_walls`) and the open connection edge, not
+  per-room `Wall_x_y` children — those were removed with the static wall loop.
