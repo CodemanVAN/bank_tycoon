@@ -167,17 +167,36 @@ func _make_kpi_box(parent: Node, icon_name: String) -> Dictionary:
 func _make_speed_btn(parent: Node, speed_val: int, icon_name: String) -> Button:
 	var b := Button.new()
 	b.icon = UiI18n.load_icon(icon_name)
+	var toast_key: String = _speed_toast_key(speed_val)
 	b.pressed.connect(func() -> void:
 		UiI18n.play_sfx("sfx_ui_click")
-		if _sim_host != null:
-			var cmd: Variant = _sim_host.get("command_service")
-			if cmd != null and (cmd as Object).has_method("set_speed"):
-				var r: Variant = (cmd as Object).call("set_speed", speed_val)
-				command_executed.emit(r, "UI_TOPBAR_SPEED_1X")
-				refresh()
+		if _sim_host == null:
+			push_warning("[TopBar] speed %d pressed before SimulationHost was bound; input ignored." % speed_val)
+			return
+		var cmd: Variant = _sim_host.get("command_service")
+		if cmd == null or not (cmd as Object).has_method("set_speed"):
+			push_warning("[TopBar] speed %d pressed but command_service.set_speed is unavailable; input ignored." % speed_val)
+			return
+		var r: Variant = (cmd as Object).call("set_speed", speed_val)
+		command_executed.emit(r, toast_key)
+		refresh()
 	)
 	parent.add_child(b)
 	return b
+
+
+func _speed_toast_key(speed_val: int) -> String:
+	match speed_val:
+		0:
+			return "UI_TOPBAR_SPEED_PAUSE"
+		1:
+			return "UI_TOPBAR_SPEED_1X"
+		2:
+			return "UI_TOPBAR_SPEED_2X"
+		3:
+			return "UI_TOPBAR_SPEED_3X"
+		_:
+			return "UI_TOPBAR_SPEED_1X"
 
 
 func refresh() -> void:
@@ -244,10 +263,12 @@ func refresh() -> void:
 func _on_day_action_pressed() -> void:
 	UiI18n.play_sfx("sfx_ui_click")
 	if _sim_host == null:
+		push_warning("[TopBar] day action pressed before SimulationHost was bound; input ignored.")
 		return
 	var cmd: Variant = _sim_host.get("command_service")
 	var bs: BankState = _sim_host.get("bank_state") as BankState
 	if cmd == null or bs == null:
+		push_warning("[TopBar] day action pressed but command_service/bank_state is unavailable; input ignored.")
 		return
 	if bs.day_phase == Enums.DayPhase.PRE_OPEN:
 		var r: Variant = (cmd as Object).call("open_branch_for_day")

@@ -13,6 +13,7 @@ var _bank_world: Node = null
 @onready var _bottom_bar: PanelContainer = $HUDLayer/BottomBar
 @onready var _drawer_container: Control = $HUDLayer/DrawerContainer
 @onready var _modal_container: Control = $HUDLayer/ModalContainer
+@onready var _modal_shield: Control = get_node_or_null("HUDLayer/ModalContainer/ModalShield") as Control
 @onready var _daily_report_overlay: PanelContainer = $HUDLayer/DailyReportOverlay
 @onready var _toast_bar: PanelContainer = $HUDLayer/ToastBar
 
@@ -61,6 +62,7 @@ func _ready() -> void:
 	_bind_runtime_session()
 	_wire_signals()
 	UiI18n.connect_locale_changed(self, &"_on_locale_changed")
+	_sync_modal_shield()
 	refresh_all()
 
 
@@ -91,6 +93,11 @@ func _bind_runtime_session() -> void:
 	if _sim_host != null and _sim_host.has_method("bind_session"):
 		_sim_host.call("bind_session", bs, defs)
 
+	# bind_session() rebuilds the DomainEventBus (simulation_host.gd), so the
+	# event_published connection has to be re-established after every rebind
+	# (initial boot and every save-game reload). is_connected guard = idempotent.
+	_wire_event_bus()
+
 	if _bank_world != null and _bank_world.has_method("bind_runtime"):
 		_bank_world.call("bind_runtime", _sim_host)
 
@@ -104,17 +111,23 @@ func _bind_runtime_session() -> void:
 			dnode.call("bind", _sim_host)
 
 
+func _wire_event_bus() -> void:
+	if _sim_host == null:
+		return
+	var eb: Variant = _sim_host.get("event_bus")
+	if eb is Object and (eb as Object).has_signal("event_published"):
+		var cb_ev := Callable(self, &"_on_domain_event_published")
+		if not (eb as Object).is_connected("event_published", cb_ev):
+			(eb as Object).connect("event_published", cb_ev)
+
+
 func _wire_signals() -> void:
 	if _sim_host != null:
 		if _sim_host.has_signal("snapshot_changed"):
 			var cb_snap := Callable(self, &"_on_snapshot_changed")
 			if not _sim_host.is_connected("snapshot_changed", cb_snap):
 				_sim_host.connect("snapshot_changed", cb_snap)
-		var eb: Variant = _sim_host.get("event_bus")
-		if eb is Object and (eb as Object).has_signal("event_published"):
-			var cb_ev := Callable(self, &"_on_domain_event_published")
-			if not (eb as Object).is_connected("event_published", cb_ev):
-				(eb as Object).connect("event_published", cb_ev)
+		_wire_event_bus()
 
 	if _bank_world != null and _bank_world.has_signal("entity_selected"):
 		var cb_sel := Callable(self, &"_on_world_entity_selected")
@@ -166,6 +179,33 @@ func _wire_signals() -> void:
 
 	if _daily_report_overlay != null and _daily_report_overlay.has_signal("next_day_requested"):
 		_daily_report_overlay.connect("next_day_requested", _on_next_day_requested)
+
+	# ModalShield blocks clicks outside an open modal. Hook visibility_changed (not
+	# just the `closed` signal) so every close path - close button, open_pause_modal
+	# toggle, or a direct visible = false - re-opens mouse picking for the HUD.
+	for modal_node in [_loan_modal, _event_modal, _pause_modal]:
+		var mctl: Control = modal_node as Control
+		if mctl == null:
+			continue
+		var cb_vis := Callable(self, &"_sync_modal_shield")
+		if not mctl.is_connected("visibility_changed", cb_vis):
+			mctl.connect("visibility_changed", cb_vis)
+
+
+func _any_modal_open() -> bool:
+	for modal_node in [_loan_modal, _event_modal, _pause_modal]:
+		if not is_instance_valid(modal_node):
+			continue
+		var mctl: Control = modal_node as Control
+		if mctl != null and mctl.visible:
+			return true
+	return false
+
+
+func _sync_modal_shield() -> void:
+	if _modal_shield == null or not is_instance_valid(_modal_shield):
+		return
+	_modal_shield.visible = _any_modal_open()
 
 
 func open_drawer(drawer_id: StringName) -> void:
