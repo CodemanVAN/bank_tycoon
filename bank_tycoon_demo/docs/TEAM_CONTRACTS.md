@@ -146,11 +146,23 @@ tokens `TOP_BAR_HEIGHT=56, LEFT_NAV_WIDTH=76, RIGHT_INSPECTOR_WIDTH=300, BOTTOM_
 `PanelCard, PanelHeader, PanelLarge, PanelBar, LabelTitle, LabelHero, LabelMuted, LabelGold, LabelPositive,
 LabelNegative, LabelValue, ButtonPrimary, ButtonDanger, ButtonGold, ButtonGhost`. Icons in `res://assets/icons/`.
 
-`scenes/gameplay/game_root.tscn` (hud), actual tree after the input fix:
-`GameRoot` (Control, `mouse_filter=IGNORE`) → `SimulationHost` (Node), `WorldHost` (Node2D) → `BankWorld`
-(instance of bank_world.tscn), `HUDLayer` (CanvasLayer, layer=10) → `TopBar`, `LeftNavigation`, `RightInspector`,
-`BottomBar`, `DrawerContainer` (IGNORE) → `*Drawer`, `ModalContainer` (IGNORE) → `ModalShield`, `LoanApprovalModal`,
-`EventModal`, `PauseSaveSettingsModal`, `DailyReportOverlay`, `ToastBar` (IGNORE).
+`scenes/gameplay/game_root.tscn` (hud), actual tree after the input fix (indentation = parent/child):
+```text
+GameRoot (Control, mouse_filter=IGNORE)
+|- SimulationHost (Node)
+|- WorldHost (Node2D)
+|  `- BankWorld (instance of bank_world.tscn)
+`- HUDLayer (CanvasLayer, layer=10)
+   |- TopBar                (PanelContainer)
+   |- LeftNavigation        (PanelContainer)
+   |- RightInspector        (PanelContainer)
+   |- BottomBar             (PanelContainer)
+   |- DrawerContainer       (Control, IGNORE)  -> Overview/Finance/Employees/Departments/Policies/Events drawers
+   |- ModalContainer        (Control, IGNORE)  -> ModalShield (Control, STOP, hidden), LoanApprovalModal,
+   |                                              EventModal, PauseSaveSettingsModal
+   |- DailyReportOverlay    (PanelContainer, 780x480 centred, STOP, hidden)
+   `- ToastBar              (PanelContainer, 480x40, IGNORE, hidden)
+```
 On `_ready`: `host.bind_session(GameSession.bank_state, ContentRegistry.get_content_defs())`, then `_wire_signals()`.
 `bind_session()` rebuilds the `DomainEventBus`, so `GameRoot._wire_event_bus()` re-connects `event_published` after
 every bind (initial boot **and** save reload) with an `is_connected` guard.
@@ -164,9 +176,10 @@ BottomBar / drawer buttons; GUI picking is what the regression proves — the wo
 separate channel and was not claimed as verified-in-broken-state).
 
 1. Full-screen layout-only Controls **must** be `mouse_filter = 2` (IGNORE) and state it explicitly in the `.tscn`:
-   `GameRoot`, `DrawerContainer`, `ModalContainer`, `ToastBar`.
-2. **PASS is forbidden** on any overlapping/full-screen HUD container. Only real panels are `STOP` (default), and
-   they are hidden (`visible = false`) when inactive — a hidden Control never participates in picking.
+   `GameRoot`, `DrawerContainer`, `ModalContainer`.
+2. **PASS is forbidden** on any overlapping HUD container, full-screen or not. Overlay chrome that never takes input
+   (e.g. the 480x40 `ToastBar`) is also IGNORE, so it cannot shadow the strip below it. Only real panels are `STOP`
+   (default), and they are hidden (`visible = false`) when inactive — a hidden Control never participates in picking.
 3. Modal blocking is owned by exactly one node: `ModalShield` (first child of `ModalContainer`, full-rect, `STOP`,
    default hidden). `GameRoot._sync_modal_shield()` toggles it from the three modals' `visibility_changed` (not only
    `closed`), so every close path — close button, `open_pause_modal()` toggle, direct `visible = false` — restores
@@ -186,9 +199,10 @@ separate channel and was not claimed as verified-in-broken-state).
   owned by `scripts/app/*`, and `SimulationHost._notification` already clears them. Candidate for removal.
 - `GameRoot._bind_runtime_session()` silently creates a starter branch when `GameSession.bank_state == null`,
   producing a half-started session (`is_active == false`) that can still be saved. Prefer `push_error` + main menu.
-- Deferred test coverage: Tier 5 proves GUI picking (`gui_get_hovered_control`). Arrival of clicks/wheel at
-  `BankWorld._unhandled_input` and `PixelCamera2D._unhandled_input` should get its own cases once those channels
-  expose an observable signal; do not assert it today without instrumentation.
+- Deferred test coverage: Tier 5 proves GUI picking (`gui_get_hovered_control`). Arrival of clicks at
+  `BankWorld._unhandled_input` and wheel at `PixelCamera2D._unhandled_input` has no assertion today. When adding it,
+  use the observable API that already exists — `BankWorld.entity_selected` (emitted by a successful pick) and
+  `BankWorld.get_camera_zoom_step()` (bank_world.gd:6 / :214) — instead of reaching into `_unhandled_input`.
 
 
 Panels contract (panels implements; hud instantiates by path):
