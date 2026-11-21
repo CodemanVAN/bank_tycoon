@@ -136,7 +136,7 @@ func initialize_starter_branch() -> void:
 		var e2 := _make_generated_employee(
 			next_id("emp"),
 			"EMP_NAME_STARTER_2",
-			"emp_loan_m",
+			"emp_credit",
 			"loan_officer",
 			Vector2i(11, 3),
 			64, 56, 60, 62, 48, 72, 68,
@@ -147,7 +147,7 @@ func initialize_starter_branch() -> void:
 
 	if candidates.is_empty():
 		var roles: Array[String] = ["teller", "loan_officer", "analyst"]
-		var avatars: Array[String] = ["emp_teller_m", "emp_loan_f", "emp_analyst_f"]
+		var avatars: Array[String] = ["emp_teller_m", "emp_credit", "emp_risk"]
 		var crng: RandomNumberGenerator = rng_streams.candidate_rng
 		for i in range(3):
 			var c := _make_generated_employee(
@@ -473,7 +473,12 @@ static func from_dict(data: Dictionary) -> Result:
 	if raw_dr is Array:
 		for item in (raw_dr as Array):
 			if item is Dictionary:
-				state.daily_reports.append(_coerce_json_numbers(item) as Dictionary)
+				var rep_d: Dictionary = _coerce_json_numbers(item) as Dictionary
+				if rep_d.has("liquidity_ratio"):
+					rep_d["liquidity_ratio"] = float(rep_d["liquidity_ratio"])
+				if rep_d.has("npl_ratio"):
+					rep_d["npl_ratio"] = float(rep_d["npl_ratio"])
+				state.daily_reports.append(rep_d)
 
 	state.settled_days = []
 	var raw_sd: Variant = data.get("settled_days", [])

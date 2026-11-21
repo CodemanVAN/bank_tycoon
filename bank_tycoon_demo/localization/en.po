@@ -1,0 +1,1706 @@
+# Starway Bank — Bank Tycoon (en)
+msgid ""
+msgstr ""
+"Project-Id-Version: Starway Bank 0.1.0\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "UI_MAIN_MENU_TITLE"
+msgstr "Starway Bank"
+
+msgid "UI_MAIN_MENU_SUBTITLE"
+msgstr "Modern Tech-Blue · Pixel Branch Simulation"
+
+msgid "UI_MAIN_MENU_NEW_GAME"
+msgstr "New Game"
+
+msgid "UI_MAIN_MENU_CONTINUE"
+msgstr "Continue"
+
+msgid "UI_MAIN_MENU_LOAD_GAME"
+msgstr "Load Save"
+
+msgid "UI_MAIN_MENU_SETTINGS"
+msgstr "Settings"
+
+msgid "UI_MAIN_MENU_QUIT"
+msgstr "Quit"
+
+msgid "UI_TOPBAR_DAY"
+msgstr "Day {day}"
+
+msgid "UI_TOPBAR_CASH"
+msgstr "Cash Reserves"
+
+msgid "UI_TOPBAR_DEPOSITS"
+msgstr "Deposits"
+
+msgid "UI_TOPBAR_LOANS"
+msgstr "Loans"
+
+msgid "UI_TOPBAR_EQUITY"
+msgstr "Equity"
+
+msgid "UI_TOPBAR_PROFIT"
+msgstr "Today P&L"
+
+msgid "UI_TOPBAR_SATISFACTION"
+msgstr "Satisfaction"
+
+msgid "UI_TOPBAR_REPUTATION"
+msgstr "Reputation"
+
+msgid "UI_TOPBAR_STRATEGY_POINTS"
+msgstr "Strategy Pts"
+
+msgid "UI_TOPBAR_TIME"
+msgstr "Time {time}"
+
+msgid "UI_TOPBAR_PHASE"
+msgstr "Phase"
+
+msgid "UI_NAV_OVERVIEW"
+msgstr "Overview"
+
+msgid "UI_NAV_FINANCE"
+msgstr "Finance"
+
+msgid "UI_NAV_EMPLOYEES"
+msgstr "Staff"
+
+msgid "UI_NAV_DEPARTMENTS"
+msgstr "Depts"
+
+msgid "UI_NAV_POLICIES"
+msgstr "Policies"
+
+msgid "UI_NAV_EVENTS"
+msgstr "Events"
+
+msgid "UI_INSPECTOR_TITLE"
+msgstr "Inspector"
+
+msgid "UI_INSPECTOR_EMPTY"
+msgstr "Select an employee, customer, or station in the lobby"
+
+msgid "UI_BOTTOM_OPEN_BRANCH"
+msgstr "Open Branch"
+
+msgid "UI_BOTTOM_NEXT_DAY"
+msgstr "Next Day"
+
+msgid "UI_BOTTOM_QUEUE"
+msgstr "Queue"
+
+msgid "UI_BOTTOM_APPROVALS"
+msgstr "Approvals"
+
+msgid "UI_BOTTOM_EVENTS"
+msgstr "Active Events"
+
+msgid "DEPT_OPERATIONS_NAME"
+msgstr "Operations Department"
+
+msgid "DEPT_OPERATIONS_DESC"
+msgstr "Streamlines lobby counter workflows and dispatch, cutting teller service duration and boosting staff productivity."
+
+msgid "DEPT_OPERATIONS_LV1"
+msgstr "Lv.1 Standard SOP: Reduces teller service duration and boosts base staff productivity"
+
+msgid "DEPT_OPERATIONS_LV2"
+msgstr "Lv.2 Smart Queue Routing: Unlocks queue priority management (Normal / Priority / VIP)"
+
+msgid "DEPT_OPERATIONS_LV3"
+msgstr "Lv.3 Automated Complaint Desk: Accelerates complaint resolution and protects customer satisfaction"
+
+msgid "DEPT_HR_NAME"
+msgstr "Human Resources"
+
+msgid "DEPT_HR_DESC"
+msgstr "Manages talent acquisition, training, and staff wellness to expand the candidate pool and mitigate fatigue."
+
+msgid "DEPT_HR_LV1"
+msgstr "Lv.1 Talent Network: Expands daily candidate pool (synergizes with Operations to shorten onboarding)"
+
+msgid "DEPT_HR_LV2"
+msgstr "Lv.2 Professional Training: Unlocks on-the-job employee skill training"
+
+msgid "DEPT_HR_LV3"
+msgstr "Lv.3 Staff Wellness Program: Boosts overnight fatigue recovery and reduces overload risk"
+
+msgid "DEPT_CREDIT_NAME"
+msgstr "Credit Department"
+
+msgid "DEPT_CREDIT_DESC"
+msgstr "Expands personal and SMB lending products, improving deposit growth and loan origination capacity."
+
+msgid "DEPT_CREDIT_LV1"
+msgstr "Lv.1 Dedicated Loan Desk: Enables loan officers to process loan applications and business meetings"
+
+msgid "DEPT_CREDIT_LV2"
+msgstr "Lv.2 Fast-Track Underwriting: Auto-approves low-risk small-ticket loan applications"
+
+msgid "DEPT_CREDIT_LV3"
+msgstr "Lv.3 Precision Loan Pricing: Improves loan yields and credit limits for prime borrowers"
+
+msgid "DEPT_RISK_NAME"
+msgstr "Risk & Compliance"
+
+msgid "DEPT_RISK_DESC"
+msgstr "Builds credit scoring and post-loan risk models to reduce default probability and macro stress losses."
+
+msgid "DEPT_RISK_LV1"
+msgstr "Lv.1 Exact Credit Scoring: Reveals exact customer credit scores and risk grades (synergizes with Credit)"
+
+msgid "DEPT_RISK_LV2"
+msgstr "Lv.2 High-Risk Early Warning: Lowers daily loan default hazard and flags risky applications"
+
+msgid "DEPT_RISK_LV3"
+msgstr "Lv.3 Stress Loss Mitigation: Significantly reduces loss given default (LGD) during credit crises"
+
+msgid "SYNERGY_HR_OPERATIONS_NAME"
+msgstr "HR–Operations Synergy"
+
+msgid "SYNERGY_HR_OPERATIONS_DESC"
+msgstr "Reduces onboarding adaptation to 1 day and grants +5% global staff productivity."
+
+msgid "SYNERGY_CREDIT_RISK_NAME"
+msgstr "Credit–Risk Synergy"
+
+msgid "SYNERGY_CREDIT_RISK_DESC"
+msgstr "Lowers loan default risk by 500 bps and reduces service duration by 3%."
+
+msgid "POLICY_PRUDENT_LENDING_NAME"
+msgstr "Prudent Lending Standards"
+
+msgid "POLICY_PRUDENT_LENDING_DESC"
+msgstr "Enforces strict cash-flow and collateral verification, cutting loan default risk and required liquidity buffers."
+
+msgid "POLICY_LIQUIDITY_FIRST_NAME"
+msgstr "Liquidity-First Doctrine"
+
+msgid "POLICY_LIQUIDITY_FIRST_DESC"
+msgstr "Maintains strong liquid reserves, lowering required buffer ratios and further reducing default risk."
+
+msgid "POLICY_CUSTOMER_TRUST_NAME"
+msgstr "Starway Trust Initiative"
+
+msgid "POLICY_CUSTOMER_TRUST_DESC"
+msgstr "Builds lasting public confidence through transparent banking, raising reputation and steady deposit growth."
+
+msgid "POLICY_HIGH_RATE_ACQUISITION_NAME"
+msgstr "High-Rate Deposit Drive"
+
+msgid "POLICY_HIGH_RATE_ACQUISITION_DESC"
+msgstr "Attracts rapid deposit inflows with aggressive promotional campaigns, with a mild increase in credit risk."
+
+msgid "POLICY_MARKET_PENETRATION_NAME"
+msgstr "Omnichannel Penetration"
+
+msgid "POLICY_MARKET_PENETRATION_DESC"
+msgstr "Expands community and commercial outreach, sharply boosting deposit growth and frontline productivity."
+
+msgid "POLICY_CREDIT_EXPANSION_NAME"
+msgstr "Aggressive Credit Expansion"
+
+msgid "POLICY_CREDIT_EXPANSION_DESC"
+msgstr "Relaxes underwriting thresholds to maximize asset growth, driving high deposit expansion at higher default risk."
+
+msgid "POLICY_BRANCH_CONSERVATIVE"
+msgstr "Conservative Doctrine"
+
+msgid "POLICY_BRANCH_AGGRESSIVE"
+msgstr "Aggressive Doctrine"
+
+msgid "EVENT_REAL_ESTATE_BOOM_TITLE"
+msgstr "Commercial Real Estate Boom"
+
+msgid "EVENT_REAL_ESTATE_BOOM_DESC"
+msgstr "Property transactions in the surrounding tech district are surging, bringing a wave of mortgage and developer inquiries."
+
+msgid "EVENT_RE_BOOM_OPT_AGGR"
+msgstr "Aggressively Expand Property Lending"
+
+msgid "EVENT_RE_BOOM_OPT_AGGR_DESC"
+msgstr "Boosts deposit growth and strategy points now, but increases default exposure if the market cools."
+
+msgid "EVENT_RE_BOOM_OPT_PRUDENT"
+msgstr "Cap Real Estate Credit Exposure"
+
+msgid "EVENT_RE_BOOM_OPT_PRUDENT_DESC"
+msgstr "Limits high-risk exposure and earns reputation, building a buffer against future market swings."
+
+msgid "EVENT_REAL_ESTATE_COOLING_TITLE"
+msgstr "Real Estate Market Cooling Warning"
+
+msgid "EVENT_REAL_ESTATE_COOLING_DESC"
+msgstr "Regulators issue tighter mortgage guidance and commercial property volume slows, squeezing highly leveraged borrowers."
+
+msgid "EVENT_RE_COOL_OPT_TIGHTEN"
+msgstr "Tighten Credit & Call Collateral Margins"
+
+msgid "EVENT_RE_COOL_OPT_TIGHTEN_DESC"
+msgstr "Lowers default risk and gains strategy points ahead of potential credit stress."
+
+msgid "EVENT_RE_COOL_OPT_HOLD"
+msgstr "Hold Current Lending Course"
+
+msgid "EVENT_RE_COOL_OPT_HOLD_DESC"
+msgstr "Avoids disrupting borrowers today, but default risk bps rises further."
+
+msgid "EVENT_REAL_ESTATE_CREDIT_STRESS_TITLE"
+msgstr "Real Estate Credit Default Wave"
+
+msgid "EVENT_REAL_ESTATE_CREDIT_STRESS_DESC"
+msgstr "Several property-linked merchants fall past due as market stress peaks, testing your loan book resilience."
+
+msgid "EVENT_RE_STRESS_OPT_PROVISION"
+msgstr "Book Emergency Provisions & Workout"
+
+msgid "EVENT_RE_STRESS_OPT_PROVISION_DESC"
+msgstr "Contains delinquency spread and lowers active loan default risk."
+
+msgid "EVENT_RE_STRESS_OPT_RESTRUCTURE"
+msgstr "Restructure Prime Collateral Books"
+
+msgid "EVENT_RE_STRESS_OPT_RESTRUCTURE_DESC"
+msgstr "Spends cash reserves to restructure troubled debt, sharply cutting default risk and boosting reputation."
+
+msgid "EVENT_VIP_DEPOSIT_VISIT_TITLE"
+msgstr "Family Office Delegation Visit"
+
+msgid "EVENT_VIP_DEPOSIT_VISIT_DESC"
+msgstr "Representatives from a prominent tech family office visit Starway Bank to evaluate treasury custody services."
+
+msgid "EVENT_VIP_VISIT_OPT_CONCIERGE"
+msgstr "Launch Dedicated VIP Concierge"
+
+msgid "EVENT_VIP_VISIT_OPT_CONCIERGE_DESC"
+msgstr "Assigns senior staff for white-glove service, boosting deposit growth and reputation."
+
+msgid "EVENT_VIP_VISIT_OPT_STANDARD"
+msgstr "Provide Standard Wealth Reception"
+
+msgid "EVENT_VIP_VISIT_OPT_STANDARD_DESC"
+msgstr "Keeps regular lobby operations running smoothly with a modest deposit growth bonus."
+
+msgid "EVENT_TELLER_SYSTEM_GLITCH_TITLE"
+msgstr "Core Teller Terminal Latency"
+
+msgid "EVENT_TELLER_SYSTEM_GLITCH_DESC"
+msgstr "Intermittent settlement gateway latency appears during morning peak hours; IT recommends immediate action."
+
+msgid "EVENT_GLITCH_OPT_HOTFIX"
+msgstr "Deploy Rapid Hotfix & Bandwidth Boost"
+
+msgid "EVENT_GLITCH_OPT_HOTFIX_DESC"
+msgstr "Restores and optimizes terminal responsiveness, reducing teller service duration."
+
+msgid "EVENT_GLITCH_OPT_MANUAL"
+msgstr "Switch to Manual Verification Fallback"
+
+msgid "EVENT_GLITCH_OPT_MANUAL_DESC"
+msgstr "Avoids IT spend, but temporarily increases teller duration and lowers productivity."
+
+msgid "EVENT_COMPETITOR_POACHING_TITLE"
+msgstr "Rival Bank Poaching Attempt"
+
+msgid "EVENT_COMPETITOR_POACHING_DESC"
+msgstr "A competing branch down the avenue is offering sign-on bonuses to your experienced tellers and loan officers."
+
+msgid "EVENT_POACHING_OPT_BONUS"
+msgstr "Issue Retention Incentive Bonuses"
+
+msgid "EVENT_POACHING_OPT_BONUS_DESC"
+msgstr "Lifts team morale, increasing staff productivity and bank reputation."
+
+msgid "EVENT_POACHING_OPT_IGNORE"
+msgstr "Rely on Standard Compensation Tiers"
+
+msgid "EVENT_POACHING_OPT_IGNORE_DESC"
+msgstr "Saves immediate outlay, though short-term staff productivity dips slightly."
+
+msgid "EVENT_COMMUNITY_SPONSORSHIP_TITLE"
+msgstr "Tech Park Financial Summit Sponsorship"
+
+msgid "EVENT_COMMUNITY_SPONSORSHIP_DESC"
+msgstr "The local innovation district invites Starway Bank to headline its annual FinTech & SMB Summit."
+
+msgid "EVENT_COMMUNITY_OPT_SPONSOR"
+msgstr "Sponsor the Summit & Host a Booth"
+
+msgid "EVENT_COMMUNITY_OPT_SPONSOR_DESC"
+msgstr "Enhances bank reputation and accelerates customer deposit growth."
+
+msgid "EVENT_COMMUNITY_OPT_DECLINE"
+msgstr "Decline Title Sponsorship Politely"
+
+msgid "EVENT_COMMUNITY_OPT_DECLINE_DESC"
+msgstr "Maintains current operations without additional commitments."
+
+msgid "EVENT_REGULATORY_AUDIT_TITLE"
+msgstr "Quarterly Prudential Compliance Review"
+
+msgid "EVENT_REGULATORY_AUDIT_DESC"
+msgstr "Prudential examiners arrive to review recent loan underwriting files and liquidity buffer coverage."
+
+msgid "EVENT_AUDIT_OPT_COOPERATE"
+msgstr "Full Ledger Transparency & Remediation"
+
+msgid "EVENT_AUDIT_OPT_COOPERATE_DESC"
+msgstr "Strengthens underwriting discipline, lowering default risk and earning reputation."
+
+msgid "EVENT_AUDIT_OPT_MINIMAL"
+msgstr "Submit Baseline Statutory Filings Only"
+
+msgid "EVENT_AUDIT_OPT_MINIMAL_DESC"
+msgstr "Minimizes staff disruption, but examiners temporarily raise required liquidity buffers."
+
+msgid "EVENT_FINTECH_PARTNERSHIP_TITLE"
+msgstr "FinTech Smart Workflow Pilot"
+
+msgid "EVENT_FINTECH_PARTNERSHIP_DESC"
+msgstr "A FinTech partner proposes piloting automated document OCR and smart teller routing in your branch."
+
+msgid "EVENT_FINTECH_OPT_INTEGRATE"
+msgstr "Integrate Smart Counter API"
+
+msgid "EVENT_FINTECH_OPT_INTEGRATE_DESC"
+msgstr "Significantly shortens teller service duration and increases staff productivity."
+
+msgid "EVENT_FINTECH_OPT_LEGACY"
+msgstr "Retain Legacy Verification Controls"
+
+msgid "EVENT_FINTECH_OPT_LEGACY_DESC"
+msgstr "Sticks with conservative manual checks, slightly lowering loan default risk."
+
+msgid "EVENT_RATE_HIKE_RUMOR_TITLE"
+msgstr "Benchmark Rate Hike Rumor"
+
+msgid "EVENT_RATE_HIKE_RUMOR_DESC"
+msgstr "Money market rumors suggest an upcoming benchmark rate adjustment, prompting depositors to shop around."
+
+msgid "EVENT_RATE_RUMOR_OPT_BUFFER"
+msgstr "Lock Interbank Liquidity Lines"
+
+msgid "EVENT_RATE_RUMOR_OPT_BUFFER_DESC"
+msgstr "Secures short-term funding flexibility and reduces required liquidity buffer bps."
+
+msgid "EVENT_RATE_RUMOR_OPT_DEPOSITS"
+msgstr "Launch Step-Up Savings Campaign"
+
+msgid "EVENT_RATE_RUMOR_OPT_DEPOSITS_DESC"
+msgstr "Captures rate-sensitive depositors and boosts deposit growth."
+
+msgid "TRAIT_SALES_PRODIGY_NAME"
+msgstr "Sales Prodigy"
+
+msgid "TRAIT_SALES_PRODIGY_DESC"
+msgstr "Charismatic and persuasive with clients, driving higher customer deposit growth."
+
+msgid "TRAIT_RISK_EXPERT_NAME"
+msgstr "Risk Expert"
+
+msgid "TRAIT_RISK_EXPERT_DESC"
+msgstr "Spots financial statement red flags early, reducing loan default risk."
+
+msgid "TRAIT_WORKAHOLIC_NAME"
+msgstr "High Achiever"
+
+msgid "TRAIT_WORKAHOLIC_DESC"
+msgstr "Maintains exceptional focus and throughput even during peak lobby hours."
+
+msgid "TRAIT_DETAIL_ORIENTED_NAME"
+msgstr "Detail-Oriented"
+
+msgid "TRAIT_DETAIL_ORIENTED_DESC"
+msgstr "Processes vouchers and reconciliations with zero errors, shortening teller duration."
+
+msgid "TRAIT_BANK_VETERAN_NAME"
+msgstr "Bank Veteran"
+
+msgid "TRAIT_BANK_VETERAN_DESC"
+msgstr "Seasoned branch professional with balanced professionalism, management, and loyalty."
+
+msgid "TRAIT_TEAM_LEADER_NAME"
+msgstr "Team Leader"
+
+msgid "TRAIT_TEAM_LEADER_DESC"
+msgstr "Coordinates smoothly across desks, lifting overall branch staff productivity."
+
+msgid "CUSTOMER_REGULAR_NAME"
+msgstr "Regular Depositor"
+
+msgid "CUSTOMER_REGULAR_DESC"
+msgstr "Neighborhood resident handling everyday deposits, withdrawals, and transfers."
+
+msgid "CUST_TYPE_REGULAR"
+msgstr "Regular Depositor"
+
+msgid "CUSTOMER_SALARIED_NAME"
+msgstr "Salaried Professional"
+
+msgid "CUSTOMER_SALARIED_DESC"
+msgstr "Tech park professional with steady payroll deposits, transfers, and personal loan needs."
+
+msgid "CUST_TYPE_SALARIED"
+msgstr "Salaried Professional"
+
+msgid "CUSTOMER_BORROWER_NAME"
+msgstr "Personal Borrower"
+
+msgid "CUSTOMER_BORROWER_DESC"
+msgstr "Credit applicant seeking mortgage or consumer financing with sensitivity to loan rates."
+
+msgid "CUST_TYPE_BORROWER"
+msgstr "Personal Borrower"
+
+msgid "CUSTOMER_SMB_NAME"
+msgstr "SMB Owner"
+
+msgid "CUSTOMER_SMB_DESC"
+msgstr "Small business owner handling larger commercial settlements, meetings, and working capital loans."
+
+msgid "CUST_TYPE_SMB"
+msgstr "SMB Owner"
+
+msgid "CUSTOMER_VIP_NAME"
+msgstr "VIP Wealth Client"
+
+msgid "CUSTOMER_VIP_DESC"
+msgstr "High-net-worth client bringing large deposits and advisory meetings, with low queue patience."
+
+msgid "CUST_TYPE_VIP"
+msgstr "VIP Wealth Client"
+
+msgid "CUSTOMER_SUSPICIOUS_NAME"
+msgstr "High-Risk Speculator"
+
+msgid "CUSTOMER_SUSPICIOUS_DESC"
+msgstr "Heavily leveraged applicant with weak credit history requiring careful underwriting scrutiny."
+
+msgid "CUST_TYPE_SUSPICIOUS"
+msgstr "High-Risk Speculator"
+
+msgid "SERVICE_CASH_DEPOSIT"
+msgstr "Cash Deposit"
+
+msgid "SERVICE_CASH_WITHDRAWAL"
+msgstr "Cash Withdrawal"
+
+msgid "SERVICE_TRANSFER"
+msgstr "Wire Transfer"
+
+msgid "SERVICE_PERSONAL_LOAN_APPLICATION"
+msgstr "Personal Loan Application"
+
+msgid "SERVICE_BUSINESS_MEETING"
+msgstr "Business Advisory Meeting"
+
+msgid "SERVICE_COMPLAINT"
+msgstr "Customer Complaint"
+
+msgid "ROLE_TELLER"
+msgstr "Teller"
+
+msgid "ROLE_LOAN_OFFICER"
+msgstr "Loan Officer"
+
+msgid "ROLE_MANAGER"
+msgstr "Branch Manager"
+
+msgid "ROLE_ANALYST"
+msgstr "Risk Analyst"
+
+msgid "EMP_STATE_AVAILABLE"
+msgstr "Available"
+
+msgid "EMP_STATE_MOVING"
+msgstr "Moving"
+
+msgid "EMP_STATE_WORKING"
+msgstr "In Service"
+
+msgid "EMP_STATE_BREAK"
+msgstr "On Break"
+
+msgid "EMP_STATE_OVERLOADED"
+msgstr "Overloaded"
+
+msgid "EMP_STATE_OFF_DUTY"
+msgstr "Off Duty"
+
+msgid "CUST_STATE_SPAWNING"
+msgstr "Entering"
+
+msgid "CUST_STATE_FINDING_SERVICE"
+msgstr "Routing"
+
+msgid "CUST_STATE_WAITING"
+msgstr "Waiting"
+
+msgid "CUST_STATE_IN_SERVICE"
+msgstr "In Service"
+
+msgid "CUST_STATE_COMPLETED"
+msgstr "Completed"
+
+msgid "CUST_STATE_LEAVING"
+msgstr "Leaving"
+
+msgid "PHASE_PRE_OPEN"
+msgstr "Pre-Open"
+
+msgid "PHASE_OPEN"
+msgstr "Open"
+
+msgid "PHASE_CLOSING"
+msgstr "Closing"
+
+msgid "PHASE_SETTLED"
+msgstr "Settled"
+
+msgid "LIQUIDITY_SAFE"
+msgstr "Liquidity Safe"
+
+msgid "LIQUIDITY_CAUTION"
+msgstr "Liquidity Caution"
+
+msgid "LIQUIDITY_DANGER"
+msgstr "Liquidity Danger"
+
+msgid "RISK_GRADE_A"
+msgstr "Grade A (Prime)"
+
+msgid "RISK_GRADE_B"
+msgstr "Grade B (Good)"
+
+msgid "RISK_GRADE_C"
+msgstr "Grade C (Watch)"
+
+msgid "RISK_GRADE_D"
+msgstr "Grade D (Subprime)"
+
+msgid "QUEUE_PRIORITY_NORMAL"
+msgstr "Normal"
+
+msgid "QUEUE_PRIORITY_PRIORITY"
+msgstr "Priority"
+
+msgid "QUEUE_PRIORITY_VIP"
+msgstr "VIP"
+
+msgid "EMP_NAME_STARTER_1"
+msgstr "Elena Lin"
+
+msgid "EMP_NAME_STARTER_2"
+msgstr "Marcus Zhou"
+
+msgid "CAND_NAME_1"
+msgstr "Claire Su"
+
+msgid "CAND_NAME_2"
+msgstr "lucas Chen"
+
+msgid "CAND_NAME_3"
+msgstr "Orion Xu"
+
+msgid "PERSON_NAME_01"
+msgstr "Arthur Lu"
+
+msgid "PERSON_NAME_02"
+msgstr "Serena Shen"
+
+msgid "PERSON_NAME_03"
+msgstr "Liam Gu"
+
+msgid "PERSON_NAME_04"
+msgstr "Autumn Ye"
+
+msgid "PERSON_NAME_05"
+msgstr "Diana Cheng"
+
+msgid "PERSON_NAME_06"
+msgstr "Julian Song"
+
+msgid "PERSON_NAME_07"
+msgstr "Maya Qin"
+
+msgid "PERSON_NAME_08"
+msgstr "Ethan Jiang"
+
+msgid "PERSON_NAME_09"
+msgstr "Stella Tang"
+
+msgid "PERSON_NAME_10"
+msgstr "Adrian Wen"
+
+msgid "PERSON_NAME_11"
+msgstr "Chloe Xie"
+
+msgid "PERSON_NAME_12"
+msgstr "Leo Han"
+
+msgid "PERSON_NAME_13"
+msgstr "Grace Bai"
+
+msgid "PERSON_NAME_14"
+msgstr "Nathan Zhao"
+
+msgid "PERSON_NAME_15"
+msgstr "Vivian Meng"
+
+msgid "PERSON_NAME_16"
+msgstr "Miles Pei"
+
+msgid "PERSON_NAME_17"
+msgstr "Nora Ji"
+
+msgid "PERSON_NAME_18"
+msgstr "Hazel Zhong"
+
+msgid "PERSON_NAME_19"
+msgstr "Victor Fang"
+
+msgid "PERSON_NAME_20"
+msgstr "Aria Xia"
+
+msgid "PERSON_NAME_21"
+msgstr "Colin He"
+
+msgid "PERSON_NAME_22"
+msgstr "Lydia Jiang"
+
+msgid "PERSON_NAME_23"
+msgstr "Damon Yan"
+
+msgid "PERSON_NAME_24"
+msgstr "Alice Qiao"
+
+msgid "PERSON_NAME_25"
+msgstr "Gavin Wei"
+
+msgid "PERSON_NAME_26"
+msgstr "Iris Li"
+
+msgid "PERSON_NAME_27"
+msgstr "Vincent Fu"
+
+msgid "PERSON_NAME_28"
+msgstr "Melody Ruan"
+
+msgid "PERSON_NAME_29"
+msgstr "Owen Shao"
+
+msgid "PERSON_NAME_30"
+msgstr "Clara Liu"
+
+msgid "PERSON_NAME_31"
+msgstr "Felix Mo"
+
+msgid "PERSON_NAME_32"
+msgstr "Sienna Xiang"
+
+msgid "PERSON_NAME_33"
+msgstr "Jasper Tao"
+
+msgid "PERSON_NAME_34"
+msgstr "Summer Ning"
+
+msgid "PERSON_NAME_35"
+msgstr "Cedric Zhuang"
+
+msgid "PERSON_NAME_36"
+msgstr "River Luo"
+
+msgid "PERSON_NAME_37"
+msgstr "Elliott Chi"
+
+msgid "PERSON_NAME_38"
+msgstr "Ruby Sang"
+
+msgid "PERSON_NAME_39"
+msgstr "Xavier Ling"
+
+msgid "PERSON_NAME_40"
+msgstr "Harper Wen"
+
+msgid "LEDGER_INIT_CAPITAL"
+msgstr "Initial branch equity capital injection"
+
+msgid "LEDGER_DEPOSIT"
+msgstr "Customer deposit received"
+
+msgid "LEDGER_WITHDRAWAL"
+msgstr "Customer cash withdrawal paid"
+
+msgid "LEDGER_SERVICE_FEE"
+msgstr "Service fee and commission income"
+
+msgid "LEDGER_LOAN_DISBURSEMENT"
+msgstr "Loan principal disbursed"
+
+msgid "LEDGER_LOAN_REPAYMENT"
+msgstr "Loan principal repayment received"
+
+msgid "LEDGER_CREDIT_LOSS"
+msgstr "Non-performing loan credit loss write-off"
+
+msgid "LEDGER_OPERATING_COST"
+msgstr "Operating and department overhead expense"
+
+msgid "LEDGER_EVENT_EXPENSE"
+msgstr "Special event expense"
+
+msgid "LEDGER_DAILY_LOAN_INTEREST"
+msgstr "Daily accrued loan interest income"
+
+msgid "LEDGER_DAILY_DEPOSIT_INTEREST"
+msgstr "Daily accrued deposit interest expense"
+
+msgid "LEDGER_DAILY_CLOSEOUT"
+msgstr "Daily P&L closed to retained earnings"
+
+msgid "ACCOUNT_CASH_RESERVES"
+msgstr "Cash Reserves"
+
+msgid "ACCOUNT_LOAN_PRINCIPAL_OUTSTANDING"
+msgstr "Loan Principal Outstanding"
+
+msgid "ACCOUNT_CUSTOMER_DEPOSITS"
+msgstr "Customer Deposits"
+
+msgid "ACCOUNT_EQUITY_CAPITAL"
+msgstr "Equity Capital"
+
+msgid "ACCOUNT_RETAINED_EARNINGS"
+msgstr "Retained Earnings"
+
+msgid "ACCOUNT_LOAN_INTEREST_INCOME"
+msgstr "Loan Interest Income"
+
+msgid "ACCOUNT_FEE_INCOME"
+msgstr "Fee Income"
+
+msgid "ACCOUNT_DEPOSIT_INTEREST_EXPENSE"
+msgstr "Deposit Interest Expense"
+
+msgid "ACCOUNT_OPERATING_EXPENSE"
+msgstr "Operating Expense"
+
+msgid "ACCOUNT_CREDIT_LOSS_EXPENSE"
+msgstr "Credit Loss Expense"
+
+msgid "ACCOUNT_EVENT_EXPENSE"
+msgstr "Event Expense"
+
+msgid "REPORT_DRIVER_PROFIT_UP"
+msgstr "Healthy net interest margin and fee income boosted retained earnings."
+
+msgid "REPORT_DRIVER_PROFIT_DOWN"
+msgstr "Net operating loss today; review counter staffing efficiency or grow loan book."
+
+msgid "REPORT_DRIVER_CREDIT_LOSS"
+msgstr "Credit default losses recorded; consider upgrading Risk Management or tightening approvals."
+
+msgid "REPORT_DRIVER_LIQUIDITY_STRESS"
+msgstr "Liquidity buffer under pressure; raise deposit rates or moderate large loan disbursements."
+
+msgid "REPORT_DRIVER_PAYROLL_COST"
+msgstr "Daily staff payroll settled; employees recovered fatigue overnight."
+
+msgid "ERR_UNKNOWN_ERROR"
+msgstr "An unknown error occurred"
+
+msgid "ERR_INVALID_CONTENT_ID"
+msgstr "Invalid content ID: {id}"
+
+msgid "ERR_INVALID_BANK_STATE"
+msgstr "Bank state is invalid or uninitialized"
+
+msgid "ERR_INVALID_LEDGER_DATA"
+msgstr "Invalid ledger data structure"
+
+msgid "ERR_LEDGER_CORRUPTED_UNBALANCED"
+msgstr "Ledger balance sheet is unbalanced"
+
+msgid "ERR_LEDGER_TOO_FEW_LINES"
+msgstr "Journal entry requires at least 2 lines"
+
+msgid "ERR_LEDGER_MALFORMED_LINE"
+msgstr "Malformed journal entry line"
+
+msgid "ERR_LEDGER_UNKNOWN_ACCOUNT"
+msgstr "Unknown ledger account: {account}"
+
+msgid "ERR_LEDGER_INVALID_SIDE"
+msgstr "Invalid journal entry side: {side}"
+
+msgid "ERR_LEDGER_INVALID_AMOUNT"
+msgstr "Invalid or out-of-range journal entry amount"
+
+msgid "ERR_LEDGER_UNBALANCED"
+msgstr "Double-entry debit and credit totals do not match"
+
+msgid "ERR_INVALID_AMOUNT"
+msgstr "Amount must be a positive integer"
+
+msgid "ERR_INSUFFICIENT_DEPOSITS"
+msgstr "Insufficient customer deposit balance"
+
+msgid "ERR_INSUFFICIENT_CASH"
+msgstr "Insufficient branch cash reserves"
+
+msgid "ERR_INVALID_LOAN_TERMS"
+msgstr "Invalid loan principal, rate, or term"
+
+msgid "ERR_LOAN_REPAYMENT_EXCEEDS_PRINCIPAL"
+msgstr "Repayment amount exceeds loan principal outstanding"
+
+msgid "ERR_INVALID_LOAN"
+msgstr "Invalid loan record"
+
+msgid "ERR_LOAN_NOT_ACTIVE"
+msgstr "Loan is not currently active"
+
+msgid "ERR_CREDIT_LOSS_EXCEEDS_LOANS"
+msgstr "Credit loss exceeds total loan principal outstanding"
+
+msgid "ERR_DAY_ALREADY_SETTLED"
+msgstr "Day {day} has already been settled"
+
+msgid "ERR_INVALID_REPAYMENT_AMOUNT"
+msgstr "Repayment amount must be positive"
+
+msgid "ERR_LOAN_ALREADY_CLOSED"
+msgstr "Loan is already repaid or written off"
+
+msgid "ERR_INVALID_LOAN_ID"
+msgstr "Invalid loan ID"
+
+msgid "ERR_INVALID_CUSTOMER_ID"
+msgstr "Invalid customer ID"
+
+msgid "ERR_INVALID_CUSTOMER_STATE"
+msgstr "Invalid customer state"
+
+msgid "ERR_ILLEGAL_CUSTOMER_TRANSITION"
+msgstr "Illegal customer state transition"
+
+msgid "ERR_INVALID_EMPLOYEE_ID"
+msgstr "Invalid employee ID"
+
+msgid "ERR_INVALID_EMPLOYEE_STATE"
+msgstr "Invalid employee state"
+
+msgid "ERR_ILLEGAL_EMPLOYEE_TRANSITION"
+msgstr "Illegal employee state transition"
+
+msgid "ERR_INVALID_REQUEST_ID"
+msgstr "Invalid service request ID"
+
+msgid "ERR_EMPLOYEE_TASK_CONFLICT"
+msgstr "Employee already has an active service task"
+
+msgid "ERR_EMPLOYEE_ON_BREAK"
+msgstr "Employee is currently on break"
+
+msgid "ERR_EMPLOYEE_OFF_DUTY"
+msgstr "Employee is currently off duty"
+
+msgid "ERR_EMPLOYEE_BUSY"
+msgstr "Employee is currently busy serving a customer"
+
+msgid "ERR_EMPLOYEE_NOT_FOUND"
+msgstr "Employee not found"
+
+msgid "ERR_CANDIDATE_NOT_FOUND"
+msgstr "Candidate not found"
+
+msgid "ERR_CANNOT_FIRE_BUSY_EMPLOYEE"
+msgstr "Cannot fire an employee while in active service"
+
+msgid "ERR_CANNOT_FIRE_LAST_EMPLOYEE"
+msgstr "Cannot fire the last remaining employee"
+
+msgid "ERR_REQUEST_NOT_QUEUED"
+msgstr "Service request is not queued"
+
+msgid "ERR_REQUEST_ALREADY_ASSIGNED"
+msgstr "Service request is already assigned"
+
+msgid "ERR_INVALID_QUEUE_PRIORITY"
+msgstr "Invalid queue priority level"
+
+msgid "ERR_REQUEST_NOT_FOUND"
+msgstr "Service request not found"
+
+msgid "ERR_QUEUE_PRIORITY_LOCKED"
+msgstr "Requires Operations Department Lv.2 to change queue priority"
+
+msgid "ERR_DEPT_NOT_FOUND"
+msgstr "Department definition not found: {department_id}"
+
+msgid "ERR_DEPT_ALREADY_EXISTS"
+msgstr "Department has already been created"
+
+msgid "ERR_DEPT_LOCKED"
+msgstr "Department unlock conditions not met"
+
+msgid "ERR_DEPT_NOT_CREATED"
+msgstr "Department must be created before upgrading"
+
+msgid "ERR_DEPT_MAX_LEVEL"
+msgstr "Department has reached maximum level Lv.{max_level}"
+
+msgid "ERR_POLICY_NOT_FOUND"
+msgstr "Policy definition not found: {policy_id}"
+
+msgid "ERR_POLICY_ALREADY_ADOPTED"
+msgstr "Policy has already been adopted"
+
+msgid "ERR_POLICY_PREREQUISITE_MISSING"
+msgstr "Missing prerequisite policy: {missing_prerequisite}"
+
+msgid "ERR_POLICY_BRANCH_CONFLICT"
+msgstr "Conflicts with adopted strategic doctrine branch"
+
+msgid "ERR_POLICY_EXCLUSIVE_CONFLICT"
+msgstr "Conflicts with mutually exclusive policy: {conflicting_policy}"
+
+msgid "ERR_POLICY_CONDITION_UNMET"
+msgstr "Policy metric requirements are not met"
+
+msgid "ERR_INSUFFICIENT_STRATEGY_POINTS"
+msgstr "Insufficient strategy points (need {required}, have {available})"
+
+msgid "ERR_EVENT_NOT_FOUND"
+msgstr "Event definition not found: {event_id}"
+
+msgid "ERR_EVENT_INSTANCE_NOT_FOUND"
+msgstr "Active event instance not found"
+
+msgid "ERR_EVENT_OPTION_NOT_FOUND"
+msgstr "Event option not found"
+
+msgid "ERR_EVENT_OPTION_LOCKED"
+msgstr "Requirements for this event option are not met"
+
+msgid "ERR_STATION_NOT_FOUND"
+msgstr "Station not found: {station_id}"
+
+msgid "ERR_INVALID_ROLE"
+msgstr "Invalid employee role: {role_id}"
+
+msgid "ERR_INVALID_SPEED"
+msgstr "Invalid simulation speed multiplier"
+
+msgid "ERR_INVALID_RATE"
+msgstr "Invalid interest rate value"
+
+msgid "ERR_RATE_OUT_OF_RANGE"
+msgstr "Interest rate is outside allowed bounds"
+
+msgid "ERR_INVALID_PHASE"
+msgstr "Action not allowed in current day phase"
+
+msgid "ERR_BRANCH_ALREADY_OPEN"
+msgstr "Branch is already open or has closed for today"
+
+msgid "ERR_BRANCH_NOT_SETTLED"
+msgstr "Complete daily settlement before advancing to next day"
+
+msgid "ERR_APPROVAL_NOT_FOUND"
+msgstr "Pending loan approval not found"
+
+msgid "ERR_INVALID_SLOT_ID"
+msgstr "Invalid save slot ID: {slot_id}"
+
+msgid "ERR_SAVE_WRITE_FAILED"
+msgstr "Failed to write save file"
+
+msgid "ERR_SAVE_NOT_FOUND"
+msgstr "Save slot file not found"
+
+msgid "ERR_SAVE_CORRUPTED"
+msgstr "Both primary save and backup file are corrupted"
+
+msgid "ERR_UNSUPPORTED_SAVE_VERSION"
+msgstr "Unsupported save file version: {version}"
+
+msgid "ERR_NO_ACTIVE_SESSION"
+msgstr "No active game session"
+
+msgid "SIM_LOG_EVENT"
+msgstr "[{time}] Branch activity updated"
+
+msgid "SIM_LOG_DAY_STARTED"
+msgstr "[{time}] Day {day} business hours opened"
+
+msgid "SIM_LOG_PHASE_CHANGED"
+msgstr "[{time}] Business phase changed"
+
+msgid "SIM_LOG_CUSTOMER_ARRIVED"
+msgstr "[{time}] Customer ({customer_type}) arrived in lobby"
+
+msgid "SIM_LOG_SERVICE_STARTED"
+msgstr "[{time}] Station {station_id} started service"
+
+msgid "SIM_LOG_SERVICE_COMPLETED"
+msgstr "[{time}] Station {station_id} completed service ({service_type})"
+
+msgid "SIM_LOG_CUSTOMER_LEFT_UNSERVED"
+msgstr "[{time}] Customer {customer_id} left unserved after timeout"
+
+msgid "SIM_LOG_LOAN_APPROVAL_REQUESTED"
+msgstr "[{time}] New loan approval requested ({approval_id})"
+
+msgid "SIM_LOG_LOAN_APPROVED"
+msgstr "[{time}] Loan approved and disbursed ({loan_id})"
+
+msgid "SIM_LOG_LOAN_REJECTED"
+msgstr "[{time}] Loan application rejected ({approval_id})"
+
+msgid "SIM_LOG_EMPLOYEE_HIRED"
+msgstr "[{time}] Hired new employee ({employee_id})"
+
+msgid "SIM_LOG_EMPLOYEE_FIRED"
+msgstr "[{time}] Dismissed employee ({employee_id})"
+
+msgid "SIM_LOG_EMPLOYEE_ASSIGNED"
+msgstr "[{time}] Assigned employee {employee_id} to station {station_id}"
+
+msgid "SIM_LOG_EMPLOYEE_TRAINED"
+msgstr "[{time}] Employee {employee_id} completed training"
+
+msgid "SIM_LOG_EMPLOYEE_RESTED"
+msgstr "[{time}] Employee {employee_id} started rest break"
+
+msgid "SIM_LOG_STATION_TOGGLED"
+msgstr "[{time}] Station {station_id} open status updated"
+
+msgid "SIM_LOG_DEPARTMENT_CREATED"
+msgstr "[{time}] Established department {department_id}"
+
+msgid "SIM_LOG_DEPARTMENT_UPGRADED"
+msgstr "[{time}] Upgraded department {department_id} to Lv.{level}"
+
+msgid "SIM_LOG_POLICY_ADOPTED"
+msgstr "[{time}] Adopted strategic policy {policy_id}"
+
+msgid "SIM_LOG_EVENT_TRIGGERED"
+msgstr "[{time}] Macro event triggered ({event_id})"
+
+msgid "SIM_LOG_EVENT_RESOLVED"
+msgstr "[{time}] Resolved event with option ({option_id})"
+
+msgid "SIM_LOG_DAILY_SETTLEMENT"
+msgstr "[{time}] Day {day} daily financial settlement completed"
+
+msgid "SIM_LOG_SPEED_CHANGED"
+msgstr "[{time}] Simulation speed set to {speed}x"
+
+msgid "SIM_LOG_RATES_CHANGED"
+msgstr "[{time}] Interest rates updated"
+
+msgid "SIM_LOG_ALERT"
+msgstr "[{time}] Operational alert"
+
+msgid "SIM_LOG_STATE_RELOADED"
+msgstr "[{time}] Session state reloaded"
+
+msgid "WORLD_STATION_TELLER_TAG"
+msgstr "T#{num}"
+
+msgid "WORLD_STATION_LOAN_TAG"
+msgstr "L#{num}"
+
+msgid "WORLD_STATION_OPEN"
+msgstr "OPEN"
+
+msgid "WORLD_STATION_CLOSED"
+msgstr "CLOSED"
+
+msgid "WORLD_DEPT_OPS_SHORT"
+msgstr "OPS"
+
+msgid "WORLD_DEPT_HR_SHORT"
+msgstr "HR"
+
+msgid "WORLD_DEPT_CREDIT_SHORT"
+msgstr "CREDIT"
+
+msgid "WORLD_DEPT_RISK_SHORT"
+msgstr "RISK"
+
+msgid "WORLD_DEPT_LEVEL_BADGE"
+msgstr "Lv.{level}"
+
+msgid "WORLD_FX_SERVICE_DONE"
+msgstr "{amount}"
+
+msgid "WORLD_FX_SATISFACTION_UP"
+msgstr "Service Done"
+
+msgid "WORLD_FX_CUSTOMER_LEFT"
+msgstr "Left Unserved"
+
+msgid "WORLD_FX_LOAN_APPROVED"
+msgstr "Loan Approved"
+
+msgid "WORLD_FX_LOAN_REJECTED"
+msgstr "Loan Rejected"
+
+msgid "WORLD_FX_DEPT_UPGRADED"
+msgstr "Dept Lv.{level}"
+
+msgid "WORLD_ACTOR_STATE_WORKING"
+msgstr "Working"
+
+msgid "WORLD_ACTOR_STATE_WAITING"
+msgstr "Waiting"
+
+msgid "WORLD_ACTOR_STATE_BREAK"
+msgstr "Break"
+
+msgid "WORLD_ACTOR_STATE_OVERLOADED"
+msgstr "Overload"
+
+msgid "UI_MAIN_MENU_LOAD_SAVE"
+msgstr "Load Save"
+
+msgid "UI_MAIN_MENU_VERSION"
+msgstr "Starway Core Banking OS v0.1.0 · Godot 4.7.2"
+
+msgid "UI_TOPBAR_BANK_NAME"
+msgstr "Starway Bank"
+
+msgid "UI_TOPBAR_TODAY_PROFIT"
+msgstr "Est. Daily Net"
+
+msgid "UI_TOPBAR_EMPLOYEES"
+msgstr "Staff"
+
+msgid "UI_TOPBAR_SPEED_PAUSE"
+msgstr "Pause 0x"
+
+msgid "UI_TOPBAR_SPEED_1X"
+msgstr "1x"
+
+msgid "UI_TOPBAR_SPEED_2X"
+msgstr "2x"
+
+msgid "UI_TOPBAR_SPEED_3X"
+msgstr "3x"
+
+msgid "UI_TOPBAR_ACTION_OPEN_BRANCH"
+msgstr "Open Branch"
+
+msgid "UI_TOPBAR_ACTION_IN_BUSINESS"
+msgstr "Branch Open"
+
+msgid "UI_TOPBAR_ACTION_CLOSING"
+msgstr "Closing Queue"
+
+msgid "UI_TOPBAR_ACTION_NEXT_DAY"
+msgstr "Settle / Next Day"
+
+msgid "UI_TOPBAR_BTN_SAVE_SETTINGS"
+msgstr "Save / Settings"
+
+msgid "UI_PHASE_PRE_OPEN"
+msgstr "Pre-Open Prep"
+
+msgid "UI_PHASE_OPEN"
+msgstr "Open for Business"
+
+msgid "UI_PHASE_CLOSING"
+msgstr "Closing & Settlement"
+
+msgid "UI_PHASE_SETTLED"
+msgstr "Day Settled"
+
+msgid "UI_NAV_SETTINGS"
+msgstr "Settings"
+
+msgid "UI_INSPECTOR_TITLE_OVERVIEW"
+msgstr "Live Branch Inspector"
+
+msgid "UI_INSPECTOR_TITLE_STATION"
+msgstr "Station Inspector"
+
+msgid "UI_INSPECTOR_TITLE_EMPLOYEE"
+msgstr "Staff Inspector"
+
+msgid "UI_INSPECTOR_TITLE_CUSTOMER"
+msgstr "Customer Inspector"
+
+msgid "UI_INSPECTOR_BTN_BACK_OVERVIEW"
+msgstr "Back to Overview"
+
+msgid "UI_INSPECTOR_LIQUIDITY"
+msgstr "Liquidity Ratio"
+
+msgid "UI_INSPECTOR_NPL"
+msgstr "NPL Ratio"
+
+msgid "UI_INSPECTOR_QUEUE_HEADER"
+msgstr "Active Service Queue ({count})"
+
+msgid "UI_INSPECTOR_QUEUE_EMPTY"
+msgstr "No queued service requests"
+
+msgid "UI_INSPECTOR_STATIONS_HEADER"
+msgstr "Service Counters"
+
+msgid "UI_INSPECTOR_ALERTS_HEADER"
+msgstr "Action Alerts"
+
+msgid "UI_INSPECTOR_PENDING_LOANS"
+msgstr "Pending Loans: {count}"
+
+msgid "UI_INSPECTOR_ACTIVE_EVENTS"
+msgstr "Active Events: {count}"
+
+msgid "UI_INSPECTOR_STATION_ID"
+msgstr "Counter ID: {id}"
+
+msgid "UI_INSPECTOR_STATION_TYPE"
+msgstr "Counter Type: {type}"
+
+msgid "UI_INSPECTOR_STATION_STATUS"
+msgstr "Status: {status}"
+
+msgid "UI_INSPECTOR_STATION_OPEN"
+msgstr "Open"
+
+msgid "UI_INSPECTOR_STATION_CLOSED"
+msgstr "Closed"
+
+msgid "UI_INSPECTOR_STATION_STAFF"
+msgstr "Assigned Staff: {name}"
+
+msgid "UI_INSPECTOR_STATION_UNSTAFFED"
+msgstr "Unassigned"
+
+msgid "UI_INSPECTOR_BTN_TOGGLE_STATION"
+msgstr "Toggle Open / Close"
+
+msgid "UI_INSPECTOR_ASSIGN_STAFF_HEADER"
+msgstr "Quick Assign Staff"
+
+msgid "UI_INSPECTOR_ASSIGN_TO"
+msgstr "Assign: {name}"
+
+msgid "UI_INSPECTOR_EMP_ROLE"
+msgstr "Role: {role}"
+
+msgid "UI_INSPECTOR_EMP_STATE"
+msgstr "State: {state}"
+
+msgid "UI_INSPECTOR_EMP_FATIGUE"
+msgstr "Fatigue: {fatigue}/100"
+
+msgid "UI_INSPECTOR_EMP_ADAPTATION"
+msgstr "Adaptation: {days}d left"
+
+msgid "UI_INSPECTOR_EMP_SALARY"
+msgstr "Daily Salary: {salary}"
+
+msgid "UI_INSPECTOR_EMP_STATION"
+msgstr "Counter: {station}"
+
+msgid "UI_INSPECTOR_BTN_TRAIN"
+msgstr "Train Staff"
+
+msgid "UI_INSPECTOR_BTN_REST"
+msgstr "Send to Break"
+
+msgid "UI_INSPECTOR_BTN_FIRE"
+msgstr "Dismiss Staff"
+
+msgid "UI_INSPECTOR_CUST_TYPE"
+msgstr "Segment: {type}"
+
+msgid "UI_INSPECTOR_CUST_SERVICE"
+msgstr "Service: {service}"
+
+msgid "UI_INSPECTOR_CUST_AMOUNT"
+msgstr "Amount: {amount}"
+
+msgid "UI_INSPECTOR_CUST_PATIENCE"
+msgstr "Patience: {cur}/{max}"
+
+msgid "UI_INSPECTOR_CUST_PRIORITY"
+msgstr "Queue Priority: {priority}"
+
+msgid "UI_PRIORITY_NORMAL"
+msgstr "Normal"
+
+msgid "UI_PRIORITY_PRIORITY"
+msgstr "Priority"
+
+msgid "UI_PRIORITY_VIP"
+msgstr "VIP"
+
+msgid "UI_BOTTOM_LOG_TITLE"
+msgstr "Live Operations Feed"
+
+msgid "UI_BOTTOM_LOG_READY"
+msgstr "Starway Branch Telemetry Online."
+
+msgid "UI_BOTTOM_LOAN_BADGE"
+msgstr "Loan Approvals ({count})"
+
+msgid "UI_BOTTOM_EVENT_BADGE"
+msgstr "Active Events ({count})"
+
+msgid "UI_BOTTOM_ZOOM_LABEL"
+msgstr "Zoom"
+
+msgid "UI_BOTTOM_ZOOM_1X"
+msgstr "1x"
+
+msgid "UI_BOTTOM_ZOOM_2X"
+msgstr "2x"
+
+msgid "UI_BOTTOM_ZOOM_3X"
+msgstr "3x"
+
+msgid "UI_SETTINGS_TITLE"
+msgstr "System Settings & Saves"
+
+msgid "UI_SETTINGS_LOCALE"
+msgstr "Language"
+
+msgid "UI_SETTINGS_PACE"
+msgstr "Simulation Pace"
+
+msgid "UI_SETTINGS_PACE_DEMO"
+msgstr "Demo Fast Pace (0.25s/min)"
+
+msgid "UI_SETTINGS_PACE_STANDARD"
+msgstr "Standard Pace (1.0s/min)"
+
+msgid "UI_SETTINGS_MASTER_VOL"
+msgstr "Master Volume"
+
+msgid "UI_SETTINGS_BGM_VOL"
+msgstr "Music Volume (BGM)"
+
+msgid "UI_SETTINGS_SFX_VOL"
+msgstr "Effects Volume (SFX)"
+
+msgid "UI_SETTINGS_MUTE"
+msgstr "Mute All Audio"
+
+msgid "UI_SAVE_TITLE"
+msgstr "Save Slots"
+
+msgid "UI_SAVE_SLOT_EMPTY"
+msgstr "{slot} · Empty Slot"
+
+msgid "UI_SAVE_SLOT_INFO"
+msgstr "{slot} · {bank} · Day {day} · Cash {cash}"
+
+msgid "UI_SAVE_BTN_SAVE"
+msgstr "Save"
+
+msgid "UI_SAVE_BTN_LOAD"
+msgstr "Load"
+
+msgid "UI_SAVE_BTN_DELETE"
+msgstr "Delete"
+
+msgid "UI_SAVE_BTN_RETURN_MENU"
+msgstr "Return to Main Menu"
+
+msgid "UI_COMMON_CLOSE"
+msgstr "Close"
+
+msgid "UI_COMMON_CONFIRM"
+msgstr "Confirm"
+
+msgid "UI_COMMON_CANCEL"
+msgstr "Cancel"
+
+msgid "UI_TOAST_CMD_OK"
+msgstr "Action executed: {action}"
+
+msgid "UI_TOAST_SAVE_OK"
+msgstr "Saved game to {slot}"
+
+msgid "UI_TOAST_LOAD_OK"
+msgstr "Loaded save {slot}"
+
+msgid "UI_TOAST_AUTOSAVE_OK"
+msgstr "End-of-day autosave complete (autosave)"
+
+msgid "UI_DRAWER_OVERVIEW_TITLE"
+msgstr "Branch Executive Overview"
+
+msgid "UI_DRAWER_OVERVIEW_SUBTITLE"
+msgstr "Key performance indicators, risk warnings, and quick actions"
+
+msgid "UI_DRAWER_FINANCE_TITLE"
+msgstr "Finance & Balance Sheet Center"
+
+msgid "UI_DRAWER_FINANCE_SUBTITLE"
+msgstr "Double-entry ledger, interest rate controls, and daily P&L trend chart"
+
+msgid "UI_DRAWER_EMPLOYEES_TITLE"
+msgstr "Staff & Talent Recruitment"
+
+msgid "UI_DRAWER_EMPLOYEES_SUBTITLE"
+msgstr "Counter assignments, professional training, break recovery, and candidate hiring"
+
+msgid "UI_DRAWER_DEPARTMENTS_TITLE"
+msgstr "Organization & Departments"
+
+msgid "UI_DRAWER_DEPARTMENTS_SUBTITLE"
+msgstr "Establish core departments, unlock automation, and activate cross-department synergies"
+
+msgid "UI_DRAWER_POLICIES_TITLE"
+msgstr "Bank Doctrine & Policy Tree"
+
+msgid "UI_DRAWER_POLICIES_SUBTITLE"
+msgstr "Spend Strategy Points on Conservative or Aggressive doctrine branches (irreversible)"
+
+msgid "UI_DRAWER_EVENTS_TITLE"
+msgstr "Events & Credit Approval Desk"
+
+msgid "UI_DRAWER_EVENTS_SUBTITLE"
+msgstr "Resolve macro/branch events and review high-value loan applications"
+
+msgid "UI_FINANCE_BS_HEADER"
+msgstr "Live Balance Sheet"
+
+msgid "UI_FINANCE_CASH"
+msgstr "Cash Reserves (Asset)"
+
+msgid "UI_FINANCE_LOANS"
+msgstr "Loans Outstanding (Asset)"
+
+msgid "UI_FINANCE_DEPOSITS"
+msgstr "Customer Deposits (Liability)"
+
+msgid "UI_FINANCE_EQUITY_CAP"
+msgstr "Equity Capital (Equity)"
+
+msgid "UI_FINANCE_RETAINED"
+msgstr "Retained Earnings (Equity)"
+
+msgid "UI_FINANCE_TOTAL_ASSETS"
+msgstr "Total Assets"
+
+msgid "UI_FINANCE_TOTAL_LIAB_EQ"
+msgstr "Total Liabilities & Equity"
+
+msgid "UI_FINANCE_BALANCED"
+msgstr "Ledger Balanced: Assets = Liabilities + Equity"
+
+msgid "UI_FINANCE_UNBALANCED"
+msgstr "Ledger Unbalanced Warning"
+
+msgid "UI_FINANCE_RATES_HEADER"
+msgstr "Annual Interest Rate Controls"
+
+msgid "UI_FINANCE_DEPOSIT_RATE"
+msgstr "Deposit Annual Rate: {rate}"
+
+msgid "UI_FINANCE_LOAN_RATE"
+msgstr "Loan Base Annual Rate: {rate}"
+
+msgid "UI_FINANCE_BTN_APPLY_RATES"
+msgstr "Apply Interest Rates"
+
+msgid "UI_FINANCE_CHART_HEADER"
+msgstr "Daily Revenue / Expense / Net Profit Trend"
+
+msgid "UI_FINANCE_CHART_LEGEND"
+msgstr "Cyan: Total Income · Coral: Total Expense · Gold/Green: Net Profit"
+
+msgid "UI_EMP_ACTIVE_HEADER"
+msgstr "Active Staff Roster ({count})"
+
+msgid "UI_EMP_CANDIDATES_HEADER"
+msgstr "Candidate Talent Pool ({count})"
+
+msgid "UI_EMP_CANDIDATES_EMPTY"
+msgstr "All current candidates have been hired"
+
+msgid "UI_EMP_ATTR_PROF"
+msgstr "Prof {val}"
+
+msgid "UI_EMP_ATTR_EFF"
+msgstr "Eff {val}"
+
+msgid "UI_EMP_ATTR_SOC"
+msgstr "Soc {val}"
+
+msgid "UI_EMP_ATTR_RISK"
+msgstr "Risk {val}"
+
+msgid "UI_EMP_ATTR_MGMT"
+msgstr "Mgmt {val}"
+
+msgid "UI_EMP_ATTR_LOY"
+msgstr "Loy {val}"
+
+msgid "UI_EMP_ATTR_POT"
+msgstr "Pot {val}"
+
+msgid "UI_EMP_BTN_HIRE_TELLER"
+msgstr "Hire as Teller"
+
+msgid "UI_EMP_BTN_HIRE_LOAN"
+msgstr "Hire as Loan Officer"
+
+msgid "UI_EMP_BTN_HIRE_ANALYST"
+msgstr "Hire as Analyst"
+
+msgid "UI_DEPT_LEVEL_FORMAT"
+msgstr "Level: Lv.{level} / Lv.{max}"
+
+msgid "UI_DEPT_NOT_CREATED"
+msgstr "Not Established (Lv.0)"
+
+msgid "UI_DEPT_INIT_COST"
+msgstr "Setup Cost: {cost}"
+
+msgid "UI_DEPT_UPGRADE_COST"
+msgstr "Upgrade Cost: {cost}"
+
+msgid "UI_DEPT_DAILY_COST"
+msgstr "Daily Operating Cost: {cost}"
+
+msgid "UI_DEPT_BTN_CREATE"
+msgstr "Establish Dept ({cost})"
+
+msgid "UI_DEPT_BTN_UPGRADE"
+msgstr "Upgrade to Lv.{next} ({cost})"
+
+msgid "UI_DEPT_BTN_MAX_LEVEL"
+msgstr "Max Level Reached"
+
+msgid "UI_DEPT_SYNERGY_HEADER"
+msgstr "Cross-Department Synergies"
+
+msgid "UI_DEPT_SYNERGY_HR_OPS"
+msgstr "HR + Operations Synergy: Staff productivity +5%, onboarding adaptation reduced to 1 day"
+
+msgid "UI_DEPT_SYNERGY_CREDIT_RISK"
+msgstr "Credit + Risk Synergy: Loan default risk -5%, service duration -3%"
+
+msgid "UI_DEPT_SYNERGY_ACTIVE"
+msgstr "[ACTIVE]"
+
+msgid "UI_DEPT_SYNERGY_INACTIVE"
+msgstr "[INACTIVE]"
+
+msgid "UI_POLICY_POINTS"
+msgstr "Available Strategy Points: {points}"
+
+msgid "UI_POLICY_BRANCH_CONSERVATIVE"
+msgstr "Conservative Doctrine"
+
+msgid "UI_POLICY_BRANCH_AGGRESSIVE"
+msgstr "Aggressive Growth Doctrine"
+
+msgid "UI_POLICY_BRANCH_MOD"
+msgstr "Extended Policy Branch"
+
+msgid "UI_POLICY_COST"
+msgstr "Cost: {cost} SP"
+
+msgid "UI_POLICY_PREREQ"
+msgstr "Prerequisite: {prereq}"
+
+msgid "UI_POLICY_PREREQ_NONE"
+msgstr "Prerequisite: None (Tier 1)"
+
+msgid "UI_POLICY_BTN_ADOPT"
+msgstr "Adopt Policy ({cost} SP)"
+
+msgid "UI_POLICY_ADOPTED"
+msgstr "Adopted"
+
+msgid "UI_LOAN_MODAL_TITLE"
+msgstr "Credit Underwriting Desk"
+
+msgid "UI_LOAN_EMPTY"
+msgstr "No pending loan applications"
+
+msgid "UI_LOAN_BORROWER"
+msgstr "Applicant: {customer} ({type})"
+
+msgid "UI_LOAN_TERMS"
+msgstr "Principal: {principal} · Annual Rate: {rate} · Term: {days}d"
+
+msgid "UI_LOAN_RISK_EXACT"
+msgstr "Credit Score: {score} · Risk Grade: {grade} · Est. PD: {pd}"
+
+msgid "UI_LOAN_RISK_BAND"
+msgstr "Risk Grade Band: {grade} (Establish Risk Dept for exact credit score)"
+
+msgid "UI_LOAN_BTN_APPROVE"
+msgstr "Approve & Disburse"
+
+msgid "UI_LOAN_BTN_REJECT"
+msgstr "Reject Application"
+
+msgid "UI_EVENT_MODAL_TITLE"
+msgstr "Branch Event Decision Center"
+
+msgid "UI_EVENT_EMPTY"
+msgstr "No active events requiring decision"
+
+msgid "UI_EVENT_HISTORY_HEADER"
+msgstr "Resolved Event History ({count})"
+
+msgid "UI_REPORT_TITLE"
+msgstr "Day {day} · End-of-Day Financial Settlement Report"
+
+msgid "UI_REPORT_SUBTITLE"
+msgstr "Double-entry P&L closed to Retained Earnings · Branch risk summary"
+
+msgid "UI_REPORT_PNL_HEADER"
+msgstr "Daily Profit & Loss (P&L)"
+
+msgid "UI_REPORT_LOAN_INT_INC"
+msgstr "Loan Interest Income"
+
+msgid "UI_REPORT_FEE_INC"
+msgstr "Service Fee Income"
+
+msgid "UI_REPORT_DEP_INT_EXP"
+msgstr "Deposit Interest Expense"
+
+msgid "UI_REPORT_STAFF_COST"
+msgstr "Staff Payroll Expense"
+
+msgid "UI_REPORT_FACILITY_COST"
+msgstr "Facility Rent Expense"
+
+msgid "UI_REPORT_DEPT_COST"
+msgstr "Department Operating Expense"
+
+msgid "UI_REPORT_CREDIT_LOSS"
+msgstr "Credit Default Write-off Loss"
+
+msgid "UI_REPORT_EVENT_EXP"
+msgstr "Event Expense"
+
+msgid "UI_REPORT_NET_PROFIT"
+msgstr "Daily Net Profit"
+
+msgid "UI_REPORT_BS_HEADER"
+msgstr "Closing Balance Sheet & Risk Health"
+
+msgid "UI_REPORT_DRIVERS_HEADER"
+msgstr "Key Performance Drivers & Outlook"
+
+msgid "UI_REPORT_BTN_NEXT_DAY"
+msgstr "Advance to Next Day (Autosave)"

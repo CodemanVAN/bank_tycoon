@@ -8,30 +8,23 @@ const MOD_ID_PATTERN: String = "^[a-z0-9]+(\\.[a-z0-9_-]+)+$"
 const SEMVER_PATTERN: String = "^[0-9]+\\.[0-9]+\\.[0-9]+$"
 const CORE_NAMESPACE: String = "core"
 
-static var _id_rx: RegEx = null
-static var _mod_rx: RegEx = null
-static var _semver_rx: RegEx = null
-
 
 static func _get_id_rx() -> RegEx:
-	if _id_rx == null:
-		_id_rx = RegEx.new()
-		_id_rx.compile(PATTERN)
-	return _id_rx
+	var rx := RegEx.new()
+	rx.compile(PATTERN)
+	return rx
 
 
 static func _get_mod_rx() -> RegEx:
-	if _mod_rx == null:
-		_mod_rx = RegEx.new()
-		_mod_rx.compile(MOD_ID_PATTERN)
-	return _mod_rx
+	var rx := RegEx.new()
+	rx.compile(MOD_ID_PATTERN)
+	return rx
 
 
 static func _get_semver_rx() -> RegEx:
-	if _semver_rx == null:
-		_semver_rx = RegEx.new()
-		_semver_rx.compile(SEMVER_PATTERN)
-	return _semver_rx
+	var rx := RegEx.new()
+	rx.compile(SEMVER_PATTERN)
+	return rx
 
 
 static func _has_line_break_or_space(raw: String) -> bool:

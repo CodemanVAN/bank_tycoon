@@ -1,0 +1,1705 @@
+# Starway Bank — Bank Tycoon Translation Template
+msgid ""
+msgstr ""
+"Project-Id-Version: Starway Bank 0.1.0\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "UI_MAIN_MENU_TITLE"
+msgstr ""
+
+msgid "UI_MAIN_MENU_SUBTITLE"
+msgstr ""
+
+msgid "UI_MAIN_MENU_NEW_GAME"
+msgstr ""
+
+msgid "UI_MAIN_MENU_CONTINUE"
+msgstr ""
+
+msgid "UI_MAIN_MENU_LOAD_GAME"
+msgstr ""
+
+msgid "UI_MAIN_MENU_SETTINGS"
+msgstr ""
+
+msgid "UI_MAIN_MENU_QUIT"
+msgstr ""
+
+msgid "UI_TOPBAR_DAY"
+msgstr ""
+
+msgid "UI_TOPBAR_CASH"
+msgstr ""
+
+msgid "UI_TOPBAR_DEPOSITS"
+msgstr ""
+
+msgid "UI_TOPBAR_LOANS"
+msgstr ""
+
+msgid "UI_TOPBAR_EQUITY"
+msgstr ""
+
+msgid "UI_TOPBAR_PROFIT"
+msgstr ""
+
+msgid "UI_TOPBAR_SATISFACTION"
+msgstr ""
+
+msgid "UI_TOPBAR_REPUTATION"
+msgstr ""
+
+msgid "UI_TOPBAR_STRATEGY_POINTS"
+msgstr ""
+
+msgid "UI_TOPBAR_TIME"
+msgstr ""
+
+msgid "UI_TOPBAR_PHASE"
+msgstr ""
+
+msgid "UI_NAV_OVERVIEW"
+msgstr ""
+
+msgid "UI_NAV_FINANCE"
+msgstr ""
+
+msgid "UI_NAV_EMPLOYEES"
+msgstr ""
+
+msgid "UI_NAV_DEPARTMENTS"
+msgstr ""
+
+msgid "UI_NAV_POLICIES"
+msgstr ""
+
+msgid "UI_NAV_EVENTS"
+msgstr ""
+
+msgid "UI_INSPECTOR_TITLE"
+msgstr ""
+
+msgid "UI_INSPECTOR_EMPTY"
+msgstr ""
+
+msgid "UI_BOTTOM_OPEN_BRANCH"
+msgstr ""
+
+msgid "UI_BOTTOM_NEXT_DAY"
+msgstr ""
+
+msgid "UI_BOTTOM_QUEUE"
+msgstr ""
+
+msgid "UI_BOTTOM_APPROVALS"
+msgstr ""
+
+msgid "UI_BOTTOM_EVENTS"
+msgstr ""
+
+msgid "DEPT_OPERATIONS_NAME"
+msgstr ""
+
+msgid "DEPT_OPERATIONS_DESC"
+msgstr ""
+
+msgid "DEPT_OPERATIONS_LV1"
+msgstr ""
+
+msgid "DEPT_OPERATIONS_LV2"
+msgstr ""
+
+msgid "DEPT_OPERATIONS_LV3"
+msgstr ""
+
+msgid "DEPT_HR_NAME"
+msgstr ""
+
+msgid "DEPT_HR_DESC"
+msgstr ""
+
+msgid "DEPT_HR_LV1"
+msgstr ""
+
+msgid "DEPT_HR_LV2"
+msgstr ""
+
+msgid "DEPT_HR_LV3"
+msgstr ""
+
+msgid "DEPT_CREDIT_NAME"
+msgstr ""
+
+msgid "DEPT_CREDIT_DESC"
+msgstr ""
+
+msgid "DEPT_CREDIT_LV1"
+msgstr ""
+
+msgid "DEPT_CREDIT_LV2"
+msgstr ""
+
+msgid "DEPT_CREDIT_LV3"
+msgstr ""
+
+msgid "DEPT_RISK_NAME"
+msgstr ""
+
+msgid "DEPT_RISK_DESC"
+msgstr ""
+
+msgid "DEPT_RISK_LV1"
+msgstr ""
+
+msgid "DEPT_RISK_LV2"
+msgstr ""
+
+msgid "DEPT_RISK_LV3"
+msgstr ""
+
+msgid "SYNERGY_HR_OPERATIONS_NAME"
+msgstr ""
+
+msgid "SYNERGY_HR_OPERATIONS_DESC"
+msgstr ""
+
+msgid "SYNERGY_CREDIT_RISK_NAME"
+msgstr ""
+
+msgid "SYNERGY_CREDIT_RISK_DESC"
+msgstr ""
+
+msgid "POLICY_PRUDENT_LENDING_NAME"
+msgstr ""
+
+msgid "POLICY_PRUDENT_LENDING_DESC"
+msgstr ""
+
+msgid "POLICY_LIQUIDITY_FIRST_NAME"
+msgstr ""
+
+msgid "POLICY_LIQUIDITY_FIRST_DESC"
+msgstr ""
+
+msgid "POLICY_CUSTOMER_TRUST_NAME"
+msgstr ""
+
+msgid "POLICY_CUSTOMER_TRUST_DESC"
+msgstr ""
+
+msgid "POLICY_HIGH_RATE_ACQUISITION_NAME"
+msgstr ""
+
+msgid "POLICY_HIGH_RATE_ACQUISITION_DESC"
+msgstr ""
+
+msgid "POLICY_MARKET_PENETRATION_NAME"
+msgstr ""
+
+msgid "POLICY_MARKET_PENETRATION_DESC"
+msgstr ""
+
+msgid "POLICY_CREDIT_EXPANSION_NAME"
+msgstr ""
+
+msgid "POLICY_CREDIT_EXPANSION_DESC"
+msgstr ""
+
+msgid "POLICY_BRANCH_CONSERVATIVE"
+msgstr ""
+
+msgid "POLICY_BRANCH_AGGRESSIVE"
+msgstr ""
+
+msgid "EVENT_REAL_ESTATE_BOOM_TITLE"
+msgstr ""
+
+msgid "EVENT_REAL_ESTATE_BOOM_DESC"
+msgstr ""
+
+msgid "EVENT_RE_BOOM_OPT_AGGR"
+msgstr ""
+
+msgid "EVENT_RE_BOOM_OPT_AGGR_DESC"
+msgstr ""
+
+msgid "EVENT_RE_BOOM_OPT_PRUDENT"
+msgstr ""
+
+msgid "EVENT_RE_BOOM_OPT_PRUDENT_DESC"
+msgstr ""
+
+msgid "EVENT_REAL_ESTATE_COOLING_TITLE"
+msgstr ""
+
+msgid "EVENT_REAL_ESTATE_COOLING_DESC"
+msgstr ""
+
+msgid "EVENT_RE_COOL_OPT_TIGHTEN"
+msgstr ""
+
+msgid "EVENT_RE_COOL_OPT_TIGHTEN_DESC"
+msgstr ""
+
+msgid "EVENT_RE_COOL_OPT_HOLD"
+msgstr ""
+
+msgid "EVENT_RE_COOL_OPT_HOLD_DESC"
+msgstr ""
+
+msgid "EVENT_REAL_ESTATE_CREDIT_STRESS_TITLE"
+msgstr ""
+
+msgid "EVENT_REAL_ESTATE_CREDIT_STRESS_DESC"
+msgstr ""
+
+msgid "EVENT_RE_STRESS_OPT_PROVISION"
+msgstr ""
+
+msgid "EVENT_RE_STRESS_OPT_PROVISION_DESC"
+msgstr ""
+
+msgid "EVENT_RE_STRESS_OPT_RESTRUCTURE"
+msgstr ""
+
+msgid "EVENT_RE_STRESS_OPT_RESTRUCTURE_DESC"
+msgstr ""
+
+msgid "EVENT_VIP_DEPOSIT_VISIT_TITLE"
+msgstr ""
+
+msgid "EVENT_VIP_DEPOSIT_VISIT_DESC"
+msgstr ""
+
+msgid "EVENT_VIP_VISIT_OPT_CONCIERGE"
+msgstr ""
+
+msgid "EVENT_VIP_VISIT_OPT_CONCIERGE_DESC"
+msgstr ""
+
+msgid "EVENT_VIP_VISIT_OPT_STANDARD"
+msgstr ""
+
+msgid "EVENT_VIP_VISIT_OPT_STANDARD_DESC"
+msgstr ""
+
+msgid "EVENT_TELLER_SYSTEM_GLITCH_TITLE"
+msgstr ""
+
+msgid "EVENT_TELLER_SYSTEM_GLITCH_DESC"
+msgstr ""
+
+msgid "EVENT_GLITCH_OPT_HOTFIX"
+msgstr ""
+
+msgid "EVENT_GLITCH_OPT_HOTFIX_DESC"
+msgstr ""
+
+msgid "EVENT_GLITCH_OPT_MANUAL"
+msgstr ""
+
+msgid "EVENT_GLITCH_OPT_MANUAL_DESC"
+msgstr ""
+
+msgid "EVENT_COMPETITOR_POACHING_TITLE"
+msgstr ""
+
+msgid "EVENT_COMPETITOR_POACHING_DESC"
+msgstr ""
+
+msgid "EVENT_POACHING_OPT_BONUS"
+msgstr ""
+
+msgid "EVENT_POACHING_OPT_BONUS_DESC"
+msgstr ""
+
+msgid "EVENT_POACHING_OPT_IGNORE"
+msgstr ""
+
+msgid "EVENT_POACHING_OPT_IGNORE_DESC"
+msgstr ""
+
+msgid "EVENT_COMMUNITY_SPONSORSHIP_TITLE"
+msgstr ""
+
+msgid "EVENT_COMMUNITY_SPONSORSHIP_DESC"
+msgstr ""
+
+msgid "EVENT_COMMUNITY_OPT_SPONSOR"
+msgstr ""
+
+msgid "EVENT_COMMUNITY_OPT_SPONSOR_DESC"
+msgstr ""
+
+msgid "EVENT_COMMUNITY_OPT_DECLINE"
+msgstr ""
+
+msgid "EVENT_COMMUNITY_OPT_DECLINE_DESC"
+msgstr ""
+
+msgid "EVENT_REGULATORY_AUDIT_TITLE"
+msgstr ""
+
+msgid "EVENT_REGULATORY_AUDIT_DESC"
+msgstr ""
+
+msgid "EVENT_AUDIT_OPT_COOPERATE"
+msgstr ""
+
+msgid "EVENT_AUDIT_OPT_COOPERATE_DESC"
+msgstr ""
+
+msgid "EVENT_AUDIT_OPT_MINIMAL"
+msgstr ""
+
+msgid "EVENT_AUDIT_OPT_MINIMAL_DESC"
+msgstr ""
+
+msgid "EVENT_FINTECH_PARTNERSHIP_TITLE"
+msgstr ""
+
+msgid "EVENT_FINTECH_PARTNERSHIP_DESC"
+msgstr ""
+
+msgid "EVENT_FINTECH_OPT_INTEGRATE"
+msgstr ""
+
+msgid "EVENT_FINTECH_OPT_INTEGRATE_DESC"
+msgstr ""
+
+msgid "EVENT_FINTECH_OPT_LEGACY"
+msgstr ""
+
+msgid "EVENT_FINTECH_OPT_LEGACY_DESC"
+msgstr ""
+
+msgid "EVENT_RATE_HIKE_RUMOR_TITLE"
+msgstr ""
+
+msgid "EVENT_RATE_HIKE_RUMOR_DESC"
+msgstr ""
+
+msgid "EVENT_RATE_RUMOR_OPT_BUFFER"
+msgstr ""
+
+msgid "EVENT_RATE_RUMOR_OPT_BUFFER_DESC"
+msgstr ""
+
+msgid "EVENT_RATE_RUMOR_OPT_DEPOSITS"
+msgstr ""
+
+msgid "EVENT_RATE_RUMOR_OPT_DEPOSITS_DESC"
+msgstr ""
+
+msgid "TRAIT_SALES_PRODIGY_NAME"
+msgstr ""
+
+msgid "TRAIT_SALES_PRODIGY_DESC"
+msgstr ""
+
+msgid "TRAIT_RISK_EXPERT_NAME"
+msgstr ""
+
+msgid "TRAIT_RISK_EXPERT_DESC"
+msgstr ""
+
+msgid "TRAIT_WORKAHOLIC_NAME"
+msgstr ""
+
+msgid "TRAIT_WORKAHOLIC_DESC"
+msgstr ""
+
+msgid "TRAIT_DETAIL_ORIENTED_NAME"
+msgstr ""
+
+msgid "TRAIT_DETAIL_ORIENTED_DESC"
+msgstr ""
+
+msgid "TRAIT_BANK_VETERAN_NAME"
+msgstr ""
+
+msgid "TRAIT_BANK_VETERAN_DESC"
+msgstr ""
+
+msgid "TRAIT_TEAM_LEADER_NAME"
+msgstr ""
+
+msgid "TRAIT_TEAM_LEADER_DESC"
+msgstr ""
+
+msgid "CUSTOMER_REGULAR_NAME"
+msgstr ""
+
+msgid "CUSTOMER_REGULAR_DESC"
+msgstr ""
+
+msgid "CUST_TYPE_REGULAR"
+msgstr ""
+
+msgid "CUSTOMER_SALARIED_NAME"
+msgstr ""
+
+msgid "CUSTOMER_SALARIED_DESC"
+msgstr ""
+
+msgid "CUST_TYPE_SALARIED"
+msgstr ""
+
+msgid "CUSTOMER_BORROWER_NAME"
+msgstr ""
+
+msgid "CUSTOMER_BORROWER_DESC"
+msgstr ""
+
+msgid "CUST_TYPE_BORROWER"
+msgstr ""
+
+msgid "CUSTOMER_SMB_NAME"
+msgstr ""
+
+msgid "CUSTOMER_SMB_DESC"
+msgstr ""
+
+msgid "CUST_TYPE_SMB"
+msgstr ""
+
+msgid "CUSTOMER_VIP_NAME"
+msgstr ""
+
+msgid "CUSTOMER_VIP_DESC"
+msgstr ""
+
+msgid "CUST_TYPE_VIP"
+msgstr ""
+
+msgid "CUSTOMER_SUSPICIOUS_NAME"
+msgstr ""
+
+msgid "CUSTOMER_SUSPICIOUS_DESC"
+msgstr ""
+
+msgid "CUST_TYPE_SUSPICIOUS"
+msgstr ""
+
+msgid "SERVICE_CASH_DEPOSIT"
+msgstr ""
+
+msgid "SERVICE_CASH_WITHDRAWAL"
+msgstr ""
+
+msgid "SERVICE_TRANSFER"
+msgstr ""
+
+msgid "SERVICE_PERSONAL_LOAN_APPLICATION"
+msgstr ""
+
+msgid "SERVICE_BUSINESS_MEETING"
+msgstr ""
+
+msgid "SERVICE_COMPLAINT"
+msgstr ""
+
+msgid "ROLE_TELLER"
+msgstr ""
+
+msgid "ROLE_LOAN_OFFICER"
+msgstr ""
+
+msgid "ROLE_MANAGER"
+msgstr ""
+
+msgid "ROLE_ANALYST"
+msgstr ""
+
+msgid "EMP_STATE_AVAILABLE"
+msgstr ""
+
+msgid "EMP_STATE_MOVING"
+msgstr ""
+
+msgid "EMP_STATE_WORKING"
+msgstr ""
+
+msgid "EMP_STATE_BREAK"
+msgstr ""
+
+msgid "EMP_STATE_OVERLOADED"
+msgstr ""
+
+msgid "EMP_STATE_OFF_DUTY"
+msgstr ""
+
+msgid "CUST_STATE_SPAWNING"
+msgstr ""
+
+msgid "CUST_STATE_FINDING_SERVICE"
+msgstr ""
+
+msgid "CUST_STATE_WAITING"
+msgstr ""
+
+msgid "CUST_STATE_IN_SERVICE"
+msgstr ""
+
+msgid "CUST_STATE_COMPLETED"
+msgstr ""
+
+msgid "CUST_STATE_LEAVING"
+msgstr ""
+
+msgid "PHASE_PRE_OPEN"
+msgstr ""
+
+msgid "PHASE_OPEN"
+msgstr ""
+
+msgid "PHASE_CLOSING"
+msgstr ""
+
+msgid "PHASE_SETTLED"
+msgstr ""
+
+msgid "LIQUIDITY_SAFE"
+msgstr ""
+
+msgid "LIQUIDITY_CAUTION"
+msgstr ""
+
+msgid "LIQUIDITY_DANGER"
+msgstr ""
+
+msgid "RISK_GRADE_A"
+msgstr ""
+
+msgid "RISK_GRADE_B"
+msgstr ""
+
+msgid "RISK_GRADE_C"
+msgstr ""
+
+msgid "RISK_GRADE_D"
+msgstr ""
+
+msgid "QUEUE_PRIORITY_NORMAL"
+msgstr ""
+
+msgid "QUEUE_PRIORITY_PRIORITY"
+msgstr ""
+
+msgid "QUEUE_PRIORITY_VIP"
+msgstr ""
+
+msgid "EMP_NAME_STARTER_1"
+msgstr ""
+
+msgid "EMP_NAME_STARTER_2"
+msgstr ""
+
+msgid "CAND_NAME_1"
+msgstr ""
+
+msgid "CAND_NAME_2"
+msgstr ""
+
+msgid "CAND_NAME_3"
+msgstr ""
+
+msgid "PERSON_NAME_01"
+msgstr ""
+
+msgid "PERSON_NAME_02"
+msgstr ""
+
+msgid "PERSON_NAME_03"
+msgstr ""
+
+msgid "PERSON_NAME_04"
+msgstr ""
+
+msgid "PERSON_NAME_05"
+msgstr ""
+
+msgid "PERSON_NAME_06"
+msgstr ""
+
+msgid "PERSON_NAME_07"
+msgstr ""
+
+msgid "PERSON_NAME_08"
+msgstr ""
+
+msgid "PERSON_NAME_09"
+msgstr ""
+
+msgid "PERSON_NAME_10"
+msgstr ""
+
+msgid "PERSON_NAME_11"
+msgstr ""
+
+msgid "PERSON_NAME_12"
+msgstr ""
+
+msgid "PERSON_NAME_13"
+msgstr ""
+
+msgid "PERSON_NAME_14"
+msgstr ""
+
+msgid "PERSON_NAME_15"
+msgstr ""
+
+msgid "PERSON_NAME_16"
+msgstr ""
+
+msgid "PERSON_NAME_17"
+msgstr ""
+
+msgid "PERSON_NAME_18"
+msgstr ""
+
+msgid "PERSON_NAME_19"
+msgstr ""
+
+msgid "PERSON_NAME_20"
+msgstr ""
+
+msgid "PERSON_NAME_21"
+msgstr ""
+
+msgid "PERSON_NAME_22"
+msgstr ""
+
+msgid "PERSON_NAME_23"
+msgstr ""
+
+msgid "PERSON_NAME_24"
+msgstr ""
+
+msgid "PERSON_NAME_25"
+msgstr ""
+
+msgid "PERSON_NAME_26"
+msgstr ""
+
+msgid "PERSON_NAME_27"
+msgstr ""
+
+msgid "PERSON_NAME_28"
+msgstr ""
+
+msgid "PERSON_NAME_29"
+msgstr ""
+
+msgid "PERSON_NAME_30"
+msgstr ""
+
+msgid "PERSON_NAME_31"
+msgstr ""
+
+msgid "PERSON_NAME_32"
+msgstr ""
+
+msgid "PERSON_NAME_33"
+msgstr ""
+
+msgid "PERSON_NAME_34"
+msgstr ""
+
+msgid "PERSON_NAME_35"
+msgstr ""
+
+msgid "PERSON_NAME_36"
+msgstr ""
+
+msgid "PERSON_NAME_37"
+msgstr ""
+
+msgid "PERSON_NAME_38"
+msgstr ""
+
+msgid "PERSON_NAME_39"
+msgstr ""
+
+msgid "PERSON_NAME_40"
+msgstr ""
+
+msgid "LEDGER_INIT_CAPITAL"
+msgstr ""
+
+msgid "LEDGER_DEPOSIT"
+msgstr ""
+
+msgid "LEDGER_WITHDRAWAL"
+msgstr ""
+
+msgid "LEDGER_SERVICE_FEE"
+msgstr ""
+
+msgid "LEDGER_LOAN_DISBURSEMENT"
+msgstr ""
+
+msgid "LEDGER_LOAN_REPAYMENT"
+msgstr ""
+
+msgid "LEDGER_CREDIT_LOSS"
+msgstr ""
+
+msgid "LEDGER_OPERATING_COST"
+msgstr ""
+
+msgid "LEDGER_EVENT_EXPENSE"
+msgstr ""
+
+msgid "LEDGER_DAILY_LOAN_INTEREST"
+msgstr ""
+
+msgid "LEDGER_DAILY_DEPOSIT_INTEREST"
+msgstr ""
+
+msgid "LEDGER_DAILY_CLOSEOUT"
+msgstr ""
+
+msgid "ACCOUNT_CASH_RESERVES"
+msgstr ""
+
+msgid "ACCOUNT_LOAN_PRINCIPAL_OUTSTANDING"
+msgstr ""
+
+msgid "ACCOUNT_CUSTOMER_DEPOSITS"
+msgstr ""
+
+msgid "ACCOUNT_EQUITY_CAPITAL"
+msgstr ""
+
+msgid "ACCOUNT_RETAINED_EARNINGS"
+msgstr ""
+
+msgid "ACCOUNT_LOAN_INTEREST_INCOME"
+msgstr ""
+
+msgid "ACCOUNT_FEE_INCOME"
+msgstr ""
+
+msgid "ACCOUNT_DEPOSIT_INTEREST_EXPENSE"
+msgstr ""
+
+msgid "ACCOUNT_OPERATING_EXPENSE"
+msgstr ""
+
+msgid "ACCOUNT_CREDIT_LOSS_EXPENSE"
+msgstr ""
+
+msgid "ACCOUNT_EVENT_EXPENSE"
+msgstr ""
+
+msgid "REPORT_DRIVER_PROFIT_UP"
+msgstr ""
+
+msgid "REPORT_DRIVER_PROFIT_DOWN"
+msgstr ""
+
+msgid "REPORT_DRIVER_CREDIT_LOSS"
+msgstr ""
+
+msgid "REPORT_DRIVER_LIQUIDITY_STRESS"
+msgstr ""
+
+msgid "REPORT_DRIVER_PAYROLL_COST"
+msgstr ""
+
+msgid "ERR_UNKNOWN_ERROR"
+msgstr ""
+
+msgid "ERR_INVALID_CONTENT_ID"
+msgstr ""
+
+msgid "ERR_INVALID_BANK_STATE"
+msgstr ""
+
+msgid "ERR_INVALID_LEDGER_DATA"
+msgstr ""
+
+msgid "ERR_LEDGER_CORRUPTED_UNBALANCED"
+msgstr ""
+
+msgid "ERR_LEDGER_TOO_FEW_LINES"
+msgstr ""
+
+msgid "ERR_LEDGER_MALFORMED_LINE"
+msgstr ""
+
+msgid "ERR_LEDGER_UNKNOWN_ACCOUNT"
+msgstr ""
+
+msgid "ERR_LEDGER_INVALID_SIDE"
+msgstr ""
+
+msgid "ERR_LEDGER_INVALID_AMOUNT"
+msgstr ""
+
+msgid "ERR_LEDGER_UNBALANCED"
+msgstr ""
+
+msgid "ERR_INVALID_AMOUNT"
+msgstr ""
+
+msgid "ERR_INSUFFICIENT_DEPOSITS"
+msgstr ""
+
+msgid "ERR_INSUFFICIENT_CASH"
+msgstr ""
+
+msgid "ERR_INVALID_LOAN_TERMS"
+msgstr ""
+
+msgid "ERR_LOAN_REPAYMENT_EXCEEDS_PRINCIPAL"
+msgstr ""
+
+msgid "ERR_INVALID_LOAN"
+msgstr ""
+
+msgid "ERR_LOAN_NOT_ACTIVE"
+msgstr ""
+
+msgid "ERR_CREDIT_LOSS_EXCEEDS_LOANS"
+msgstr ""
+
+msgid "ERR_DAY_ALREADY_SETTLED"
+msgstr ""
+
+msgid "ERR_INVALID_REPAYMENT_AMOUNT"
+msgstr ""
+
+msgid "ERR_LOAN_ALREADY_CLOSED"
+msgstr ""
+
+msgid "ERR_INVALID_LOAN_ID"
+msgstr ""
+
+msgid "ERR_INVALID_CUSTOMER_ID"
+msgstr ""
+
+msgid "ERR_INVALID_CUSTOMER_STATE"
+msgstr ""
+
+msgid "ERR_ILLEGAL_CUSTOMER_TRANSITION"
+msgstr ""
+
+msgid "ERR_INVALID_EMPLOYEE_ID"
+msgstr ""
+
+msgid "ERR_INVALID_EMPLOYEE_STATE"
+msgstr ""
+
+msgid "ERR_ILLEGAL_EMPLOYEE_TRANSITION"
+msgstr ""
+
+msgid "ERR_INVALID_REQUEST_ID"
+msgstr ""
+
+msgid "ERR_EMPLOYEE_TASK_CONFLICT"
+msgstr ""
+
+msgid "ERR_EMPLOYEE_ON_BREAK"
+msgstr ""
+
+msgid "ERR_EMPLOYEE_OFF_DUTY"
+msgstr ""
+
+msgid "ERR_EMPLOYEE_BUSY"
+msgstr ""
+
+msgid "ERR_EMPLOYEE_NOT_FOUND"
+msgstr ""
+
+msgid "ERR_CANDIDATE_NOT_FOUND"
+msgstr ""
+
+msgid "ERR_CANNOT_FIRE_BUSY_EMPLOYEE"
+msgstr ""
+
+msgid "ERR_CANNOT_FIRE_LAST_EMPLOYEE"
+msgstr ""
+
+msgid "ERR_REQUEST_NOT_QUEUED"
+msgstr ""
+
+msgid "ERR_REQUEST_ALREADY_ASSIGNED"
+msgstr ""
+
+msgid "ERR_INVALID_QUEUE_PRIORITY"
+msgstr ""
+
+msgid "ERR_REQUEST_NOT_FOUND"
+msgstr ""
+
+msgid "ERR_QUEUE_PRIORITY_LOCKED"
+msgstr ""
+
+msgid "ERR_DEPT_NOT_FOUND"
+msgstr ""
+
+msgid "ERR_DEPT_ALREADY_EXISTS"
+msgstr ""
+
+msgid "ERR_DEPT_LOCKED"
+msgstr ""
+
+msgid "ERR_DEPT_NOT_CREATED"
+msgstr ""
+
+msgid "ERR_DEPT_MAX_LEVEL"
+msgstr ""
+
+msgid "ERR_POLICY_NOT_FOUND"
+msgstr ""
+
+msgid "ERR_POLICY_ALREADY_ADOPTED"
+msgstr ""
+
+msgid "ERR_POLICY_PREREQUISITE_MISSING"
+msgstr ""
+
+msgid "ERR_POLICY_BRANCH_CONFLICT"
+msgstr ""
+
+msgid "ERR_POLICY_EXCLUSIVE_CONFLICT"
+msgstr ""
+
+msgid "ERR_POLICY_CONDITION_UNMET"
+msgstr ""
+
+msgid "ERR_INSUFFICIENT_STRATEGY_POINTS"
+msgstr ""
+
+msgid "ERR_EVENT_NOT_FOUND"
+msgstr ""
+
+msgid "ERR_EVENT_INSTANCE_NOT_FOUND"
+msgstr ""
+
+msgid "ERR_EVENT_OPTION_NOT_FOUND"
+msgstr ""
+
+msgid "ERR_EVENT_OPTION_LOCKED"
+msgstr ""
+
+msgid "ERR_STATION_NOT_FOUND"
+msgstr ""
+
+msgid "ERR_INVALID_ROLE"
+msgstr ""
+
+msgid "ERR_INVALID_SPEED"
+msgstr ""
+
+msgid "ERR_INVALID_RATE"
+msgstr ""
+
+msgid "ERR_RATE_OUT_OF_RANGE"
+msgstr ""
+
+msgid "ERR_INVALID_PHASE"
+msgstr ""
+
+msgid "ERR_BRANCH_ALREADY_OPEN"
+msgstr ""
+
+msgid "ERR_BRANCH_NOT_SETTLED"
+msgstr ""
+
+msgid "ERR_APPROVAL_NOT_FOUND"
+msgstr ""
+
+msgid "ERR_INVALID_SLOT_ID"
+msgstr ""
+
+msgid "ERR_SAVE_WRITE_FAILED"
+msgstr ""
+
+msgid "ERR_SAVE_NOT_FOUND"
+msgstr ""
+
+msgid "ERR_SAVE_CORRUPTED"
+msgstr ""
+
+msgid "ERR_UNSUPPORTED_SAVE_VERSION"
+msgstr ""
+
+msgid "ERR_NO_ACTIVE_SESSION"
+msgstr ""
+
+msgid "SIM_LOG_EVENT"
+msgstr ""
+
+msgid "SIM_LOG_DAY_STARTED"
+msgstr ""
+
+msgid "SIM_LOG_PHASE_CHANGED"
+msgstr ""
+
+msgid "SIM_LOG_CUSTOMER_ARRIVED"
+msgstr ""
+
+msgid "SIM_LOG_SERVICE_STARTED"
+msgstr ""
+
+msgid "SIM_LOG_SERVICE_COMPLETED"
+msgstr ""
+
+msgid "SIM_LOG_CUSTOMER_LEFT_UNSERVED"
+msgstr ""
+
+msgid "SIM_LOG_LOAN_APPROVAL_REQUESTED"
+msgstr ""
+
+msgid "SIM_LOG_LOAN_APPROVED"
+msgstr ""
+
+msgid "SIM_LOG_LOAN_REJECTED"
+msgstr ""
+
+msgid "SIM_LOG_EMPLOYEE_HIRED"
+msgstr ""
+
+msgid "SIM_LOG_EMPLOYEE_FIRED"
+msgstr ""
+
+msgid "SIM_LOG_EMPLOYEE_ASSIGNED"
+msgstr ""
+
+msgid "SIM_LOG_EMPLOYEE_TRAINED"
+msgstr ""
+
+msgid "SIM_LOG_EMPLOYEE_RESTED"
+msgstr ""
+
+msgid "SIM_LOG_STATION_TOGGLED"
+msgstr ""
+
+msgid "SIM_LOG_DEPARTMENT_CREATED"
+msgstr ""
+
+msgid "SIM_LOG_DEPARTMENT_UPGRADED"
+msgstr ""
+
+msgid "SIM_LOG_POLICY_ADOPTED"
+msgstr ""
+
+msgid "SIM_LOG_EVENT_TRIGGERED"
+msgstr ""
+
+msgid "SIM_LOG_EVENT_RESOLVED"
+msgstr ""
+
+msgid "SIM_LOG_DAILY_SETTLEMENT"
+msgstr ""
+
+msgid "SIM_LOG_SPEED_CHANGED"
+msgstr ""
+
+msgid "SIM_LOG_RATES_CHANGED"
+msgstr ""
+
+msgid "SIM_LOG_ALERT"
+msgstr ""
+
+msgid "SIM_LOG_STATE_RELOADED"
+msgstr ""
+
+msgid "WORLD_STATION_TELLER_TAG"
+msgstr ""
+
+msgid "WORLD_STATION_LOAN_TAG"
+msgstr ""
+
+msgid "WORLD_STATION_OPEN"
+msgstr ""
+
+msgid "WORLD_STATION_CLOSED"
+msgstr ""
+
+msgid "WORLD_DEPT_OPS_SHORT"
+msgstr ""
+
+msgid "WORLD_DEPT_HR_SHORT"
+msgstr ""
+
+msgid "WORLD_DEPT_CREDIT_SHORT"
+msgstr ""
+
+msgid "WORLD_DEPT_RISK_SHORT"
+msgstr ""
+
+msgid "WORLD_DEPT_LEVEL_BADGE"
+msgstr ""
+
+msgid "WORLD_FX_SERVICE_DONE"
+msgstr ""
+
+msgid "WORLD_FX_SATISFACTION_UP"
+msgstr ""
+
+msgid "WORLD_FX_CUSTOMER_LEFT"
+msgstr ""
+
+msgid "WORLD_FX_LOAN_APPROVED"
+msgstr ""
+
+msgid "WORLD_FX_LOAN_REJECTED"
+msgstr ""
+
+msgid "WORLD_FX_DEPT_UPGRADED"
+msgstr ""
+
+msgid "WORLD_ACTOR_STATE_WORKING"
+msgstr ""
+
+msgid "WORLD_ACTOR_STATE_WAITING"
+msgstr ""
+
+msgid "WORLD_ACTOR_STATE_BREAK"
+msgstr ""
+
+msgid "WORLD_ACTOR_STATE_OVERLOADED"
+msgstr ""
+
+msgid "UI_MAIN_MENU_LOAD_SAVE"
+msgstr ""
+
+msgid "UI_MAIN_MENU_VERSION"
+msgstr ""
+
+msgid "UI_TOPBAR_BANK_NAME"
+msgstr ""
+
+msgid "UI_TOPBAR_TODAY_PROFIT"
+msgstr ""
+
+msgid "UI_TOPBAR_EMPLOYEES"
+msgstr ""
+
+msgid "UI_TOPBAR_SPEED_PAUSE"
+msgstr ""
+
+msgid "UI_TOPBAR_SPEED_1X"
+msgstr ""
+
+msgid "UI_TOPBAR_SPEED_2X"
+msgstr ""
+
+msgid "UI_TOPBAR_SPEED_3X"
+msgstr ""
+
+msgid "UI_TOPBAR_ACTION_OPEN_BRANCH"
+msgstr ""
+
+msgid "UI_TOPBAR_ACTION_IN_BUSINESS"
+msgstr ""
+
+msgid "UI_TOPBAR_ACTION_CLOSING"
+msgstr ""
+
+msgid "UI_TOPBAR_ACTION_NEXT_DAY"
+msgstr ""
+
+msgid "UI_TOPBAR_BTN_SAVE_SETTINGS"
+msgstr ""
+
+msgid "UI_PHASE_PRE_OPEN"
+msgstr ""
+
+msgid "UI_PHASE_OPEN"
+msgstr ""
+
+msgid "UI_PHASE_CLOSING"
+msgstr ""
+
+msgid "UI_PHASE_SETTLED"
+msgstr ""
+
+msgid "UI_NAV_SETTINGS"
+msgstr ""
+
+msgid "UI_INSPECTOR_TITLE_OVERVIEW"
+msgstr ""
+
+msgid "UI_INSPECTOR_TITLE_STATION"
+msgstr ""
+
+msgid "UI_INSPECTOR_TITLE_EMPLOYEE"
+msgstr ""
+
+msgid "UI_INSPECTOR_TITLE_CUSTOMER"
+msgstr ""
+
+msgid "UI_INSPECTOR_BTN_BACK_OVERVIEW"
+msgstr ""
+
+msgid "UI_INSPECTOR_LIQUIDITY"
+msgstr ""
+
+msgid "UI_INSPECTOR_NPL"
+msgstr ""
+
+msgid "UI_INSPECTOR_QUEUE_HEADER"
+msgstr ""
+
+msgid "UI_INSPECTOR_QUEUE_EMPTY"
+msgstr ""
+
+msgid "UI_INSPECTOR_STATIONS_HEADER"
+msgstr ""
+
+msgid "UI_INSPECTOR_ALERTS_HEADER"
+msgstr ""
+
+msgid "UI_INSPECTOR_PENDING_LOANS"
+msgstr ""
+
+msgid "UI_INSPECTOR_ACTIVE_EVENTS"
+msgstr ""
+
+msgid "UI_INSPECTOR_STATION_ID"
+msgstr ""
+
+msgid "UI_INSPECTOR_STATION_TYPE"
+msgstr ""
+
+msgid "UI_INSPECTOR_STATION_STATUS"
+msgstr ""
+
+msgid "UI_INSPECTOR_STATION_OPEN"
+msgstr ""
+
+msgid "UI_INSPECTOR_STATION_CLOSED"
+msgstr ""
+
+msgid "UI_INSPECTOR_STATION_STAFF"
+msgstr ""
+
+msgid "UI_INSPECTOR_STATION_UNSTAFFED"
+msgstr ""
+
+msgid "UI_INSPECTOR_BTN_TOGGLE_STATION"
+msgstr ""
+
+msgid "UI_INSPECTOR_ASSIGN_STAFF_HEADER"
+msgstr ""
+
+msgid "UI_INSPECTOR_ASSIGN_TO"
+msgstr ""
+
+msgid "UI_INSPECTOR_EMP_ROLE"
+msgstr ""
+
+msgid "UI_INSPECTOR_EMP_STATE"
+msgstr ""
+
+msgid "UI_INSPECTOR_EMP_FATIGUE"
+msgstr ""
+
+msgid "UI_INSPECTOR_EMP_ADAPTATION"
+msgstr ""
+
+msgid "UI_INSPECTOR_EMP_SALARY"
+msgstr ""
+
+msgid "UI_INSPECTOR_EMP_STATION"
+msgstr ""
+
+msgid "UI_INSPECTOR_BTN_TRAIN"
+msgstr ""
+
+msgid "UI_INSPECTOR_BTN_REST"
+msgstr ""
+
+msgid "UI_INSPECTOR_BTN_FIRE"
+msgstr ""
+
+msgid "UI_INSPECTOR_CUST_TYPE"
+msgstr ""
+
+msgid "UI_INSPECTOR_CUST_SERVICE"
+msgstr ""
+
+msgid "UI_INSPECTOR_CUST_AMOUNT"
+msgstr ""
+
+msgid "UI_INSPECTOR_CUST_PATIENCE"
+msgstr ""
+
+msgid "UI_INSPECTOR_CUST_PRIORITY"
+msgstr ""
+
+msgid "UI_PRIORITY_NORMAL"
+msgstr ""
+
+msgid "UI_PRIORITY_PRIORITY"
+msgstr ""
+
+msgid "UI_PRIORITY_VIP"
+msgstr ""
+
+msgid "UI_BOTTOM_LOG_TITLE"
+msgstr ""
+
+msgid "UI_BOTTOM_LOG_READY"
+msgstr ""
+
+msgid "UI_BOTTOM_LOAN_BADGE"
+msgstr ""
+
+msgid "UI_BOTTOM_EVENT_BADGE"
+msgstr ""
+
+msgid "UI_BOTTOM_ZOOM_LABEL"
+msgstr ""
+
+msgid "UI_BOTTOM_ZOOM_1X"
+msgstr ""
+
+msgid "UI_BOTTOM_ZOOM_2X"
+msgstr ""
+
+msgid "UI_BOTTOM_ZOOM_3X"
+msgstr ""
+
+msgid "UI_SETTINGS_TITLE"
+msgstr ""
+
+msgid "UI_SETTINGS_LOCALE"
+msgstr ""
+
+msgid "UI_SETTINGS_PACE"
+msgstr ""
+
+msgid "UI_SETTINGS_PACE_DEMO"
+msgstr ""
+
+msgid "UI_SETTINGS_PACE_STANDARD"
+msgstr ""
+
+msgid "UI_SETTINGS_MASTER_VOL"
+msgstr ""
+
+msgid "UI_SETTINGS_BGM_VOL"
+msgstr ""
+
+msgid "UI_SETTINGS_SFX_VOL"
+msgstr ""
+
+msgid "UI_SETTINGS_MUTE"
+msgstr ""
+
+msgid "UI_SAVE_TITLE"
+msgstr ""
+
+msgid "UI_SAVE_SLOT_EMPTY"
+msgstr ""
+
+msgid "UI_SAVE_SLOT_INFO"
+msgstr ""
+
+msgid "UI_SAVE_BTN_SAVE"
+msgstr ""
+
+msgid "UI_SAVE_BTN_LOAD"
+msgstr ""
+
+msgid "UI_SAVE_BTN_DELETE"
+msgstr ""
+
+msgid "UI_SAVE_BTN_RETURN_MENU"
+msgstr ""
+
+msgid "UI_COMMON_CLOSE"
+msgstr ""
+
+msgid "UI_COMMON_CONFIRM"
+msgstr ""
+
+msgid "UI_COMMON_CANCEL"
+msgstr ""
+
+msgid "UI_TOAST_CMD_OK"
+msgstr ""
+
+msgid "UI_TOAST_SAVE_OK"
+msgstr ""
+
+msgid "UI_TOAST_LOAD_OK"
+msgstr ""
+
+msgid "UI_TOAST_AUTOSAVE_OK"
+msgstr ""
+
+msgid "UI_DRAWER_OVERVIEW_TITLE"
+msgstr ""
+
+msgid "UI_DRAWER_OVERVIEW_SUBTITLE"
+msgstr ""
+
+msgid "UI_DRAWER_FINANCE_TITLE"
+msgstr ""
+
+msgid "UI_DRAWER_FINANCE_SUBTITLE"
+msgstr ""
+
+msgid "UI_DRAWER_EMPLOYEES_TITLE"
+msgstr ""
+
+msgid "UI_DRAWER_EMPLOYEES_SUBTITLE"
+msgstr ""
+
+msgid "UI_DRAWER_DEPARTMENTS_TITLE"
+msgstr ""
+
+msgid "UI_DRAWER_DEPARTMENTS_SUBTITLE"
+msgstr ""
+
+msgid "UI_DRAWER_POLICIES_TITLE"
+msgstr ""
+
+msgid "UI_DRAWER_POLICIES_SUBTITLE"
+msgstr ""
+
+msgid "UI_DRAWER_EVENTS_TITLE"
+msgstr ""
+
+msgid "UI_DRAWER_EVENTS_SUBTITLE"
+msgstr ""
+
+msgid "UI_FINANCE_BS_HEADER"
+msgstr ""
+
+msgid "UI_FINANCE_CASH"
+msgstr ""
+
+msgid "UI_FINANCE_LOANS"
+msgstr ""
+
+msgid "UI_FINANCE_DEPOSITS"
+msgstr ""
+
+msgid "UI_FINANCE_EQUITY_CAP"
+msgstr ""
+
+msgid "UI_FINANCE_RETAINED"
+msgstr ""
+
+msgid "UI_FINANCE_TOTAL_ASSETS"
+msgstr ""
+
+msgid "UI_FINANCE_TOTAL_LIAB_EQ"
+msgstr ""
+
+msgid "UI_FINANCE_BALANCED"
+msgstr ""
+
+msgid "UI_FINANCE_UNBALANCED"
+msgstr ""
+
+msgid "UI_FINANCE_RATES_HEADER"
+msgstr ""
+
+msgid "UI_FINANCE_DEPOSIT_RATE"
+msgstr ""
+
+msgid "UI_FINANCE_LOAN_RATE"
+msgstr ""
+
+msgid "UI_FINANCE_BTN_APPLY_RATES"
+msgstr ""
+
+msgid "UI_FINANCE_CHART_HEADER"
+msgstr ""
+
+msgid "UI_FINANCE_CHART_LEGEND"
+msgstr ""
+
+msgid "UI_EMP_ACTIVE_HEADER"
+msgstr ""
+
+msgid "UI_EMP_CANDIDATES_HEADER"
+msgstr ""
+
+msgid "UI_EMP_CANDIDATES_EMPTY"
+msgstr ""
+
+msgid "UI_EMP_ATTR_PROF"
+msgstr ""
+
+msgid "UI_EMP_ATTR_EFF"
+msgstr ""
+
+msgid "UI_EMP_ATTR_SOC"
+msgstr ""
+
+msgid "UI_EMP_ATTR_RISK"
+msgstr ""
+
+msgid "UI_EMP_ATTR_MGMT"
+msgstr ""
+
+msgid "UI_EMP_ATTR_LOY"
+msgstr ""
+
+msgid "UI_EMP_ATTR_POT"
+msgstr ""
+
+msgid "UI_EMP_BTN_HIRE_TELLER"
+msgstr ""
+
+msgid "UI_EMP_BTN_HIRE_LOAN"
+msgstr ""
+
+msgid "UI_EMP_BTN_HIRE_ANALYST"
+msgstr ""
+
+msgid "UI_DEPT_LEVEL_FORMAT"
+msgstr ""
+
+msgid "UI_DEPT_NOT_CREATED"
+msgstr ""
+
+msgid "UI_DEPT_INIT_COST"
+msgstr ""
+
+msgid "UI_DEPT_UPGRADE_COST"
+msgstr ""
+
+msgid "UI_DEPT_DAILY_COST"
+msgstr ""
+
+msgid "UI_DEPT_BTN_CREATE"
+msgstr ""
+
+msgid "UI_DEPT_BTN_UPGRADE"
+msgstr ""
+
+msgid "UI_DEPT_BTN_MAX_LEVEL"
+msgstr ""
+
+msgid "UI_DEPT_SYNERGY_HEADER"
+msgstr ""
+
+msgid "UI_DEPT_SYNERGY_HR_OPS"
+msgstr ""
+
+msgid "UI_DEPT_SYNERGY_CREDIT_RISK"
+msgstr ""
+
+msgid "UI_DEPT_SYNERGY_ACTIVE"
+msgstr ""
+
+msgid "UI_DEPT_SYNERGY_INACTIVE"
+msgstr ""
+
+msgid "UI_POLICY_POINTS"
+msgstr ""
+
+msgid "UI_POLICY_BRANCH_CONSERVATIVE"
+msgstr ""
+
+msgid "UI_POLICY_BRANCH_AGGRESSIVE"
+msgstr ""
+
+msgid "UI_POLICY_BRANCH_MOD"
+msgstr ""
+
+msgid "UI_POLICY_COST"
+msgstr ""
+
+msgid "UI_POLICY_PREREQ"
+msgstr ""
+
+msgid "UI_POLICY_PREREQ_NONE"
+msgstr ""
+
+msgid "UI_POLICY_BTN_ADOPT"
+msgstr ""
+
+msgid "UI_POLICY_ADOPTED"
+msgstr ""
+
+msgid "UI_LOAN_MODAL_TITLE"
+msgstr ""
+
+msgid "UI_LOAN_EMPTY"
+msgstr ""
+
+msgid "UI_LOAN_BORROWER"
+msgstr ""
+
+msgid "UI_LOAN_TERMS"
+msgstr ""
+
+msgid "UI_LOAN_RISK_EXACT"
+msgstr ""
+
+msgid "UI_LOAN_RISK_BAND"
+msgstr ""
+
+msgid "UI_LOAN_BTN_APPROVE"
+msgstr ""
+
+msgid "UI_LOAN_BTN_REJECT"
+msgstr ""
+
+msgid "UI_EVENT_MODAL_TITLE"
+msgstr ""
+
+msgid "UI_EVENT_EMPTY"
+msgstr ""
+
+msgid "UI_EVENT_HISTORY_HEADER"
+msgstr ""
+
+msgid "UI_REPORT_TITLE"
+msgstr ""
+
+msgid "UI_REPORT_SUBTITLE"
+msgstr ""
+
+msgid "UI_REPORT_PNL_HEADER"
+msgstr ""
+
+msgid "UI_REPORT_LOAN_INT_INC"
+msgstr ""
+
+msgid "UI_REPORT_FEE_INC"
+msgstr ""
+
+msgid "UI_REPORT_DEP_INT_EXP"
+msgstr ""
+
+msgid "UI_REPORT_STAFF_COST"
+msgstr ""
+
+msgid "UI_REPORT_FACILITY_COST"
+msgstr ""
+
+msgid "UI_REPORT_DEPT_COST"
+msgstr ""
+
+msgid "UI_REPORT_CREDIT_LOSS"
+msgstr ""
+
+msgid "UI_REPORT_EVENT_EXP"
+msgstr ""
+
+msgid "UI_REPORT_NET_PROFIT"
+msgstr ""
+
+msgid "UI_REPORT_BS_HEADER"
+msgstr ""
+
+msgid "UI_REPORT_DRIVERS_HEADER"
+msgstr ""
+
+msgid "UI_REPORT_BTN_NEXT_DAY"
+msgstr ""

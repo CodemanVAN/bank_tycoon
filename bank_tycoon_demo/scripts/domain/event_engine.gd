@@ -363,6 +363,42 @@ func resolve_event_option(
 	elif cash_delta > 0:
 		fe.record_service_fee(bank_state, cash_delta, bank_state.current_day, bank_state.current_minute_of_day, "ev_in_" + event_instance_id)
 
+	var stress_prov: int = int(impacts.get("macro_stress_provision_minor", 0))
+	if stress_prov > 0 and bank_state.ledger != null:
+		var risk_lvl: int = _dept_level(bank_state, "core:department.risk")
+		var was_prudent: bool = false
+		for h_entry in bank_state.event_history:
+			if str(h_entry.get("macro_risk_choice", "")) == "prudent":
+				was_prudent = true
+				break
+		if risk_lvl >= 2:
+			stress_prov = FinanceEngine.round_div(stress_prov * 40, 100)
+		elif risk_lvl == 1 or was_prudent:
+			stress_prov = FinanceEngine.round_div(stress_prov * 65, 100)
+		var loan_bal: int = bank_state.ledger.get_balance(&"loan_principal_outstanding")
+		var loss_amt: int = mini(stress_prov, loan_bal)
+		if loss_amt > 0:
+			var rem_to_write_off: int = loss_amt
+			var loan_ids: Array[String] = []
+			for lid: Variant in bank_state.loans.keys():
+				loan_ids.append(str(lid))
+			loan_ids.sort()
+			for lid in loan_ids:
+				if rem_to_write_off <= 0:
+					break
+				var ln: LoanInstance = bank_state.loans[lid] as LoanInstance
+				if ln != null and ln.is_active() and ln.principal_outstanding > 0:
+					var chunk: int = mini(rem_to_write_off, ln.principal_outstanding)
+					ln.write_off(chunk)
+					rem_to_write_off -= chunk
+			fe.record_credit_loss(
+				bank_state,
+				loss_amt,
+				bank_state.current_day,
+				bank_state.current_minute_of_day,
+				"ev_stress_" + event_instance_id
+			)
+
 	var sat_delta: int = int(impacts.get("satisfaction_delta", 0))
 	if sat_delta != 0:
 		bank_state.satisfaction = clampi(bank_state.satisfaction + sat_delta, 0, 100)

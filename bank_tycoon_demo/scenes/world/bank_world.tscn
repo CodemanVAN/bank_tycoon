@@ -1,0 +1,43 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/presentation/world/bank_world.gd" id="1_bank_world"]
+[ext_resource type="Script" path="res://scripts/presentation/world/pixel_camera_2d.gd" id="2_pixel_camera"]
+
+[node name="BankWorld" type="Node2D"]
+texture_filter = 1
+script = ExtResource("1_bank_world")
+
+[node name="FloorLayer" type="Node2D" parent="."]
+texture_filter = 1
+
+[node name="WallLayer" type="Node2D" parent="."]
+texture_filter = 1
+
+[node name="YSortedLayer" type="Node2D" parent="."]
+texture_filter = 1
+y_sort_enabled = true
+
+[node name="PropsContainer" type="Node2D" parent="YSortedLayer"]
+texture_filter = 1
+y_sort_enabled = true
+
+[node name="DepartmentsContainer" type="Node2D" parent="YSortedLayer"]
+texture_filter = 1
+y_sort_enabled = true
+
+[node name="StationsContainer" type="Node2D" parent="YSortedLayer"]
+texture_filter = 1
+y_sort_enabled = true
+
+[node name="ActorsContainer" type="Node2D" parent="YSortedLayer"]
+texture_filter = 1
+y_sort_enabled = true
+
+[node name="EffectsLayer" type="Node2D" parent="."]
+texture_filter = 1
+
+[node name="Camera2D" type="Camera2D" parent="."]
+texture_filter = 1
+position = Vector2(604, 338)
+zoom = Vector2(2, 2)
+script = ExtResource("2_pixel_camera")

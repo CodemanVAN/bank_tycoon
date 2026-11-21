@@ -1,0 +1,142 @@
+[
+  {
+    "id": "core:policy.prudent_lending",
+    "name_key": "POLICY_PRUDENT_LENDING_NAME",
+    "description_key": "POLICY_PRUDENT_LENDING_DESC",
+    "cost_strategy_points": 3,
+    "exclusive_group": "doctrine_route",
+    "prerequisites": [],
+    "effects": [
+      {
+        "target": "loan.default_risk_bps",
+        "operation": "add",
+        "value": -1500,
+        "scope": "global"
+      },
+      {
+        "target": "liquidity.required_buffer_bps",
+        "operation": "add",
+        "value": -500,
+        "scope": "global"
+      }
+    ]
+  },
+  {
+    "id": "core:policy.liquidity_first",
+    "name_key": "POLICY_LIQUIDITY_FIRST_NAME",
+    "description_key": "POLICY_LIQUIDITY_FIRST_DESC",
+    "cost_strategy_points": 4,
+    "exclusive_group": "doctrine_route",
+    "prerequisites": [
+      "core:policy.prudent_lending"
+    ],
+    "effects": [
+      {
+        "target": "liquidity.required_buffer_bps",
+        "operation": "add",
+        "value": -1000,
+        "scope": "global"
+      },
+      {
+        "target": "loan.default_risk_bps",
+        "operation": "add",
+        "value": -800,
+        "scope": "global"
+      }
+    ]
+  },
+  {
+    "id": "core:policy.customer_trust",
+    "name_key": "POLICY_CUSTOMER_TRUST_NAME",
+    "description_key": "POLICY_CUSTOMER_TRUST_DESC",
+    "cost_strategy_points": 5,
+    "exclusive_group": "doctrine_route",
+    "prerequisites": [
+      "core:policy.liquidity_first"
+    ],
+    "effects": [
+      {
+        "target": "bank.reputation_points",
+        "operation": "add",
+        "value": 8,
+        "scope": "global"
+      },
+      {
+        "target": "customer.deposit_growth_bps",
+        "operation": "add",
+        "value": 1000,
+        "scope": "global"
+      }
+    ]
+  },
+  {
+    "id": "core:policy.high_rate_acquisition",
+    "name_key": "POLICY_HIGH_RATE_ACQUISITION_NAME",
+    "description_key": "POLICY_HIGH_RATE_ACQUISITION_DESC",
+    "cost_strategy_points": 3,
+    "exclusive_group": "doctrine_route",
+    "prerequisites": [],
+    "effects": [
+      {
+        "target": "customer.deposit_growth_bps",
+        "operation": "add",
+        "value": 2000,
+        "scope": "global"
+      },
+      {
+        "target": "loan.default_risk_bps",
+        "operation": "add",
+        "value": 500,
+        "scope": "global"
+      }
+    ]
+  },
+  {
+    "id": "core:policy.market_penetration",
+    "name_key": "POLICY_MARKET_PENETRATION_NAME",
+    "description_key": "POLICY_MARKET_PENETRATION_DESC",
+    "cost_strategy_points": 4,
+    "exclusive_group": "doctrine_route",
+    "prerequisites": [
+      "core:policy.high_rate_acquisition"
+    ],
+    "effects": [
+      {
+        "target": "customer.deposit_growth_bps",
+        "operation": "add",
+        "value": 2500,
+        "scope": "global"
+      },
+      {
+        "target": "staff.productivity_bps",
+        "operation": "add",
+        "value": 1000,
+        "scope": "global"
+      }
+    ]
+  },
+  {
+    "id": "core:policy.credit_expansion",
+    "name_key": "POLICY_CREDIT_EXPANSION_NAME",
+    "description_key": "POLICY_CREDIT_EXPANSION_DESC",
+    "cost_strategy_points": 5,
+    "exclusive_group": "doctrine_route",
+    "prerequisites": [
+      "core:policy.market_penetration"
+    ],
+    "effects": [
+      {
+        "target": "customer.deposit_growth_bps",
+        "operation": "add",
+        "value": 3000,
+        "scope": "global"
+      },
+      {
+        "target": "loan.default_risk_bps",
+        "operation": "add",
+        "value": 1200,
+        "scope": "global"
+      }
+    ]
+  }
+]

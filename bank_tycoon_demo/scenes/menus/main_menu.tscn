@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/presentation/ui/main_menu.gd" id="1_main_menu"]
+[ext_resource type="Texture2D" path="res://assets/icons/icon_starway_emblem.png" id="2_emblem"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -20,12 +21,103 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.0313726, 0.105882, 0.211765, 1)
 
-[node name="StatusLabel" type="Label" parent="."]
+[node name="TopAccentGlow" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 4.0
+grow_horizontal = 2
+color = Color(0, 0.776471, 1, 0.85)
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="HeroCard" type="PanelContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(460, 440)
+layout_mode = 2
+theme_type_variation = &"PanelLarge"
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer/HeroCard"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="HeaderBox" type="HBoxContainer" parent="CenterContainer/HeroCard/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 14
+alignment = 1
+
+[node name="Emblem" type="TextureRect" parent="CenterContainer/HeroCard/VBox/HeaderBox"]
+texture_filter = 1
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+texture = ExtResource("2_emblem")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TitleBox" type="VBoxContainer" parent="CenterContainer/HeroCard/VBox/HeaderBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/HeroCard/VBox/HeaderBox/TitleBox"]
+layout_mode = 2
+theme_type_variation = &"LabelHero"
+text = "星海银行"
+
+[node name="SubtitleLabel" type="Label" parent="CenterContainer/HeroCard/VBox/HeaderBox/TitleBox"]
+layout_mode = 2
+theme_type_variation = &"LabelMuted"
+text = "现代科技蓝 · 像素分行实时经营模拟"
+
+[node name="Divider" type="HSeparator" parent="CenterContainer/HeroCard/VBox"]
+layout_mode = 2
+
+[node name="ButtonBox" type="VBoxContainer" parent="CenterContainer/HeroCard/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="NewGameButton" type="Button" parent="CenterContainer/HeroCard/VBox/ButtonBox"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+theme_type_variation = &"ButtonPrimary"
+text = "新游戏"
+
+[node name="ContinueButton" type="Button" parent="CenterContainer/HeroCard/VBox/ButtonBox"]
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 2
+text = "继续游戏"
+
+[node name="LoadSaveButton" type="Button" parent="CenterContainer/HeroCard/VBox/ButtonBox"]
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 2
+text = "读取存档"
+
+[node name="SettingsButton" type="Button" parent="CenterContainer/HeroCard/VBox/ButtonBox"]
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 2
+text = "游戏设置"
+
+[node name="QuitButton" type="Button" parent="CenterContainer/HeroCard/VBox/ButtonBox"]
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 2
+theme_type_variation = &"ButtonDanger"
+text = "退出游戏"
+
+[node name="StatusLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -32.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_type_variation = &"LabelMuted"
+text = "星海银行核心系统 v0.1.0 · Godot 4.7.2"
 horizontal_alignment = 1
 vertical_alignment = 1

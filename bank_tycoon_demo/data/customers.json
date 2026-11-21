@@ -1,0 +1,144 @@
+[
+  {
+    "id": "core:customer.regular",
+    "type_id": "regular",
+    "avatar_id": "cust_regular",
+    "name_key": "CUSTOMER_REGULAR_NAME",
+    "description_key": "CUSTOMER_REGULAR_DESC",
+    "spawn_weight": 35,
+    "patience_minutes": 45,
+    "min_amount_minor": 50000,
+    "max_amount_minor": 400000,
+    "service_weights": {
+      "cash_deposit": 45,
+      "cash_withdrawal": 35,
+      "transfer": 15,
+      "complaint": 5
+    },
+    "credit_profile_template": {
+      "income_minor": 600000,
+      "existing_debt_minor": 50000,
+      "history_score": 72,
+      "collateral_value": 0,
+      "risk_tag": "normal"
+    }
+  },
+  {
+    "id": "core:customer.salaried",
+    "type_id": "salaried",
+    "avatar_id": "cust_salaried",
+    "name_key": "CUSTOMER_SALARIED_NAME",
+    "description_key": "CUSTOMER_SALARIED_DESC",
+    "spawn_weight": 25,
+    "patience_minutes": 40,
+    "min_amount_minor": 80000,
+    "max_amount_minor": 600000,
+    "service_weights": {
+      "cash_deposit": 55,
+      "cash_withdrawal": 20,
+      "transfer": 20,
+      "personal_loan_application": 5
+    },
+    "credit_profile_template": {
+      "income_minor": 850000,
+      "existing_debt_minor": 40000,
+      "history_score": 78,
+      "collateral_value": 150000,
+      "risk_tag": "normal"
+    }
+  },
+  {
+    "id": "core:customer.borrower",
+    "type_id": "borrower",
+    "avatar_id": "cust_borrower",
+    "name_key": "CUSTOMER_BORROWER_NAME",
+    "description_key": "CUSTOMER_BORROWER_DESC",
+    "spawn_weight": 15,
+    "patience_minutes": 50,
+    "min_amount_minor": 150000,
+    "max_amount_minor": 900000,
+    "service_weights": {
+      "personal_loan_application": 70,
+      "cash_withdrawal": 15,
+      "transfer": 15
+    },
+    "credit_profile_template": {
+      "income_minor": 700000,
+      "existing_debt_minor": 120000,
+      "history_score": 68,
+      "collateral_value": 250000,
+      "risk_tag": "normal"
+    }
+  },
+  {
+    "id": "core:customer.smb",
+    "type_id": "smb",
+    "avatar_id": "cust_smb",
+    "name_key": "CUSTOMER_SMB_NAME",
+    "description_key": "CUSTOMER_SMB_DESC",
+    "spawn_weight": 12,
+    "patience_minutes": 45,
+    "min_amount_minor": 300000,
+    "max_amount_minor": 1800000,
+    "service_weights": {
+      "cash_deposit": 30,
+      "transfer": 30,
+      "business_meeting": 25,
+      "personal_loan_application": 15
+    },
+    "credit_profile_template": {
+      "income_minor": 1500000,
+      "existing_debt_minor": 200000,
+      "history_score": 74,
+      "collateral_value": 600000,
+      "risk_tag": "normal"
+    }
+  },
+  {
+    "id": "core:customer.vip",
+    "type_id": "vip",
+    "avatar_id": "cust_vip",
+    "name_key": "CUSTOMER_VIP_NAME",
+    "description_key": "CUSTOMER_VIP_DESC",
+    "spawn_weight": 8,
+    "patience_minutes": 35,
+    "min_amount_minor": 800000,
+    "max_amount_minor": 3500000,
+    "service_weights": {
+      "cash_deposit": 50,
+      "business_meeting": 30,
+      "transfer": 15,
+      "cash_withdrawal": 5
+    },
+    "credit_profile_template": {
+      "income_minor": 3000000,
+      "existing_debt_minor": 100000,
+      "history_score": 88,
+      "collateral_value": 1500000,
+      "risk_tag": "low"
+    }
+  },
+  {
+    "id": "core:customer.suspicious",
+    "type_id": "suspicious",
+    "avatar_id": "cust_suspicious",
+    "name_key": "CUSTOMER_SUSPICIOUS_NAME",
+    "description_key": "CUSTOMER_SUSPICIOUS_DESC",
+    "spawn_weight": 5,
+    "patience_minutes": 30,
+    "min_amount_minor": 200000,
+    "max_amount_minor": 1200000,
+    "service_weights": {
+      "personal_loan_application": 65,
+      "cash_withdrawal": 25,
+      "complaint": 10
+    },
+    "credit_profile_template": {
+      "income_minor": 350000,
+      "existing_debt_minor": 400000,
+      "history_score": 42,
+      "collateral_value": 20000,
+      "risk_tag": "high"
+    }
+  }
+]

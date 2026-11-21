@@ -1,0 +1,443 @@
+[
+  {
+    "id": "core:event.real_estate_boom",
+    "title_key": "EVENT_REAL_ESTATE_BOOM_TITLE",
+    "description_key": "EVENT_REAL_ESTATE_BOOM_DESC",
+    "weight": 25,
+    "cooldown_days": 15,
+    "conditions": [
+      {
+        "type": "day_at_least",
+        "value": 2
+      }
+    ],
+    "options": [
+      {
+        "id": "aggressive_expand",
+        "label_key": "EVENT_RE_BOOM_OPT_AGGR",
+        "next_event_id": "core:event.real_estate_cooling",
+        "effects": [
+          {
+            "target": "customer.deposit_growth_bps",
+            "operation": "add",
+            "value": 1500,
+            "scope": "global"
+          },
+          {
+            "target": "loan.default_risk_bps",
+            "operation": "add",
+            "value": 1200,
+            "scope": "global"
+          }
+        ]
+      },
+      {
+        "id": "prudent_cap",
+        "label_key": "EVENT_RE_BOOM_OPT_PRUDENT",
+        "next_event_id": "core:event.real_estate_cooling",
+        "effects": [
+          {
+            "target": "loan.default_risk_bps",
+            "operation": "add",
+            "value": -600,
+            "scope": "global"
+          },
+          {
+            "target": "bank.reputation_points",
+            "operation": "add",
+            "value": 2,
+            "scope": "global"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "core:event.real_estate_cooling",
+    "title_key": "EVENT_REAL_ESTATE_COOLING_TITLE",
+    "description_key": "EVENT_REAL_ESTATE_COOLING_DESC",
+    "weight": 0,
+    "cooldown_days": 15,
+    "conditions": [
+      {
+        "type": "day_at_least",
+        "value": 3
+      }
+    ],
+    "options": [
+      {
+        "id": "tighten_credit",
+        "label_key": "EVENT_RE_COOL_OPT_TIGHTEN",
+        "next_event_id": "core:event.real_estate_credit_stress",
+        "effects": [
+          {
+            "target": "loan.default_risk_bps",
+            "operation": "add",
+            "value": -800,
+            "scope": "global"
+          }
+        ]
+      },
+      {
+        "id": "hold_course",
+        "label_key": "EVENT_RE_COOL_OPT_HOLD",
+        "next_event_id": "core:event.real_estate_credit_stress",
+        "effects": [
+          {
+            "target": "loan.default_risk_bps",
+            "operation": "add",
+            "value": 600,
+            "scope": "global"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "core:event.real_estate_credit_stress",
+    "title_key": "EVENT_REAL_ESTATE_CREDIT_STRESS_TITLE",
+    "description_key": "EVENT_REAL_ESTATE_CREDIT_STRESS_DESC",
+    "weight": 0,
+    "cooldown_days": 20,
+    "conditions": [
+      {
+        "type": "day_at_least",
+        "value": 4
+      }
+    ],
+    "options": [
+      {
+        "id": "emergency_provision",
+        "label_key": "EVENT_RE_STRESS_OPT_PROVISION",
+        "effects": [
+          {
+            "target": "loan.default_risk_bps",
+            "operation": "add",
+            "value": -500,
+            "scope": "global"
+          }
+        ]
+      },
+      {
+        "id": "restructure_books",
+        "label_key": "EVENT_RE_STRESS_OPT_RESTRUCTURE",
+        "effects": [
+          {
+            "target": "bank.reputation_points",
+            "operation": "add",
+            "value": 3,
+            "scope": "global"
+          },
+          {
+            "target": "loan.default_risk_bps",
+            "operation": "add",
+            "value": -1000,
+            "scope": "global"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "core:event.vip_deposit_visit",
+    "title_key": "EVENT_VIP_DEPOSIT_VISIT_TITLE",
+    "description_key": "EVENT_VIP_DEPOSIT_VISIT_DESC",
+    "weight": 20,
+    "cooldown_days": 7,
+    "conditions": [
+      {
+        "type": "day_at_least",
+        "value": 1
+      }
+    ],
+    "options": [
+      {
+        "id": "dedicated_concierge",
+        "label_key": "EVENT_VIP_VISIT_OPT_CONCIERGE",
+        "effects": [
+          {
+            "target": "customer.deposit_growth_bps",
+            "operation": "add",
+            "value": 1200,
+            "scope": "global"
+          },
+          {
+            "target": "bank.reputation_points",
+            "operation": "add",
+            "value": 2,
+            "scope": "global"
+          }
+        ]
+      },
+      {
+        "id": "standard_reception",
+        "label_key": "EVENT_VIP_VISIT_OPT_STANDARD",
+        "effects": [
+          {
+            "target": "customer.deposit_growth_bps",
+            "operation": "add",
+            "value": 400,
+            "scope": "global"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "core:event.teller_system_glitch",
+    "title_key": "EVENT_TELLER_SYSTEM_GLITCH_TITLE",
+    "description_key": "EVENT_TELLER_SYSTEM_GLITCH_DESC",
+    "weight": 18,
+    "cooldown_days": 8,
+    "conditions": [
+      {
+        "type": "day_at_least",
+        "value": 2
+      }
+    ],
+    "options": [
+      {
+        "id": "rapid_hotfix",
+        "label_key": "EVENT_GLITCH_OPT_HOTFIX",
+        "effects": [
+          {
+            "target": "service.teller_duration_bps",
+            "operation": "add",
+            "value": -400,
+            "scope": "global"
+          }
+        ]
+      },
+      {
+        "id": "manual_fallback",
+        "label_key": "EVENT_GLITCH_OPT_MANUAL",
+        "effects": [
+          {
+            "target": "service.teller_duration_bps",
+            "operation": "add",
+            "value": 800,
+            "scope": "global"
+          },
+          {
+            "target": "staff.productivity_bps",
+            "operation": "add",
+            "value": -500,
+            "scope": "global"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "core:event.competitor_poaching",
+    "title_key": "EVENT_COMPETITOR_POACHING_TITLE",
+    "description_key": "EVENT_COMPETITOR_POACHING_DESC",
+    "weight": 16,
+    "cooldown_days": 10,
+    "conditions": [
+      {
+        "type": "day_at_least",
+        "value": 3
+      }
+    ],
+    "options": [
+      {
+        "id": "retention_bonus",
+        "label_key": "EVENT_POACHING_OPT_BONUS",
+        "effects": [
+          {
+            "target": "staff.productivity_bps",
+            "operation": "add",
+            "value": 900,
+            "scope": "global"
+          },
+          {
+            "target": "bank.reputation_points",
+            "operation": "add",
+            "value": 1,
+            "scope": "global"
+          }
+        ]
+      },
+      {
+        "id": "let_them_compete",
+        "label_key": "EVENT_POACHING_OPT_IGNORE",
+        "effects": [
+          {
+            "target": "staff.productivity_bps",
+            "operation": "add",
+            "value": -400,
+            "scope": "global"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "core:event.community_sponsorship",
+    "title_key": "EVENT_COMMUNITY_SPONSORSHIP_TITLE",
+    "description_key": "EVENT_COMMUNITY_SPONSORSHIP_DESC",
+    "weight": 22,
+    "cooldown_days": 9,
+    "conditions": [
+      {
+        "type": "day_at_least",
+        "value": 1
+      }
+    ],
+    "options": [
+      {
+        "id": "sponsor_festival",
+        "label_key": "EVENT_COMMUNITY_OPT_SPONSOR",
+        "effects": [
+          {
+            "target": "bank.reputation_points",
+            "operation": "add",
+            "value": 3,
+            "scope": "global"
+          },
+          {
+            "target": "customer.deposit_growth_bps",
+            "operation": "add",
+            "value": 800,
+            "scope": "global"
+          }
+        ]
+      },
+      {
+        "id": "decline_politely",
+        "label_key": "EVENT_COMMUNITY_OPT_DECLINE",
+        "effects": []
+      }
+    ]
+  },
+  {
+    "id": "core:event.regulatory_audit",
+    "title_key": "EVENT_REGULATORY_AUDIT_TITLE",
+    "description_key": "EVENT_REGULATORY_AUDIT_DESC",
+    "weight": 15,
+    "cooldown_days": 12,
+    "conditions": [
+      {
+        "type": "day_at_least",
+        "value": 4
+      }
+    ],
+    "options": [
+      {
+        "id": "full_cooperation",
+        "label_key": "EVENT_AUDIT_OPT_COOPERATE",
+        "effects": [
+          {
+            "target": "loan.default_risk_bps",
+            "operation": "add",
+            "value": -700,
+            "scope": "global"
+          },
+          {
+            "target": "bank.reputation_points",
+            "operation": "add",
+            "value": 2,
+            "scope": "global"
+          }
+        ]
+      },
+      {
+        "id": "minimal_disclosure",
+        "label_key": "EVENT_AUDIT_OPT_MINIMAL",
+        "effects": [
+          {
+            "target": "liquidity.required_buffer_bps",
+            "operation": "add",
+            "value": 600,
+            "scope": "global"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "core:event.fintech_partnership",
+    "title_key": "EVENT_FINTECH_PARTNERSHIP_TITLE",
+    "description_key": "EVENT_FINTECH_PARTNERSHIP_DESC",
+    "weight": 18,
+    "cooldown_days": 10,
+    "conditions": [
+      {
+        "type": "day_at_least",
+        "value": 3
+      }
+    ],
+    "options": [
+      {
+        "id": "integrate_api",
+        "label_key": "EVENT_FINTECH_OPT_INTEGRATE",
+        "effects": [
+          {
+            "target": "service.teller_duration_bps",
+            "operation": "add",
+            "value": -900,
+            "scope": "global"
+          },
+          {
+            "target": "staff.productivity_bps",
+            "operation": "add",
+            "value": 700,
+            "scope": "global"
+          }
+        ]
+      },
+      {
+        "id": "keep_legacy",
+        "label_key": "EVENT_FINTECH_OPT_LEGACY",
+        "effects": [
+          {
+            "target": "loan.default_risk_bps",
+            "operation": "add",
+            "value": -300,
+            "scope": "global"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "core:event.rate_hike_rumor",
+    "title_key": "EVENT_RATE_HIKE_RUMOR_TITLE",
+    "description_key": "EVENT_RATE_HIKE_RUMOR_DESC",
+    "weight": 20,
+    "cooldown_days": 8,
+    "conditions": [
+      {
+        "type": "day_at_least",
+        "value": 2
+      }
+    ],
+    "options": [
+      {
+        "id": "lock_liquidity",
+        "label_key": "EVENT_RATE_RUMOR_OPT_BUFFER",
+        "effects": [
+          {
+            "target": "liquidity.required_buffer_bps",
+            "operation": "add",
+            "value": -800,
+            "scope": "global"
+          }
+        ]
+      },
+      {
+        "id": "promote_deposits",
+        "label_key": "EVENT_RATE_RUMOR_OPT_DEPOSITS",
+        "effects": [
+          {
+            "target": "customer.deposit_growth_bps",
+            "operation": "add",
+            "value": 1100,
+            "scope": "global"
+          }
+        ]
+      }
+    ]
+  }
+]

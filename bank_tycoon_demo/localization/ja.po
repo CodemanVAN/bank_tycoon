@@ -1,0 +1,1706 @@
+# Starway Bank — Bank Tycoon (ja)
+msgid ""
+msgstr ""
+"Project-Id-Version: Starway Bank 0.1.0\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "UI_MAIN_MENU_TITLE"
+msgstr "スターウェイ銀行"
+
+msgid "UI_MAIN_MENU_SUBTITLE"
+msgstr "モダンテックブルー · ピクセル銀行経営シミュレーション"
+
+msgid "UI_MAIN_MENU_NEW_GAME"
+msgstr "新規ゲーム"
+
+msgid "UI_MAIN_MENU_CONTINUE"
+msgstr "コンティニュー"
+
+msgid "UI_MAIN_MENU_LOAD_GAME"
+msgstr "セーブ読込"
+
+msgid "UI_MAIN_MENU_SETTINGS"
+msgstr "設定"
+
+msgid "UI_MAIN_MENU_QUIT"
+msgstr "終了"
+
+msgid "UI_TOPBAR_DAY"
+msgstr "{day}日目"
+
+msgid "UI_TOPBAR_CASH"
+msgstr "現金準備"
+
+msgid "UI_TOPBAR_DEPOSITS"
+msgstr "顧客預金"
+
+msgid "UI_TOPBAR_LOANS"
+msgstr "融資残高"
+
+msgid "UI_TOPBAR_EQUITY"
+msgstr "自己資本"
+
+msgid "UI_TOPBAR_PROFIT"
+msgstr "本日損益"
+
+msgid "UI_TOPBAR_SATISFACTION"
+msgstr "顧客満足度"
+
+msgid "UI_TOPBAR_REPUTATION"
+msgstr "信用評価"
+
+msgid "UI_TOPBAR_STRATEGY_POINTS"
+msgstr "戦略Pt"
+
+msgid "UI_TOPBAR_TIME"
+msgstr "時刻 {time}"
+
+msgid "UI_TOPBAR_PHASE"
+msgstr "フェーズ"
+
+msgid "UI_NAV_OVERVIEW"
+msgstr "概要"
+
+msgid "UI_NAV_FINANCE"
+msgstr "財務"
+
+msgid "UI_NAV_EMPLOYEES"
+msgstr "行員"
+
+msgid "UI_NAV_DEPARTMENTS"
+msgstr "部門"
+
+msgid "UI_NAV_POLICIES"
+msgstr "方針"
+
+msgid "UI_NAV_EVENTS"
+msgstr "イベント"
+
+msgid "UI_INSPECTOR_TITLE"
+msgstr "詳細情報"
+
+msgid "UI_INSPECTOR_EMPTY"
+msgstr "ロビー内の行員・顧客・窓口をクリックして詳細を表示"
+
+msgid "UI_BOTTOM_OPEN_BRANCH"
+msgstr "営業開始"
+
+msgid "UI_BOTTOM_NEXT_DAY"
+msgstr "翌日へ進む"
+
+msgid "UI_BOTTOM_QUEUE"
+msgstr "待機列"
+
+msgid "UI_BOTTOM_APPROVALS"
+msgstr "融資稟議"
+
+msgid "UI_BOTTOM_EVENTS"
+msgstr "発生イベント"
+
+msgid "DEPT_OPERATIONS_NAME"
+msgstr "業務運営部"
+
+msgid "DEPT_OPERATIONS_DESC"
+msgstr "窓口フローとロビー誘導を最適化し、窓口処理時間を短縮して行員の生産性を高めます。"
+
+msgid "DEPT_OPERATIONS_LV1"
+msgstr "Lv.1 標準業務手順：窓口平均処理時間を短縮し、基本業務効率を向上"
+
+msgid "DEPT_OPERATIONS_LV2"
+msgstr "Lv.2 スマート待機列制御：待機列の優先度変更（通常／優先／VIP）を解放"
+
+msgid "DEPT_OPERATIONS_LV3"
+msgstr "Lv.3 自動クレーム対応：苦情処理を迅速化し、顧客満足度の低下を抑制"
+
+msgid "DEPT_HR_NAME"
+msgstr "人事部"
+
+msgid "DEPT_HR_DESC"
+msgstr "採用・研修・労務ケアを統括し、候補者プール拡大と疲労軽減を実現します。"
+
+msgid "DEPT_HR_LV1"
+msgstr "Lv.1 採用ネットワーク：候補者プールを拡大（業務運営部との連携で適応期間を短縮）"
+
+msgid "DEPT_HR_LV2"
+msgstr "Lv.2 専門スキル研修：行員のスキル訓練と能力育成を解放"
+
+msgid "DEPT_HR_LV3"
+msgstr "Lv.3 メンタル＆労務ケア：夜間の疲労回復量を強化し過負荷リスクを軽減"
+
+msgid "DEPT_CREDIT_NAME"
+msgstr "融資審査部"
+
+msgid "DEPT_CREDIT_DESC"
+msgstr "個人・中小企業向け融資商品を拡充し、預金成長と融資処理能力を強化します。"
+
+msgid "DEPT_CREDIT_LV1"
+msgstr "Lv.1 専任融資デスク：融資窓口でのローン申請と法人商談の受付を強化"
+
+msgid "DEPT_CREDIT_LV2"
+msgstr "Lv.2 迅速審査レーン：低リスク小口ローンの自動承認を解放"
+
+msgid "DEPT_CREDIT_LV3"
+msgstr "Lv.3 精密プライシング：優良顧客向け融資利回りと与信枠を最適化"
+
+msgid "DEPT_RISK_NAME"
+msgstr "リスク管理部"
+
+msgid "DEPT_RISK_DESC"
+msgstr "信用スコアリングと事後モニタリングを構築し、貸倒リスクと危機時の損失を抑えます。"
+
+msgid "DEPT_RISK_LV1"
+msgstr "Lv.1 精密信用スコア：顧客の正確な信用スコアと格付を表示（融資審査部とシナジー）"
+
+msgid "DEPT_RISK_LV2"
+msgstr "Lv.2 高リスク早期警戒：融資の日次デフォルト確率を低減し危険案件を警告"
+
+msgid "DEPT_RISK_LV3"
+msgstr "Lv.3 ストレステスト緩和：信用危機時のデフォルト時損失率（LGD）を大幅軽減"
+
+msgid "SYNERGY_HR_OPERATIONS_NAME"
+msgstr "人事・運営シナジー"
+
+msgid "SYNERGY_HR_OPERATIONS_DESC"
+msgstr "新規採用・配置転換時の適応期間を1日に短縮し、全体の業務効率+5%。"
+
+msgid "SYNERGY_CREDIT_RISK_NAME"
+msgstr "融資・リスク管理シナジー"
+
+msgid "SYNERGY_CREDIT_RISK_DESC"
+msgstr "融資デフォルトリスクを500bps低減し、窓口処理時間を3%短縮。"
+
+msgid "POLICY_PRUDENT_LENDING_NAME"
+msgstr "慎重与信基準"
+
+msgid "POLICY_PRUDENT_LENDING_DESC"
+msgstr "キャッシュフローと担保審査を厳格化し、貸倒リスクと必要流動性バッファーを低減します。"
+
+msgid "POLICY_LIQUIDITY_FIRST_NAME"
+msgstr "流動性最優先主義"
+
+msgid "POLICY_LIQUIDITY_FIRST_DESC"
+msgstr "潤沢な支払準備金を維持し、必要バッファー比率とデフォルトリスクをさらに引き下げます。"
+
+msgid "POLICY_CUSTOMER_TRUST_NAME"
+msgstr "スターウェイ信頼宣言"
+
+msgid "POLICY_CUSTOMER_TRUST_DESC"
+msgstr "透明で堅実な経営により評判を高め、安定した低コスト預金の流入を促進します。"
+
+msgid "POLICY_HIGH_RATE_ACQUISITION_NAME"
+msgstr "高金利預金獲得キャンペーン"
+
+msgid "POLICY_HIGH_RATE_ACQUISITION_DESC"
+msgstr "魅力的な預金プロモーションで資金流入を急拡大しますが、与信リスクがわずかに上昇します。"
+
+msgid "POLICY_MARKET_PENETRATION_NAME"
+msgstr "オムニチャネル市場浸透"
+
+msgid "POLICY_MARKET_PENETRATION_DESC"
+msgstr "地域・法人営業網を全面展開し、預金成長率と現場行員の生産性を大幅に引き上げます。"
+
+msgid "POLICY_CREDIT_EXPANSION_NAME"
+msgstr "積極与信拡大路線"
+
+msgid "POLICY_CREDIT_EXPANSION_DESC"
+msgstr "審査基準を緩和して資産規模を最大化します。高い成長を得る一方、貸倒リスクが上昇します。"
+
+msgid "POLICY_BRANCH_CONSERVATIVE"
+msgstr "堅実経営ルート"
+
+msgid "POLICY_BRANCH_AGGRESSIVE"
+msgstr "積極拡大ルート"
+
+msgid "EVENT_REAL_ESTATE_BOOM_TITLE"
+msgstr "商業不動産ブーム到来"
+
+msgid "EVENT_REAL_ESTATE_BOOM_DESC"
+msgstr "周辺テック地区で不動産取引が急増し、住宅ローンや開発資金の相談が殺到しています。"
+
+msgid "EVENT_RE_BOOM_OPT_AGGR"
+msgstr "不動産融資を積極拡大する"
+
+msgid "EVENT_RE_BOOM_OPT_AGGR_DESC"
+msgstr "預金成長と戦略Ptが大きく伸びますが、市況冷却時の貸倒リスクが高まります。"
+
+msgid "EVENT_RE_BOOM_OPT_PRUDENT"
+msgstr "不動産与信枠に上限を設ける"
+
+msgid "EVENT_RE_BOOM_OPT_PRUDENT_DESC"
+msgstr "高リスク案件を抑制して評判を高め、将来の市況変動に備えます。"
+
+msgid "EVENT_REAL_ESTATE_COOLING_TITLE"
+msgstr "不動産市況の減速警戒"
+
+msgid "EVENT_REAL_ESTATE_COOLING_DESC"
+msgstr "当局の融資指導により商業不動産の成約が鈍化し、高レバレッジ借入人の資金繰りが悪化しています。"
+
+msgid "EVENT_RE_COOL_OPT_TIGHTEN"
+msgstr "与信を引き締め追加担保を要請"
+
+msgid "EVENT_RE_COOL_OPT_TIGHTEN_DESC"
+msgstr "信用ストレス本格化の前に貸倒リスクを引き下げ、戦略Ptを獲得します。"
+
+msgid "EVENT_RE_COOL_OPT_HOLD"
+msgstr "現行の融資方針を維持して静観"
+
+msgid "EVENT_RE_COOL_OPT_HOLD_DESC"
+msgstr "目先の顧客離れを防ぎますが、貸倒リスクbpsがさらに上昇します。"
+
+msgid "EVENT_REAL_ESTATE_CREDIT_STRESS_TITLE"
+msgstr "不動産信用デフォルト波"
+
+msgid "EVENT_REAL_ESTATE_CREDIT_STRESS_DESC"
+msgstr "不動産関連の複数取引先で延滞が発生し、支店のポートフォリオ耐性が試されています。"
+
+msgid "EVENT_RE_STRESS_OPT_PROVISION"
+msgstr "緊急引当金を計上し回収を強化"
+
+msgid "EVENT_RE_STRESS_OPT_PROVISION_DESC"
+msgstr "延滞拡大を封じ込め、既存融資のデフォルトリスクを低減します。"
+
+msgid "EVENT_RE_STRESS_OPT_RESTRUCTURE"
+msgstr "優良担保債権の条件変更・再編"
+
+msgid "EVENT_RE_STRESS_OPT_RESTRUCTURE_DESC"
+msgstr "現金を投じて債務再編を行い、貸倒リスクを大幅低減して評判を高めます。"
+
+msgid "EVENT_VIP_DEPOSIT_VISIT_TITLE"
+msgstr "資産家ファミリーオフィスの視察"
+
+msgid "EVENT_VIP_DEPOSIT_VISIT_DESC"
+msgstr "地元テック創業家の資産管理部門がスターウェイ銀行を訪れ、大口資金預託を検討しています。"
+
+msgid "EVENT_VIP_VISIT_OPT_CONCIERGE"
+msgstr "VIP専任コンシェルジュを配置"
+
+msgid "EVENT_VIP_VISIT_OPT_CONCIERGE_DESC"
+msgstr "精鋭スタッフで厚遇し、預金成長率と支店の評判を高めます。"
+
+msgid "EVENT_VIP_VISIT_OPT_STANDARD"
+msgstr "標準ウェルスマネジメント対応"
+
+msgid "EVENT_VIP_VISIT_OPT_STANDARD_DESC"
+msgstr "通常のロビー運営を維持しつつ、一定の預金成長ボーナスを得ます。"
+
+msgid "EVENT_TELLER_SYSTEM_GLITCH_TITLE"
+msgstr "窓口決済端末のレスポンス遅延"
+
+msgid "EVENT_TELLER_SYSTEM_GLITCH_DESC"
+msgstr "午前のピーク帯に決済ゲートウェイで一時的な遅延が発生しました。迅速な対処が求められます。"
+
+msgid "EVENT_GLITCH_OPT_HOTFIX"
+msgstr "緊急ホットフィックスと回線増強"
+
+msgid "EVENT_GLITCH_OPT_HOTFIX_DESC"
+msgstr "端末応答を最適化し、窓口の平均処理時間を短縮します。"
+
+msgid "EVENT_GLITCH_OPT_MANUAL"
+msgstr "手動照合バックアップ手順へ切替"
+
+msgid "EVENT_GLITCH_OPT_MANUAL_DESC"
+msgstr "IT費用を抑えますが、一時的に窓口処理時間が延び生産性が低下します。"
+
+msgid "EVENT_COMPETITOR_POACHING_TITLE"
+msgstr "競合他行による引き抜き攻勢"
+
+msgid "EVENT_COMPETITOR_POACHING_DESC"
+msgstr "近隣の競合支店が、当行の熟練テラーや融資担当者に高待遇でオファーを出しています。"
+
+msgid "EVENT_POACHING_OPT_BONUS"
+msgstr "リテンション特別賞与を支給"
+
+msgid "EVENT_POACHING_OPT_BONUS_DESC"
+msgstr "士気を高め、行員の生産性と銀行の評判を向上させます。"
+
+msgid "EVENT_POACHING_OPT_IGNORE"
+msgstr "現行の給与体系を維持する"
+
+msgid "EVENT_POACHING_OPT_IGNORE_DESC"
+msgstr "追加支出を避けますが、短期間チームの生産性がやや低下します。"
+
+msgid "EVENT_COMMUNITY_SPONSORSHIP_TITLE"
+msgstr "テックパーク金融サミット協賛要請"
+
+msgid "EVENT_COMMUNITY_SPONSORSHIP_DESC"
+msgstr "支店が立地するスマート地区の年次イノベーション会議から、メイン協賛の案内が届きました。"
+
+msgid "EVENT_COMMUNITY_OPT_SPONSOR"
+msgstr "特別協賛し相談ブースを出展"
+
+msgid "EVENT_COMMUNITY_OPT_SPONSOR_DESC"
+msgstr "ブランド評判を高め、新規預金の獲得を加速させます。"
+
+msgid "EVENT_COMMUNITY_OPT_DECLINE"
+msgstr "丁重に辞退し一般参加にとどめる"
+
+msgid "EVENT_COMMUNITY_OPT_DECLINE_DESC"
+msgstr "追加負担なしで通常営業を継続します。"
+
+msgid "EVENT_REGULATORY_AUDIT_TITLE"
+msgstr "四半期健全性・コンプライアンス検査"
+
+msgid "EVENT_REGULATORY_AUDIT_DESC"
+msgstr "金融検査官が来訪し、直近の融資稟議書と流動性バッファー水準を点検しています。"
+
+msgid "EVENT_AUDIT_OPT_COOPERATE"
+msgstr "全台帳を開示し改善策を即時実施"
+
+msgid "EVENT_AUDIT_OPT_COOPERATE_DESC"
+msgstr "審査規律を強化して貸倒リスクを下げ、監督上の評判を高めます。"
+
+msgid "EVENT_AUDIT_OPT_MINIMAL"
+msgstr "法定の最低限レポートのみ提出"
+
+msgid "EVENT_AUDIT_OPT_MINIMAL_DESC"
+msgstr "現場負担を抑えますが、一時的に必要流動性バッファーが引き上げられます。"
+
+msgid "EVENT_FINTECH_PARTNERSHIP_TITLE"
+msgstr "フィンテック窓口自動化パイロット"
+
+msgid "EVENT_FINTECH_PARTNERSHIP_DESC"
+msgstr "フィンテック企業から帳票OCRとスマート呼出APIの試験導入が提案されました。"
+
+msgid "EVENT_FINTECH_OPT_INTEGRATE"
+msgstr "スマート窓口APIを統合する"
+
+msgid "EVENT_FINTECH_OPT_INTEGRATE_DESC"
+msgstr "窓口処理時間を大幅に短縮し、行員の生産性を向上させます。"
+
+msgid "EVENT_FINTECH_OPT_LEGACY"
+msgstr "従来の多段階確認フローを維持"
+
+msgid "EVENT_FINTECH_OPT_LEGACY_DESC"
+msgstr "堅実な手作業チェックを継続し、貸倒リスクをわずかに低減します。"
+
+msgid "EVENT_RATE_HIKE_RUMOR_TITLE"
+msgstr "政策金利引き上げの観測"
+
+msgid "EVENT_RATE_HIKE_RUMOR_DESC"
+msgstr "短期金融市場で金利改定の噂が広がり、預金者や法人財務が動向を注視しています。"
+
+msgid "EVENT_RATE_RUMOR_OPT_BUFFER"
+msgstr "インターバンク流動性枠を確保"
+
+msgid "EVENT_RATE_RUMOR_OPT_BUFFER_DESC"
+msgstr "短期資金繰りを安定させ、必要流動性バッファーbpsを低減します。"
+
+msgid "EVENT_RATE_RUMOR_OPT_DEPOSITS"
+msgstr "ステップアップ定期預金を告知"
+
+msgid "EVENT_RATE_RUMOR_OPT_DEPOSITS_DESC"
+msgstr "金利敏感な預金層を取り込み、預金成長率を高めます。"
+
+msgid "TRAIT_SALES_PRODIGY_NAME"
+msgstr "営業の才覚"
+
+msgid "TRAIT_SALES_PRODIGY_DESC"
+msgstr "高い接客力と提案力で顧客の信頼を勝ち取り、預金獲得を促進します。"
+
+msgid "TRAIT_RISK_EXPERT_NAME"
+msgstr "リスク審査の達人"
+
+msgid "TRAIT_RISK_EXPERT_DESC"
+msgstr "財務諸表の違和感をいち早く見抜き、貸倒リスクを低減します。"
+
+msgid "TRAIT_WORKAHOLIC_NAME"
+msgstr "ハイパフォーマー"
+
+msgid "TRAIT_WORKAHOLIC_DESC"
+msgstr "ピーク時間帯でも高い集中力と処理速度を維持します。"
+
+msgid "TRAIT_DETAIL_ORIENTED_NAME"
+msgstr "緻密・正確"
+
+msgid "TRAIT_DETAIL_ORIENTED_DESC"
+msgstr "伝票処理と照合を正確無比にこなし、窓口処理時間を短縮します。"
+
+msgid "TRAIT_BANK_VETERAN_NAME"
+msgstr "ベテラン行員"
+
+msgid "TRAIT_BANK_VETERAN_DESC"
+msgstr "長年の支店経験を持ち、専門性・管理力・忠誠心に優れています。"
+
+msgid "TRAIT_TEAM_LEADER_NAME"
+msgstr "チームリーダー"
+
+msgid "TRAIT_TEAM_LEADER_DESC"
+msgstr "窓口間の連携を円滑にし、支店全体の生産性を底上げします。"
+
+msgid "CUSTOMER_REGULAR_NAME"
+msgstr "一般預金者"
+
+msgid "CUSTOMER_REGULAR_DESC"
+msgstr "日常の入出金や振込を行う地域住民です。"
+
+msgid "CUST_TYPE_REGULAR"
+msgstr "一般預金者"
+
+msgid "CUSTOMER_SALARIED_NAME"
+msgstr "テック地区会社員"
+
+msgid "CUSTOMER_SALARIED_DESC"
+msgstr "安定した給与振込・送金・個人ローンを利用するビジネスパーソンです。"
+
+msgid "CUST_TYPE_SALARIED"
+msgstr "テック地区会社員"
+
+msgid "CUSTOMER_BORROWER_NAME"
+msgstr "個人ローン顧客"
+
+msgid "CUSTOMER_BORROWER_DESC"
+msgstr "住宅や消費ローンの借入を目的として来店する資金需要者です。"
+
+msgid "CUST_TYPE_BORROWER"
+msgstr "個人ローン顧客"
+
+msgid "CUSTOMER_SMB_NAME"
+msgstr "中小企業経営者"
+
+msgid "CUSTOMER_SMB_DESC"
+msgstr "大口決済や事業資金の融資相談を行う地元企業の代表者です。"
+
+msgid "CUST_TYPE_SMB"
+msgstr "中小企業経営者"
+
+msgid "CUSTOMER_VIP_NAME"
+msgstr "VIP富裕層顧客"
+
+msgid "CUSTOMER_VIP_DESC"
+msgstr "大口預金と資産相談をもたらす一方、待ち時間に厳しい重要顧客です。"
+
+msgid "CUST_TYPE_VIP"
+msgstr "VIP富裕層顧客"
+
+msgid "CUSTOMER_SUSPICIOUS_NAME"
+msgstr "高リスク投機客"
+
+msgid "CUSTOMER_SUSPICIOUS_DESC"
+msgstr "既存負債が多く信用履歴に懸念がある借入申込者です。慎重な審査が必要です。"
+
+msgid "CUST_TYPE_SUSPICIOUS"
+msgstr "高リスク投機客"
+
+msgid "SERVICE_CASH_DEPOSIT"
+msgstr "現金預入"
+
+msgid "SERVICE_CASH_WITHDRAWAL"
+msgstr "現金引出"
+
+msgid "SERVICE_TRANSFER"
+msgstr "振込・送金"
+
+msgid "SERVICE_PERSONAL_LOAN_APPLICATION"
+msgstr "個人ローン申込"
+
+msgid "SERVICE_BUSINESS_MEETING"
+msgstr "法人融資商談"
+
+msgid "SERVICE_COMPLAINT"
+msgstr "苦情・相談対応"
+
+msgid "ROLE_TELLER"
+msgstr "窓口テラー"
+
+msgid "ROLE_LOAN_OFFICER"
+msgstr "融資担当者"
+
+msgid "ROLE_MANAGER"
+msgstr "フロアマネージャー"
+
+msgid "ROLE_ANALYST"
+msgstr "リスクアナリスト"
+
+msgid "EMP_STATE_AVAILABLE"
+msgstr "待機中"
+
+msgid "EMP_STATE_MOVING"
+msgstr "移動中"
+
+msgid "EMP_STATE_WORKING"
+msgstr "応対中"
+
+msgid "EMP_STATE_BREAK"
+msgstr "休憩中"
+
+msgid "EMP_STATE_OVERLOADED"
+msgstr "疲労過多"
+
+msgid "EMP_STATE_OFF_DUTY"
+msgstr "退勤・休養"
+
+msgid "CUST_STATE_SPAWNING"
+msgstr "入店"
+
+msgid "CUST_STATE_FINDING_SERVICE"
+msgstr "受付案内"
+
+msgid "CUST_STATE_WAITING"
+msgstr "順番待ち"
+
+msgid "CUST_STATE_IN_SERVICE"
+msgstr "手続中"
+
+msgid "CUST_STATE_COMPLETED"
+msgstr "手続完了"
+
+msgid "CUST_STATE_LEAVING"
+msgstr "退店"
+
+msgid "PHASE_PRE_OPEN"
+msgstr "開店準備"
+
+msgid "PHASE_OPEN"
+msgstr "営業中"
+
+msgid "PHASE_CLOSING"
+msgstr "閉店締め"
+
+msgid "PHASE_SETTLED"
+msgstr "日次決算済"
+
+msgid "LIQUIDITY_SAFE"
+msgstr "流動性健全"
+
+msgid "LIQUIDITY_CAUTION"
+msgstr "流動性注意"
+
+msgid "LIQUIDITY_DANGER"
+msgstr "流動性危険"
+
+msgid "RISK_GRADE_A"
+msgstr "格付A（優良）"
+
+msgid "RISK_GRADE_B"
+msgstr "格付B（良好）"
+
+msgid "RISK_GRADE_C"
+msgstr "格付C（要注意）"
+
+msgid "RISK_GRADE_D"
+msgstr "格付D（高リスク）"
+
+msgid "QUEUE_PRIORITY_NORMAL"
+msgstr "通常"
+
+msgid "QUEUE_PRIORITY_PRIORITY"
+msgstr "優先"
+
+msgid "QUEUE_PRIORITY_VIP"
+msgstr "VIP"
+
+msgid "EMP_NAME_STARTER_1"
+msgstr "林 知夏"
+
+msgid "EMP_NAME_STARTER_2"
+msgstr "周 牧野"
+
+msgid "CAND_NAME_1"
+msgstr "蘇 晴嵐"
+
+msgid "CAND_NAME_2"
+msgstr "陳 嘉樹"
+
+msgid "CAND_NAME_3"
+msgstr "許 星河"
+
+msgid "PERSON_NAME_01"
+msgstr "陸 明遠"
+
+msgid "PERSON_NAME_02"
+msgstr "沈 清歓"
+
+msgid "PERSON_NAME_03"
+msgstr "顧 言深"
+
+msgid "PERSON_NAME_04"
+msgstr "葉 知秋"
+
+msgid "PERSON_NAME_05"
+msgstr "程 望舒"
+
+msgid "PERSON_NAME_06"
+msgstr "宋 懐瑾"
+
+msgid "PERSON_NAME_07"
+msgstr "秦 書瑶"
+
+msgid "PERSON_NAME_08"
+msgstr "江 嶼森"
+
+msgid "PERSON_NAME_09"
+msgstr "唐 晩星"
+
+msgid "PERSON_NAME_10"
+msgstr "温 景行"
+
+msgid "PERSON_NAME_11"
+msgstr "謝 雲舒"
+
+msgid "PERSON_NAME_12"
+msgstr "韓 沐辰"
+
+msgid "PERSON_NAME_13"
+msgstr "白 若渓"
+
+msgid "PERSON_NAME_14"
+msgstr "趙 津南"
+
+msgid "PERSON_NAME_15"
+msgstr "孟 昭華"
+
+msgid "PERSON_NAME_16"
+msgstr "裴 季礼"
+
+msgid "PERSON_NAME_17"
+msgstr "紀 星眠"
+
+msgid "PERSON_NAME_18"
+msgstr "鍾 意禾"
+
+msgid "PERSON_NAME_19"
+msgstr "方 鶴鳴"
+
+msgid "PERSON_NAME_20"
+msgstr "夏 清越"
+
+msgid "PERSON_NAME_21"
+msgstr "賀 蘭舟"
+
+msgid "PERSON_NAME_22"
+msgstr "姜 南絮"
+
+msgid "PERSON_NAME_23"
+msgstr "厳 景沢"
+
+msgid "PERSON_NAME_24"
+msgstr "喬 安然"
+
+msgid "PERSON_NAME_25"
+msgstr "魏 長風"
+
+msgid "PERSON_NAME_26"
+msgstr "黎 微光"
+
+msgid "PERSON_NAME_27"
+msgstr "傅 庭深"
+
+msgid "PERSON_NAME_28"
+msgstr "阮 清音"
+
+msgid "PERSON_NAME_29"
+msgstr "邵 明軒"
+
+msgid "PERSON_NAME_30"
+msgstr "柳 如眉"
+
+msgid "PERSON_NAME_31"
+msgstr "莫 北辰"
+
+msgid "PERSON_NAME_32"
+msgstr "向 晩晴"
+
+msgid "PERSON_NAME_33"
+msgstr "陶 景明"
+
+msgid "PERSON_NAME_34"
+msgstr "寧 初夏"
+
+msgid "PERSON_NAME_35"
+msgstr "荘 厳沢"
+
+msgid "PERSON_NAME_36"
+msgstr "洛 清河"
+
+msgid "PERSON_NAME_37"
+msgstr "池 宴礼"
+
+msgid "PERSON_NAME_38"
+msgstr "桑 楡晩"
+
+msgid "PERSON_NAME_39"
+msgstr "凌 雲澈"
+
+msgid "PERSON_NAME_40"
+msgstr "聞 人羽"
+
+msgid "LEDGER_INIT_CAPITAL"
+msgstr "支店開設初期資本金の払込"
+
+msgid "LEDGER_DEPOSIT"
+msgstr "顧客預金の受入"
+
+msgid "LEDGER_WITHDRAWAL"
+msgstr "顧客預金の払出"
+
+msgid "LEDGER_SERVICE_FEE"
+msgstr "役務取引等手数料収入"
+
+msgid "LEDGER_LOAN_DISBURSEMENT"
+msgstr "融資金の実行・貸出"
+
+msgid "LEDGER_LOAN_REPAYMENT"
+msgstr "融資元本の返済回収"
+
+msgid "LEDGER_CREDIT_LOSS"
+msgstr "不良債権の貸倒償却損失"
+
+msgid "LEDGER_OPERATING_COST"
+msgstr "営業経費および部門維持費"
+
+msgid "LEDGER_EVENT_EXPENSE"
+msgstr "特別イベント関連支出"
+
+msgid "LEDGER_DAILY_LOAN_INTEREST"
+msgstr "日次貸出金利息収入の計上"
+
+msgid "LEDGER_DAILY_DEPOSIT_INTEREST"
+msgstr "日次預金利息費用の計上"
+
+msgid "LEDGER_DAILY_CLOSEOUT"
+msgstr "日次損益の利益剰余金振替"
+
+msgid "ACCOUNT_CASH_RESERVES"
+msgstr "現金・支払準備金"
+
+msgid "ACCOUNT_LOAN_PRINCIPAL_OUTSTANDING"
+msgstr "貸出金元本残高"
+
+msgid "ACCOUNT_CUSTOMER_DEPOSITS"
+msgstr "顧客預金"
+
+msgid "ACCOUNT_EQUITY_CAPITAL"
+msgstr "資本金"
+
+msgid "ACCOUNT_RETAINED_EARNINGS"
+msgstr "利益剰余金"
+
+msgid "ACCOUNT_LOAN_INTEREST_INCOME"
+msgstr "貸出金利息収入"
+
+msgid "ACCOUNT_FEE_INCOME"
+msgstr "手数料収入"
+
+msgid "ACCOUNT_DEPOSIT_INTEREST_EXPENSE"
+msgstr "預金利息費用"
+
+msgid "ACCOUNT_OPERATING_EXPENSE"
+msgstr "営業経費"
+
+msgid "ACCOUNT_CREDIT_LOSS_EXPENSE"
+msgstr "貸倒引当・償却費用"
+
+msgid "ACCOUNT_EVENT_EXPENSE"
+msgstr "イベント特別費用"
+
+msgid "REPORT_DRIVER_PROFIT_UP"
+msgstr "利ざやと手数料収益が順調に推移し、利益剰余金が増加しました。"
+
+msgid "REPORT_DRIVER_PROFIT_DOWN"
+msgstr "本日は純損失となりました。窓口配置の最適化または融資残高の拡大を検討してください。"
+
+msgid "REPORT_DRIVER_CREDIT_LOSS"
+msgstr "貸倒損失が発生しました。リスク管理部の強化または審査基準の見直しを推奨します。"
+
+msgid "REPORT_DRIVER_LIQUIDITY_STRESS"
+msgstr "流動性バッファーが低下しています。預金金利の引き上げや大口融資の抑制を検討してください。"
+
+msgid "REPORT_DRIVER_PAYROLL_COST"
+msgstr "本日の行員給与を精算し、夜間の疲労回復が行われました。"
+
+msgid "ERR_UNKNOWN_ERROR"
+msgstr "不明なエラーが発生しました"
+
+msgid "ERR_INVALID_CONTENT_ID"
+msgstr "無効なコンテンツIDです：{id}"
+
+msgid "ERR_INVALID_BANK_STATE"
+msgstr "銀行ステータスが無効または未初期化です"
+
+msgid "ERR_INVALID_LEDGER_DATA"
+msgstr "総勘定元帳のデータ構造が破損しています"
+
+msgid "ERR_LEDGER_CORRUPTED_UNBALANCED"
+msgstr "貸借対照表のバランスが一致しません"
+
+msgid "ERR_LEDGER_TOO_FEW_LINES"
+msgstr "仕訳には少なくとも2行の明細が必要です"
+
+msgid "ERR_LEDGER_MALFORMED_LINE"
+msgstr "仕訳明細のフィールドが不足しています"
+
+msgid "ERR_LEDGER_UNKNOWN_ACCOUNT"
+msgstr "不明な勘定科目です：{account}"
+
+msgid "ERR_LEDGER_INVALID_SIDE"
+msgstr "無効な貸借区分です：{side}"
+
+msgid "ERR_LEDGER_INVALID_AMOUNT"
+msgstr "仕訳金額が無効または上限を超えています"
+
+msgid "ERR_LEDGER_UNBALANCED"
+msgstr "複式簿記の借方合計と貸方合計が一致しません"
+
+msgid "ERR_INVALID_AMOUNT"
+msgstr "金額は正の整数である必要があります"
+
+msgid "ERR_INSUFFICIENT_DEPOSITS"
+msgstr "顧客預金残高が不足しています"
+
+msgid "ERR_INSUFFICIENT_CASH"
+msgstr "支店の現金準備が不足しています"
+
+msgid "ERR_INVALID_LOAN_TERMS"
+msgstr "融資元本・金利・期間の設定が無効です"
+
+msgid "ERR_LOAN_REPAYMENT_EXCEEDS_PRINCIPAL"
+msgstr "返済額が融資元本残高を超えています"
+
+msgid "ERR_INVALID_LOAN"
+msgstr "無効な融資データです"
+
+msgid "ERR_LOAN_NOT_ACTIVE"
+msgstr "この融資は現在有効な状態ではありません"
+
+msgid "ERR_CREDIT_LOSS_EXCEEDS_LOANS"
+msgstr "償却額が貸出金元本残高を超えています"
+
+msgid "ERR_DAY_ALREADY_SETTLED"
+msgstr "{day}日目の日次決算は既に完了しています"
+
+msgid "ERR_INVALID_REPAYMENT_AMOUNT"
+msgstr "返済額は0より大きい必要があります"
+
+msgid "ERR_LOAN_ALREADY_CLOSED"
+msgstr "この融資は既に完済または償却済みです"
+
+msgid "ERR_INVALID_LOAN_ID"
+msgstr "無効な融資IDです"
+
+msgid "ERR_INVALID_CUSTOMER_ID"
+msgstr "無効な顧客IDです"
+
+msgid "ERR_INVALID_CUSTOMER_STATE"
+msgstr "無効な顧客状態です"
+
+msgid "ERR_ILLEGAL_CUSTOMER_TRANSITION"
+msgstr "不正な顧客状態遷移です"
+
+msgid "ERR_INVALID_EMPLOYEE_ID"
+msgstr "無効な行員IDです"
+
+msgid "ERR_INVALID_EMPLOYEE_STATE"
+msgstr "無効な行員状態です"
+
+msgid "ERR_ILLEGAL_EMPLOYEE_TRANSITION"
+msgstr "不正な行員状態遷移です"
+
+msgid "ERR_INVALID_REQUEST_ID"
+msgstr "無効なサービス要求IDです"
+
+msgid "ERR_EMPLOYEE_TASK_CONFLICT"
+msgstr "行員は既に別の業務を処理中です"
+
+msgid "ERR_EMPLOYEE_ON_BREAK"
+msgstr "行員は現在休憩中です"
+
+msgid "ERR_EMPLOYEE_OFF_DUTY"
+msgstr "行員は現在退勤状態です"
+
+msgid "ERR_EMPLOYEE_BUSY"
+msgstr "行員は現在接客業務中です"
+
+msgid "ERR_EMPLOYEE_NOT_FOUND"
+msgstr "指定された行員が見つかりません"
+
+msgid "ERR_CANDIDATE_NOT_FOUND"
+msgstr "指定された候補者が見つかりません"
+
+msgid "ERR_CANNOT_FIRE_BUSY_EMPLOYEE"
+msgstr "業務処理中の行員は解雇できません"
+
+msgid "ERR_CANNOT_FIRE_LAST_EMPLOYEE"
+msgstr "支店の最後の行員は解雇できません"
+
+msgid "ERR_REQUEST_NOT_QUEUED"
+msgstr "この要求は待機列にありません"
+
+msgid "ERR_REQUEST_ALREADY_ASSIGNED"
+msgstr "この要求は既に割り当てられています"
+
+msgid "ERR_INVALID_QUEUE_PRIORITY"
+msgstr "無効な優先度です"
+
+msgid "ERR_REQUEST_NOT_FOUND"
+msgstr "サービス要求が見つかりません"
+
+msgid "ERR_QUEUE_PRIORITY_LOCKED"
+msgstr "優先度変更には業務運営部 Lv.2 が必要です"
+
+msgid "ERR_DEPT_NOT_FOUND"
+msgstr "部門定義が見つかりません：{department_id}"
+
+msgid "ERR_DEPT_ALREADY_EXISTS"
+msgstr "この部門は既に設立されています"
+
+msgid "ERR_DEPT_LOCKED"
+msgstr "部門設立の解放条件を満たしていません"
+
+msgid "ERR_DEPT_NOT_CREATED"
+msgstr "アップグレード前に対象部門を設立してください"
+
+msgid "ERR_DEPT_MAX_LEVEL"
+msgstr "この部門は最大レベル Lv.{max_level} に達しています"
+
+msgid "ERR_POLICY_NOT_FOUND"
+msgstr "政策定義が見つかりません：{policy_id}"
+
+msgid "ERR_POLICY_ALREADY_ADOPTED"
+msgstr "この政策は既に採択されています"
+
+msgid "ERR_POLICY_PREREQUISITE_MISSING"
+msgstr "前提となる政策が未採択です：{missing_prerequisite}"
+
+msgid "ERR_POLICY_BRANCH_CONFLICT"
+msgstr "採択済みの経営路線と相反するため採択できません"
+
+msgid "ERR_POLICY_EXCLUSIVE_CONFLICT"
+msgstr "排他グループの政策と競合しています：{conflicting_policy}"
+
+msgid "ERR_POLICY_CONDITION_UNMET"
+msgstr "政策の必要指標条件を満たしていません"
+
+msgid "ERR_INSUFFICIENT_STRATEGY_POINTS"
+msgstr "戦略Ptが不足しています（必要: {required} / 保有: {available}）"
+
+msgid "ERR_EVENT_NOT_FOUND"
+msgstr "イベント定義が見つかりません：{event_id}"
+
+msgid "ERR_EVENT_INSTANCE_NOT_FOUND"
+msgstr "対象のイベントインスタンスが見つかりません"
+
+msgid "ERR_EVENT_OPTION_NOT_FOUND"
+msgstr "イベント選択肢が見つかりません"
+
+msgid "ERR_EVENT_OPTION_LOCKED"
+msgstr "この選択肢の条件を満たしていません"
+
+msgid "ERR_STATION_NOT_FOUND"
+msgstr "窓口・デスクが見つかりません：{station_id}"
+
+msgid "ERR_INVALID_ROLE"
+msgstr "無効な役職ロールです：{role_id}"
+
+msgid "ERR_INVALID_SPEED"
+msgstr "無効なゲーム速度倍率です"
+
+msgid "ERR_INVALID_RATE"
+msgstr "無効な金利設定です"
+
+msgid "ERR_RATE_OUT_OF_RANGE"
+msgstr "金利が許容範囲外です"
+
+msgid "ERR_INVALID_PHASE"
+msgstr "現在の営業フェーズではこの操作を実行できません"
+
+msgid "ERR_BRANCH_ALREADY_OPEN"
+msgstr "本日は既に営業中または営業終了しています"
+
+msgid "ERR_BRANCH_NOT_SETTLED"
+msgstr "翌日へ進む前に日次決算を完了してください"
+
+msgid "ERR_APPROVAL_NOT_FOUND"
+msgstr "対象の融資稟議が見つかりません"
+
+msgid "ERR_INVALID_SLOT_ID"
+msgstr "無効なセーブスロット名です：{slot_id}"
+
+msgid "ERR_SAVE_WRITE_FAILED"
+msgstr "セーブデータの書き込みに失敗しました"
+
+msgid "ERR_SAVE_NOT_FOUND"
+msgstr "セーブファイルが見つかりません"
+
+msgid "ERR_SAVE_CORRUPTED"
+msgstr "セーブデータおよびバックアップが破損しています"
+
+msgid "ERR_UNSUPPORTED_SAVE_VERSION"
+msgstr "非対応のセーブバージョンです：{version}"
+
+msgid "ERR_NO_ACTIVE_SESSION"
+msgstr "アクティブなゲームセッションがありません"
+
+msgid "SIM_LOG_EVENT"
+msgstr "[{time}] 営業ステータス更新"
+
+msgid "SIM_LOG_DAY_STARTED"
+msgstr "[{time}] {day}日目の営業を開始しました"
+
+msgid "SIM_LOG_PHASE_CHANGED"
+msgstr "[{time}] 営業フェーズが切り替わりました"
+
+msgid "SIM_LOG_CUSTOMER_ARRIVED"
+msgstr "[{time}] 新規顧客 ({customer_type}) が来店しました"
+
+msgid "SIM_LOG_SERVICE_STARTED"
+msgstr "[{time}] 窓口 {station_id} で業務を開始しました"
+
+msgid "SIM_LOG_SERVICE_COMPLETED"
+msgstr "[{time}] 窓口 {station_id} で業務が完了しました ({service_type})"
+
+msgid "SIM_LOG_CUSTOMER_LEFT_UNSERVED"
+msgstr "[{time}] 顧客 {customer_id} が待ち時間超過で退店しました"
+
+msgid "SIM_LOG_LOAN_APPROVAL_REQUESTED"
+msgstr "[{time}] 新規融資稟議リクエスト ({approval_id})"
+
+msgid "SIM_LOG_LOAN_APPROVED"
+msgstr "[{time}] 融資を承認・実行しました ({loan_id})"
+
+msgid "SIM_LOG_LOAN_REJECTED"
+msgstr "[{time}] 融資申請を却下しました ({approval_id})"
+
+msgid "SIM_LOG_EMPLOYEE_HIRED"
+msgstr "[{time}] 新入行員を採用しました ({employee_id})"
+
+msgid "SIM_LOG_EMPLOYEE_FIRED"
+msgstr "[{time}] 行員を解雇しました ({employee_id})"
+
+msgid "SIM_LOG_EMPLOYEE_ASSIGNED"
+msgstr "[{time}] 行員 {employee_id} を窓口 {station_id} に配置しました"
+
+msgid "SIM_LOG_EMPLOYEE_TRAINED"
+msgstr "[{time}] 行員 {employee_id} が研修を完了しました"
+
+msgid "SIM_LOG_EMPLOYEE_RESTED"
+msgstr "[{time}] 行員 {employee_id} が休憩に入りました"
+
+msgid "SIM_LOG_STATION_TOGGLED"
+msgstr "[{time}] 窓口 {station_id} の稼働状態を切り替えました"
+
+msgid "SIM_LOG_DEPARTMENT_CREATED"
+msgstr "[{time}] 部門 {department_id} を新設しました"
+
+msgid "SIM_LOG_DEPARTMENT_UPGRADED"
+msgstr "[{time}] 部門 {department_id} を Lv.{level} に強化しました"
+
+msgid "SIM_LOG_POLICY_ADOPTED"
+msgstr "[{time}] 戦略方針 {policy_id} を採択しました"
+
+msgid "SIM_LOG_EVENT_TRIGGERED"
+msgstr "[{time}] 経営イベントが発生しました ({event_id})"
+
+msgid "SIM_LOG_EVENT_RESOLVED"
+msgstr "[{time}] イベント選択肢を決定しました ({option_id})"
+
+msgid "SIM_LOG_DAILY_SETTLEMENT"
+msgstr "[{time}] {day}日目の日次決算が完了しました"
+
+msgid "SIM_LOG_SPEED_CHANGED"
+msgstr "[{time}] 進行速度を {speed}x に変更しました"
+
+msgid "SIM_LOG_RATES_CHANGED"
+msgstr "[{time}] 基準金利を更新しました"
+
+msgid "SIM_LOG_ALERT"
+msgstr "[{time}] 経営アラート"
+
+msgid "SIM_LOG_STATE_RELOADED"
+msgstr "[{time}] セーブデータを読み込みました"
+
+msgid "WORLD_STATION_TELLER_TAG"
+msgstr "窓#{num}"
+
+msgid "WORLD_STATION_LOAN_TAG"
+msgstr "融#{num}"
+
+msgid "WORLD_STATION_OPEN"
+msgstr "営業中"
+
+msgid "WORLD_STATION_CLOSED"
+msgstr "休止"
+
+msgid "WORLD_DEPT_OPS_SHORT"
+msgstr "運営"
+
+msgid "WORLD_DEPT_HR_SHORT"
+msgstr "人事"
+
+msgid "WORLD_DEPT_CREDIT_SHORT"
+msgstr "与信"
+
+msgid "WORLD_DEPT_RISK_SHORT"
+msgstr "リスク"
+
+msgid "WORLD_DEPT_LEVEL_BADGE"
+msgstr "Lv.{level}"
+
+msgid "WORLD_FX_SERVICE_DONE"
+msgstr "{amount}"
+
+msgid "WORLD_FX_SATISFACTION_UP"
+msgstr "対応完了"
+
+msgid "WORLD_FX_CUSTOMER_LEFT"
+msgstr "時間切れ離脱"
+
+msgid "WORLD_FX_LOAN_APPROVED"
+msgstr "融資承認"
+
+msgid "WORLD_FX_LOAN_REJECTED"
+msgstr "融資却下"
+
+msgid "WORLD_FX_DEPT_UPGRADED"
+msgstr "部門 Lv.{level}"
+
+msgid "WORLD_ACTOR_STATE_WORKING"
+msgstr "対応中"
+
+msgid "WORLD_ACTOR_STATE_WAITING"
+msgstr "待機中"
+
+msgid "WORLD_ACTOR_STATE_BREAK"
+msgstr "休憩"
+
+msgid "WORLD_ACTOR_STATE_OVERLOADED"
+msgstr "過労"
+
+msgid "UI_MAIN_MENU_LOAD_SAVE"
+msgstr "セーブ読込"
+
+msgid "UI_MAIN_MENU_VERSION"
+msgstr "スターウェイ基幹システム v0.1.0 · Godot 4.7.2"
+
+msgid "UI_TOPBAR_BANK_NAME"
+msgstr "スターウェイ銀行"
+
+msgid "UI_TOPBAR_TODAY_PROFIT"
+msgstr "予想日次純益"
+
+msgid "UI_TOPBAR_EMPLOYEES"
+msgstr "行員数"
+
+msgid "UI_TOPBAR_SPEED_PAUSE"
+msgstr "一時停止 0x"
+
+msgid "UI_TOPBAR_SPEED_1X"
+msgstr "1x"
+
+msgid "UI_TOPBAR_SPEED_2X"
+msgstr "2x"
+
+msgid "UI_TOPBAR_SPEED_3X"
+msgstr "3x"
+
+msgid "UI_TOPBAR_ACTION_OPEN_BRANCH"
+msgstr "本日の営業開始"
+
+msgid "UI_TOPBAR_ACTION_IN_BUSINESS"
+msgstr "営業中"
+
+msgid "UI_TOPBAR_ACTION_CLOSING"
+msgstr "締め処理中"
+
+msgid "UI_TOPBAR_ACTION_NEXT_DAY"
+msgstr "日次決算 / 翌日へ"
+
+msgid "UI_TOPBAR_BTN_SAVE_SETTINGS"
+msgstr "セーブ / 設定"
+
+msgid "UI_PHASE_PRE_OPEN"
+msgstr "開店準備中"
+
+msgid "UI_PHASE_OPEN"
+msgstr "営業中"
+
+msgid "UI_PHASE_CLOSING"
+msgstr "閉店・締め処理中"
+
+msgid "UI_PHASE_SETTLED"
+msgstr "本日決算完了"
+
+msgid "UI_NAV_SETTINGS"
+msgstr "設定"
+
+msgid "UI_INSPECTOR_TITLE_OVERVIEW"
+msgstr "リアルタイム運営状況"
+
+msgid "UI_INSPECTOR_TITLE_STATION"
+msgstr "窓口詳細"
+
+msgid "UI_INSPECTOR_TITLE_EMPLOYEE"
+msgstr "行員詳細"
+
+msgid "UI_INSPECTOR_TITLE_CUSTOMER"
+msgstr "顧客詳細"
+
+msgid "UI_INSPECTOR_BTN_BACK_OVERVIEW"
+msgstr "運営概要へ戻る"
+
+msgid "UI_INSPECTOR_LIQUIDITY"
+msgstr "流動性比率"
+
+msgid "UI_INSPECTOR_NPL"
+msgstr "不良債権比率 (NPL)"
+
+msgid "UI_INSPECTOR_QUEUE_HEADER"
+msgstr "待機中のリクエスト ({count})"
+
+msgid "UI_INSPECTOR_QUEUE_EMPTY"
+msgstr "待機中のリクエストはありません"
+
+msgid "UI_INSPECTOR_STATIONS_HEADER"
+msgstr "窓口稼働状況"
+
+msgid "UI_INSPECTOR_ALERTS_HEADER"
+msgstr "要対応アラート"
+
+msgid "UI_INSPECTOR_PENDING_LOANS"
+msgstr "融資審査待ち：{count} 件"
+
+msgid "UI_INSPECTOR_ACTIVE_EVENTS"
+msgstr "発生中イベント：{count} 件"
+
+msgid "UI_INSPECTOR_STATION_ID"
+msgstr "窓口ID：{id}"
+
+msgid "UI_INSPECTOR_STATION_TYPE"
+msgstr "窓口種別：{type}"
+
+msgid "UI_INSPECTOR_STATION_STATUS"
+msgstr "状態：{status}"
+
+msgid "UI_INSPECTOR_STATION_OPEN"
+msgstr "営業中"
+
+msgid "UI_INSPECTOR_STATION_CLOSED"
+msgstr "閉鎖中"
+
+msgid "UI_INSPECTOR_STATION_STAFF"
+msgstr "担当行員：{name}"
+
+msgid "UI_INSPECTOR_STATION_UNSTAFFED"
+msgstr "未配置"
+
+msgid "UI_INSPECTOR_BTN_TOGGLE_STATION"
+msgstr "窓口を開閉する"
+
+msgid "UI_INSPECTOR_ASSIGN_STAFF_HEADER"
+msgstr "行員をクイック配置"
+
+msgid "UI_INSPECTOR_ASSIGN_TO"
+msgstr "配置：{name}"
+
+msgid "UI_INSPECTOR_EMP_ROLE"
+msgstr "役職：{role}"
+
+msgid "UI_INSPECTOR_EMP_STATE"
+msgstr "状態：{state}"
+
+msgid "UI_INSPECTOR_EMP_FATIGUE"
+msgstr "疲労度：{fatigue}/100"
+
+msgid "UI_INSPECTOR_EMP_ADAPTATION"
+msgstr "適応期間：残り {days} 日"
+
+msgid "UI_INSPECTOR_EMP_SALARY"
+msgstr "日給：{salary}"
+
+msgid "UI_INSPECTOR_EMP_STATION"
+msgstr "担当窓口：{station}"
+
+msgid "UI_INSPECTOR_BTN_TRAIN"
+msgstr "研修を実施"
+
+msgid "UI_INSPECTOR_BTN_REST"
+msgstr "休憩させる"
+
+msgid "UI_INSPECTOR_BTN_FIRE"
+msgstr "解雇する"
+
+msgid "UI_INSPECTOR_CUST_TYPE"
+msgstr "顧客区分：{type}"
+
+msgid "UI_INSPECTOR_CUST_SERVICE"
+msgstr "取引内容：{service}"
+
+msgid "UI_INSPECTOR_CUST_AMOUNT"
+msgstr "取引金額：{amount}"
+
+msgid "UI_INSPECTOR_CUST_PATIENCE"
+msgstr "残り忍耐：{cur}/{max}"
+
+msgid "UI_INSPECTOR_CUST_PRIORITY"
+msgstr "優先度：{priority}"
+
+msgid "UI_PRIORITY_NORMAL"
+msgstr "通常"
+
+msgid "UI_PRIORITY_PRIORITY"
+msgstr "優先"
+
+msgid "UI_PRIORITY_VIP"
+msgstr "VIP"
+
+msgid "UI_BOTTOM_LOG_TITLE"
+msgstr "リアルタイム業務ログ"
+
+msgid "UI_BOTTOM_LOG_READY"
+msgstr "スターウェイ支店モニタリング稼働中。"
+
+msgid "UI_BOTTOM_LOAN_BADGE"
+msgstr "融資審査待ち ({count})"
+
+msgid "UI_BOTTOM_EVENT_BADGE"
+msgstr "発生中イベント ({count})"
+
+msgid "UI_BOTTOM_ZOOM_LABEL"
+msgstr "ズーム"
+
+msgid "UI_BOTTOM_ZOOM_1X"
+msgstr "1x"
+
+msgid "UI_BOTTOM_ZOOM_2X"
+msgstr "2x"
+
+msgid "UI_BOTTOM_ZOOM_3X"
+msgstr "3x"
+
+msgid "UI_SETTINGS_TITLE"
+msgstr "システム設定とセーブ管理"
+
+msgid "UI_SETTINGS_LOCALE"
+msgstr "表示言語"
+
+msgid "UI_SETTINGS_PACE"
+msgstr "進行スピード設定"
+
+msgid "UI_SETTINGS_PACE_DEMO"
+msgstr "デモ高速モード (0.25秒/分)"
+
+msgid "UI_SETTINGS_PACE_STANDARD"
+msgstr "標準モード (1.0秒/分)"
+
+msgid "UI_SETTINGS_MASTER_VOL"
+msgstr "マスター音量"
+
+msgid "UI_SETTINGS_BGM_VOL"
+msgstr "BGM音量"
+
+msgid "UI_SETTINGS_SFX_VOL"
+msgstr "効果音 (SFX)"
+
+msgid "UI_SETTINGS_MUTE"
+msgstr "ミュート"
+
+msgid "UI_SAVE_TITLE"
+msgstr "セーブスロット管理"
+
+msgid "UI_SAVE_SLOT_EMPTY"
+msgstr "{slot} · 空きスロット"
+
+msgid "UI_SAVE_SLOT_INFO"
+msgstr "{slot} · {bank} · {day}日目 · 現金 {cash}"
+
+msgid "UI_SAVE_BTN_SAVE"
+msgstr "セーブ"
+
+msgid "UI_SAVE_BTN_LOAD"
+msgstr "ロード"
+
+msgid "UI_SAVE_BTN_DELETE"
+msgstr "削除"
+
+msgid "UI_SAVE_BTN_RETURN_MENU"
+msgstr "メインメニューへ戻る"
+
+msgid "UI_COMMON_CLOSE"
+msgstr "閉じる"
+
+msgid "UI_COMMON_CONFIRM"
+msgstr "確認"
+
+msgid "UI_COMMON_CANCEL"
+msgstr "キャンセル"
+
+msgid "UI_TOAST_CMD_OK"
+msgstr "実行完了：{action}"
+
+msgid "UI_TOAST_SAVE_OK"
+msgstr "{slot} にセーブしました"
+
+msgid "UI_TOAST_LOAD_OK"
+msgstr "{slot} をロードしました"
+
+msgid "UI_TOAST_AUTOSAVE_OK"
+msgstr "日次オートセーブ完了 (autosave)"
+
+msgid "UI_DRAWER_OVERVIEW_TITLE"
+msgstr "支店経営オーバービュー"
+
+msgid "UI_DRAWER_OVERVIEW_SUBTITLE"
+msgstr "主要業績指標（KPI）、リスク警報、クイックアクション"
+
+msgid "UI_DRAWER_FINANCE_TITLE"
+msgstr "財務・貸借対照表センター"
+
+msgid "UI_DRAWER_FINANCE_SUBTITLE"
+msgstr "複式簿記元帳、預貸金利コントロール、日次損益トレンドチャート"
+
+msgid "UI_DRAWER_EMPLOYEES_TITLE"
+msgstr "行員管理・人材採用"
+
+msgid "UI_DRAWER_EMPLOYEES_SUBTITLE"
+msgstr "窓口配置、専門研修、疲労回復、および候補者プールからの採用"
+
+msgid "UI_DRAWER_DEPARTMENTS_TITLE"
+msgstr "銀行組織・部門アップグレード"
+
+msgid "UI_DRAWER_DEPARTMENTS_SUBTITLE"
+msgstr "中核部門の設立、自動化機能の解放、部門間シナジーの発動"
+
+msgid "UI_DRAWER_POLICIES_TITLE"
+msgstr "長期経営戦略・方針ツリー"
+
+msgid "UI_DRAWER_POLICIES_SUBTITLE"
+msgstr "戦略ポイントを消費して堅実経営または積極拡大ルートを選択（排他・不可逆）"
+
+msgid "UI_DRAWER_EVENTS_TITLE"
+msgstr "ランダムイベント・融資審査センター"
+
+msgid "UI_DRAWER_EVENTS_SUBTITLE"
+msgstr "マクロ・支店イベントの意思決定と大口融資案件の審査"
+
+msgid "UI_FINANCE_BS_HEADER"
+msgstr "リアルタイム貸借対照表"
+
+msgid "UI_FINANCE_CASH"
+msgstr "現金準備金 (資産)"
+
+msgid "UI_FINANCE_LOANS"
+msgstr "貸出金残高 (資産)"
+
+msgid "UI_FINANCE_DEPOSITS"
+msgstr "顧客預金残高 (負債)"
+
+msgid "UI_FINANCE_EQUITY_CAP"
+msgstr "資本金 (純資産)"
+
+msgid "UI_FINANCE_RETAINED"
+msgstr "利益剰余金 (純資産)"
+
+msgid "UI_FINANCE_TOTAL_ASSETS"
+msgstr "総資産合計"
+
+msgid "UI_FINANCE_TOTAL_LIAB_EQ"
+msgstr "負債・純資産合計"
+
+msgid "UI_FINANCE_BALANCED"
+msgstr "貸借一致確認済：資産 = 負債 + 純資産"
+
+msgid "UI_FINANCE_UNBALANCED"
+msgstr "貸借不一致警告"
+
+msgid "UI_FINANCE_RATES_HEADER"
+msgstr "預金・貸出年利コントロール"
+
+msgid "UI_FINANCE_DEPOSIT_RATE"
+msgstr "預金年利：{rate}"
+
+msgid "UI_FINANCE_LOAN_RATE"
+msgstr "貸出基準年利：{rate}"
+
+msgid "UI_FINANCE_BTN_APPLY_RATES"
+msgstr "金利を適用する"
+
+msgid "UI_FINANCE_CHART_HEADER"
+msgstr "日次収益・費用・純利益トレンドチャート"
+
+msgid "UI_FINANCE_CHART_LEGEND"
+msgstr "シアン：総収益 · コーラル：総費用 · ゴールド/グリーン：日次純利益"
+
+msgid "UI_EMP_ACTIVE_HEADER"
+msgstr "在籍行員リスト ({count})"
+
+msgid "UI_EMP_CANDIDATES_HEADER"
+msgstr "採用候補者プール ({count})"
+
+msgid "UI_EMP_CANDIDATES_EMPTY"
+msgstr "現在採用可能な候補者はいません"
+
+msgid "UI_EMP_ATTR_PROF"
+msgstr "専門 {val}"
+
+msgid "UI_EMP_ATTR_EFF"
+msgstr "効率 {val}"
+
+msgid "UI_EMP_ATTR_SOC"
+msgstr "接客 {val}"
+
+msgid "UI_EMP_ATTR_RISK"
+msgstr "リスク {val}"
+
+msgid "UI_EMP_ATTR_MGMT"
+msgstr "管理 {val}"
+
+msgid "UI_EMP_ATTR_LOY"
+msgstr "忠誠 {val}"
+
+msgid "UI_EMP_ATTR_POT"
+msgstr "潜在 {val}"
+
+msgid "UI_EMP_BTN_HIRE_TELLER"
+msgstr "窓口係として採用"
+
+msgid "UI_EMP_BTN_HIRE_LOAN"
+msgstr "融資担当として採用"
+
+msgid "UI_EMP_BTN_HIRE_ANALYST"
+msgstr "アナリストとして採用"
+
+msgid "UI_DEPT_LEVEL_FORMAT"
+msgstr "現在レベル：Lv.{level} / Lv.{max}"
+
+msgid "UI_DEPT_NOT_CREATED"
+msgstr "未設立 (Lv.0)"
+
+msgid "UI_DEPT_INIT_COST"
+msgstr "設立費用：{cost}"
+
+msgid "UI_DEPT_UPGRADE_COST"
+msgstr "強化費用：{cost}"
+
+msgid "UI_DEPT_DAILY_COST"
+msgstr "日次運営コスト：{cost}"
+
+msgid "UI_DEPT_BTN_CREATE"
+msgstr "部門を設立 ({cost})"
+
+msgid "UI_DEPT_BTN_UPGRADE"
+msgstr "Lv.{next} へ強化 ({cost})"
+
+msgid "UI_DEPT_BTN_MAX_LEVEL"
+msgstr "最大レベル到達済"
+
+msgid "UI_DEPT_SYNERGY_HEADER"
+msgstr "部門間シナジー状態"
+
+msgid "UI_DEPT_SYNERGY_HR_OPS"
+msgstr "人事＋業務シナジー：生産性 +5%、新任適応期間が1日に短縮"
+
+msgid "UI_DEPT_SYNERGY_CREDIT_RISK"
+msgstr "融資＋リスク管理シナジー：デフォルト率 -5%、処理時間 -3%"
+
+msgid "UI_DEPT_SYNERGY_ACTIVE"
+msgstr "【発動中】"
+
+msgid "UI_DEPT_SYNERGY_INACTIVE"
+msgstr "【未発動】"
+
+msgid "UI_POLICY_POINTS"
+msgstr "利用可能な戦略ポイント：{points}"
+
+msgid "UI_POLICY_BRANCH_CONSERVATIVE"
+msgstr "堅実経営ドクトリン"
+
+msgid "UI_POLICY_BRANCH_AGGRESSIVE"
+msgstr "積極拡大ドクトリン"
+
+msgid "UI_POLICY_BRANCH_MOD"
+msgstr "拡張戦略ブランチ"
+
+msgid "UI_POLICY_COST"
+msgstr "必要ポイント：{cost} SP"
+
+msgid "UI_POLICY_PREREQ"
+msgstr "前提方針：{prereq}"
+
+msgid "UI_POLICY_PREREQ_NONE"
+msgstr "前提方針：なし（初期段階）"
+
+msgid "UI_POLICY_BTN_ADOPT"
+msgstr "方針を採用 ({cost} SP)"
+
+msgid "UI_POLICY_ADOPTED"
+msgstr "採用済"
+
+msgid "UI_LOAN_MODAL_TITLE"
+msgstr "融資審査デスク"
+
+msgid "UI_LOAN_EMPTY"
+msgstr "審査待ちの融資申請はありません"
+
+msgid "UI_LOAN_BORROWER"
+msgstr "申請者：{customer} ({type})"
+
+msgid "UI_LOAN_TERMS"
+msgstr "元本：{principal} · 年利：{rate} · 期間：{days}日"
+
+msgid "UI_LOAN_RISK_EXACT"
+msgstr "信用スコア：{score}点 · 格付：{grade} · 予想PD：{pd}"
+
+msgid "UI_LOAN_RISK_BAND"
+msgstr "リスク格付帯：{grade}ランク（リスク管理部設立で精密スコア解放）"
+
+msgid "UI_LOAN_BTN_APPROVE"
+msgstr "融資承認・実行"
+
+msgid "UI_LOAN_BTN_REJECT"
+msgstr "申請却下"
+
+msgid "UI_EVENT_MODAL_TITLE"
+msgstr "イベント意思決定センター"
+
+msgid "UI_EVENT_EMPTY"
+msgstr "対応が必要なイベントはありません"
+
+msgid "UI_EVENT_HISTORY_HEADER"
+msgstr "解決済イベント履歴 ({count})"
+
+msgid "UI_REPORT_TITLE"
+msgstr "{day}日目 · 日次財務・経営決算レポート"
+
+msgid "UI_REPORT_SUBTITLE"
+msgstr "複式簿記損益振替完了 · 支店運営およびリスク指標サマリー"
+
+msgid "UI_REPORT_PNL_HEADER"
+msgstr "日次損益計算書 (P&L)"
+
+msgid "UI_REPORT_LOAN_INT_INC"
+msgstr "貸出金利息収益"
+
+msgid "UI_REPORT_FEE_INC"
+msgstr "役務取引等手数料収益"
+
+msgid "UI_REPORT_DEP_INT_EXP"
+msgstr "預金利息費用"
+
+msgid "UI_REPORT_STAFF_COST"
+msgstr "行員給与費用"
+
+msgid "UI_REPORT_FACILITY_COST"
+msgstr "施設賃借料"
+
+msgid "UI_REPORT_DEPT_COST"
+msgstr "部門運営費用"
+
+msgid "UI_REPORT_CREDIT_LOSS"
+msgstr "貸倒引当・償却損失"
+
+msgid "UI_REPORT_EVENT_EXP"
+msgstr "イベント特別費用"
+
+msgid "UI_REPORT_NET_PROFIT"
+msgstr "当期日次純利益"
+
+msgid "UI_REPORT_BS_HEADER"
+msgstr "期末貸借対照表およびリスク健全性"
+
+msgid "UI_REPORT_DRIVERS_HEADER"
+msgstr "日次業績要因と翌日の展望"
+
+msgid "UI_REPORT_BTN_NEXT_DAY"
+msgstr "翌日へ進む（オートセーブ）"

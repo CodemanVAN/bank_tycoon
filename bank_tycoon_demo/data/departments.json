@@ -1,0 +1,76 @@
+[
+  {
+    "id": "core:department.operations",
+    "name_key": "DEPT_OPERATIONS_NAME",
+    "description_key": "DEPT_OPERATIONS_DESC",
+    "initial_cost_minor": 1500000,
+    "daily_cost_minor": 15000,
+    "max_level": 3,
+    "unlock_conditions": [],
+    "effects": [
+      {
+        "target": "service.teller_duration_bps",
+        "operation": "add",
+        "value": -1200,
+        "scope": "global"
+      },
+      {
+        "target": "staff.productivity_bps",
+        "operation": "add",
+        "value": 800,
+        "scope": "global"
+      }
+    ]
+  },
+  {
+    "id": "core:department.hr",
+    "name_key": "DEPT_HR_NAME",
+    "description_key": "DEPT_HR_DESC",
+    "initial_cost_minor": 1800000,
+    "daily_cost_minor": 16000,
+    "max_level": 3,
+    "unlock_conditions": [],
+    "effects": [
+      {
+        "target": "staff.productivity_bps",
+        "operation": "add",
+        "value": 600,
+        "scope": "global"
+      }
+    ]
+  },
+  {
+    "id": "core:department.credit",
+    "name_key": "DEPT_CREDIT_NAME",
+    "description_key": "DEPT_CREDIT_DESC",
+    "initial_cost_minor": 2500000,
+    "daily_cost_minor": 22000,
+    "max_level": 3,
+    "unlock_conditions": [],
+    "effects": [
+      {
+        "target": "customer.deposit_growth_bps",
+        "operation": "add",
+        "value": 500,
+        "scope": "global"
+      }
+    ]
+  },
+  {
+    "id": "core:department.risk",
+    "name_key": "DEPT_RISK_NAME",
+    "description_key": "DEPT_RISK_DESC",
+    "initial_cost_minor": 2200000,
+    "daily_cost_minor": 20000,
+    "max_level": 3,
+    "unlock_conditions": [],
+    "effects": [
+      {
+        "target": "loan.default_risk_bps",
+        "operation": "add",
+        "value": -1200,
+        "scope": "global"
+      }
+    ]
+  }
+]

@@ -722,7 +722,7 @@ func run_daily_settlement(
 		if modifiers != null:
 			buf_bps = maxi(1_000, modifiers.evaluate_effects("liquidity.required_buffer_bps", BalanceConfig.BPS_DENOMINATOR, active_effects))
 		var scaled_wd: int = maxi(1, _mul_div_nonneg_sat(base_wd, buf_bps, BalanceConfig.BPS_DENOMINATOR))
-		liquidity_ratio = float(cash_end) / float(scaled_wd)
+		liquidity_ratio = snappedf(float(cash_end) / float(scaled_wd), 0.0001)
 		if liquidity_ratio >= 1.5:
 			liquidity_status = Enums.LiquidityStatus.SAFE
 		elif liquidity_ratio >= 1.0:
@@ -735,7 +735,7 @@ func run_daily_settlement(
 		var loan: LoanInstance = bank_state.loans[lid] as LoanInstance
 		if loan != null and loan.is_npl():
 			npl_balance += loan.principal_outstanding
-	var npl_ratio: float = float(npl_balance) / float(loan_end) if loan_end > 0 else 0.0
+	var npl_ratio: float = snappedf(float(npl_balance) / float(loan_end), 0.0001) if loan_end > 0 else 0.0
 
 	var warning_level: int = Enums.EventSeverity.INFO
 	if liquidity_status == Enums.LiquidityStatus.DANGER or npl_ratio >= 0.12:

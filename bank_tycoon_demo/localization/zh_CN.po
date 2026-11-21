@@ -1,0 +1,1706 @@
+# Starway Bank — Bank Tycoon (zh_CN)
+msgid ""
+msgstr ""
+"Project-Id-Version: Starway Bank 0.1.0\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "UI_MAIN_MENU_TITLE"
+msgstr "星海银行"
+
+msgid "UI_MAIN_MENU_SUBTITLE"
+msgstr "现代科技蓝 · 像素分行实时经营模拟"
+
+msgid "UI_MAIN_MENU_NEW_GAME"
+msgstr "新游戏"
+
+msgid "UI_MAIN_MENU_CONTINUE"
+msgstr "继续游戏"
+
+msgid "UI_MAIN_MENU_LOAD_GAME"
+msgstr "读取存档"
+
+msgid "UI_MAIN_MENU_SETTINGS"
+msgstr "游戏设置"
+
+msgid "UI_MAIN_MENU_QUIT"
+msgstr "退出游戏"
+
+msgid "UI_TOPBAR_DAY"
+msgstr "第 {day} 天"
+
+msgid "UI_TOPBAR_CASH"
+msgstr "现金准备"
+
+msgid "UI_TOPBAR_DEPOSITS"
+msgstr "客户存款"
+
+msgid "UI_TOPBAR_LOANS"
+msgstr "贷款余额"
+
+msgid "UI_TOPBAR_EQUITY"
+msgstr "所有者权益"
+
+msgid "UI_TOPBAR_PROFIT"
+msgstr "今日净利"
+
+msgid "UI_TOPBAR_SATISFACTION"
+msgstr "满意度"
+
+msgid "UI_TOPBAR_REPUTATION"
+msgstr "声誉"
+
+msgid "UI_TOPBAR_STRATEGY_POINTS"
+msgstr "战略点"
+
+msgid "UI_TOPBAR_TIME"
+msgstr "时间 {time}"
+
+msgid "UI_TOPBAR_PHASE"
+msgstr "阶段"
+
+msgid "UI_NAV_OVERVIEW"
+msgstr "总览"
+
+msgid "UI_NAV_FINANCE"
+msgstr "财务"
+
+msgid "UI_NAV_EMPLOYEES"
+msgstr "员工"
+
+msgid "UI_NAV_DEPARTMENTS"
+msgstr "部门"
+
+msgid "UI_NAV_POLICIES"
+msgstr "政策"
+
+msgid "UI_NAV_EVENTS"
+msgstr "事件"
+
+msgid "UI_INSPECTOR_TITLE"
+msgstr "实体详情"
+
+msgid "UI_INSPECTOR_EMPTY"
+msgstr "点击大厅中的员工、客户或工位查看详情"
+
+msgid "UI_BOTTOM_OPEN_BRANCH"
+msgstr "开门营业"
+
+msgid "UI_BOTTOM_NEXT_DAY"
+msgstr "进入下一天"
+
+msgid "UI_BOTTOM_QUEUE"
+msgstr "排队等候"
+
+msgid "UI_BOTTOM_APPROVALS"
+msgstr "待审贷款"
+
+msgid "UI_BOTTOM_EVENTS"
+msgstr "待处理事件"
+
+msgid "DEPT_OPERATIONS_NAME"
+msgstr "运营管理部"
+
+msgid "DEPT_OPERATIONS_DESC"
+msgstr "统筹大厅柜台流程与服务调度，缩短柜面办理时长并提升全行工作效率。"
+
+msgid "DEPT_OPERATIONS_LV1"
+msgstr "Lv.1 基础标准流程：缩短柜面服务耗时，提升员工基础效率"
+
+msgid "DEPT_OPERATIONS_LV2"
+msgstr "Lv.2 智能排队调度：解锁队列优先级调整（普通/优先/VIP）"
+
+msgid "DEPT_OPERATIONS_LV3"
+msgstr "Lv.3 自动化客诉督办：自动加速处理客户投诉并降低满意度损耗"
+
+msgid "DEPT_HR_NAME"
+msgstr "人力资源部"
+
+msgid "DEPT_HR_DESC"
+msgstr "负责人才招募、岗位培训与员工关怀，扩充候选人池并缓解疲劳。"
+
+msgid "DEPT_HR_LV1"
+msgstr "Lv.1 人才猎聘网络：扩充每日候选人池规模（与运营部协同可缩短适应期）"
+
+msgid "DEPT_HR_LV2"
+msgstr "Lv.2 专业技能实训：解锁员工在岗技能培训与属性提升"
+
+msgid "DEPT_HR_LV3"
+msgstr "Lv.3 员工关怀体系：大幅提升夜间疲劳恢复效率并降低过载风险"
+
+msgid "DEPT_CREDIT_NAME"
+msgstr "信贷业务部"
+
+msgid "DEPT_CREDIT_DESC"
+msgstr "拓展个人与小微企业信贷产品，提升存款吸纳与贷款审批能力。"
+
+msgid "DEPT_CREDIT_LV1"
+msgstr "Lv.1 专职信贷柜台：启用信贷专席受理贷款申请与商务洽谈"
+
+msgid "DEPT_CREDIT_LV2"
+msgstr "Lv.2 快速授信通道：低风险小额贷款自动审批放款"
+
+msgid "DEPT_CREDIT_LV3"
+msgstr "Lv.3 精细化信贷定价：优化高信用客户贷款收益与额度上限"
+
+msgid "DEPT_RISK_NAME"
+msgstr "风险合规部"
+
+msgid "DEPT_RISK_DESC"
+msgstr "建立独立信用评级与贷后风控模型，降低贷款违约率与极端冲击损失。"
+
+msgid "DEPT_RISK_LV1"
+msgstr "Lv.1 精准信用评分：揭示客户精确信用分与风险等级（与信贷部协同降低违约风险）"
+
+msgid "DEPT_RISK_LV2"
+msgstr "Lv.2 高危预警审查：降低存量贷款每日违约概率并拦截高危授信"
+
+msgid "DEPT_RISK_LV3"
+msgstr "Lv.3 压力测试缓释：在宏观信贷危机中大幅降低违约损失率（LGD）"
+
+msgid "SYNERGY_HR_OPERATIONS_NAME"
+msgstr "人事—运营协同"
+
+msgid "SYNERGY_HR_OPERATIONS_DESC"
+msgstr "新聘与转岗员工适应期缩短至 1 天，全员工作效率额外 +5%。"
+
+msgid "SYNERGY_CREDIT_RISK_NAME"
+msgstr "信贷—风控协同"
+
+msgid "SYNERGY_CREDIT_RISK_DESC"
+msgstr "贷款违约风险基点降低 500 bps，服务流转耗时降低 3%。"
+
+msgid "POLICY_PRUDENT_LENDING_NAME"
+msgstr "审慎授信准则"
+
+msgid "POLICY_PRUDENT_LENDING_DESC"
+msgstr "严格核查借款人现金流与抵押物，显著降低贷款违约风险与流动性缓冲压力。"
+
+msgid "POLICY_LIQUIDITY_FIRST_NAME"
+msgstr "流动性优先战略"
+
+msgid "POLICY_LIQUIDITY_FIRST_DESC"
+msgstr "保持充裕高流动性头寸，降低备付金缓冲要求并进一步压降违约风险。"
+
+msgid "POLICY_CUSTOMER_TRUST_NAME"
+msgstr "星途信赖工程"
+
+msgid "POLICY_CUSTOMER_TRUST_DESC"
+msgstr "以稳健透明的经营树立行业口碑，提升银行声誉并带来稳定的低成本存款增长。"
+
+msgid "POLICY_HIGH_RATE_ACQUISITION_NAME"
+msgstr "高息揽储攻势"
+
+msgid "POLICY_HIGH_RATE_ACQUISITION_DESC"
+msgstr "通过极具竞争力的存款推广快速吸引资金流入，但伴随轻度信用下沉风险。"
+
+msgid "POLICY_MARKET_PENETRATION_NAME"
+msgstr "全渠道市场渗透"
+
+msgid "POLICY_MARKET_PENETRATION_DESC"
+msgstr "全面铺开社区与商业营销网络，大幅提升存款增速与前线团队业务产出。"
+
+msgid "POLICY_CREDIT_EXPANSION_NAME"
+msgstr "激进信贷扩张"
+
+msgid "POLICY_CREDIT_EXPANSION_DESC"
+msgstr "放宽授信准入全力扩大资产规模，获得极高业务增长，但显著推高违约风险。"
+
+msgid "POLICY_BRANCH_CONSERVATIVE"
+msgstr "稳健经营路线"
+
+msgid "POLICY_BRANCH_AGGRESSIVE"
+msgstr "激进扩张路线"
+
+msgid "EVENT_REAL_ESTATE_BOOM_TITLE"
+msgstr "商业地产繁荣潮"
+
+msgid "EVENT_REAL_ESTATE_BOOM_DESC"
+msgstr "周边核心商圈地产交易激增，大量开发商与按揭客户涌入分行寻求资金支持。"
+
+msgid "EVENT_RE_BOOM_OPT_AGGR"
+msgstr "顺势扩大地产按揭投放"
+
+msgid "EVENT_RE_BOOM_OPT_AGGR_DESC"
+msgstr "短期存款与战略点大幅增长，但埋下后续地产降温时的信用违约隐患。"
+
+msgid "EVENT_RE_BOOM_OPT_PRUDENT"
+msgstr "设定地产授信敞口上限"
+
+msgid "EVENT_RE_BOOM_OPT_PRUDENT_DESC"
+msgstr "控制高风险敞口并提升声誉，为后续市场波动预留安全垫。"
+
+msgid "EVENT_REAL_ESTATE_COOLING_TITLE"
+msgstr "地产市场降温预警"
+
+msgid "EVENT_REAL_ESTATE_COOLING_DESC"
+msgstr "监管部门发布按揭指导意见，商业地产成交量明显回落，部分高杠杆借款人现金流趋紧。"
+
+msgid "EVENT_RE_COOL_OPT_TIGHTEN"
+msgstr "立即收紧信贷并追缴保证金"
+
+msgid "EVENT_RE_COOL_OPT_TIGHTEN_DESC"
+msgstr "提前压降违约风险并获得战略点，在信用压力爆发前稳住资产质量。"
+
+msgid "EVENT_RE_COOL_OPT_HOLD"
+msgstr "维持现有授信规模观望"
+
+msgid "EVENT_RE_COOL_OPT_HOLD_DESC"
+msgstr "避免立即冲击客户关系，但违约风险基点将进一步上升。"
+
+msgid "EVENT_REAL_ESTATE_CREDIT_STRESS_TITLE"
+msgstr "地产信贷违约潮冲击"
+
+msgid "EVENT_REAL_ESTATE_CREDIT_STRESS_DESC"
+msgstr "多家地产关联商户出现逾期，市场迎来阶段性信用出清，分行面临真实坏账考验。"
+
+msgid "EVENT_RE_STRESS_OPT_PROVISION"
+msgstr "计提紧急拨备并专项清收"
+
+msgid "EVENT_RE_STRESS_OPT_PROVISION_DESC"
+msgstr "优先控制逾期扩散，降低存量贷款违约率。"
+
+msgid "EVENT_RE_STRESS_OPT_RESTRUCTURE"
+msgstr "注资重组优质抵押账目"
+
+msgid "EVENT_RE_STRESS_OPT_RESTRUCTURE_DESC"
+msgstr "消耗部分现金实施债务重组，大幅压降违约风险并赢得市场声誉。"
+
+msgid "EVENT_VIP_DEPOSIT_VISIT_TITLE"
+msgstr "高净值家族基金到访"
+
+msgid "EVENT_VIP_DEPOSIT_VISIT_DESC"
+msgstr "本地知名科技企业家族办公室代表考察星途银行，评估大额资金托管合作。"
+
+msgid "EVENT_VIP_VISIT_OPT_CONCIERGE"
+msgstr "启动贵宾专属绿色通道"
+
+msgid "EVENT_VIP_VISIT_OPT_CONCIERGE_DESC"
+msgstr "抽调骨干全程接待，显著提升存款增长与分行声誉。"
+
+msgid "EVENT_VIP_VISIT_OPT_STANDARD"
+msgstr "按标准财富管理流程接待"
+
+msgid "EVENT_VIP_VISIT_OPT_STANDARD_DESC"
+msgstr "保持大厅正常秩序，获得小幅存款流入加成。"
+
+msgid "EVENT_TELLER_SYSTEM_GLITCH_TITLE"
+msgstr "核心柜面终端延迟"
+
+msgid "EVENT_TELLER_SYSTEM_GLITCH_DESC"
+msgstr "早高峰期间柜面清结算接口出现偶发抖动，技术人员建议立即处理。"
+
+msgid "EVENT_GLITCH_OPT_HOTFIX"
+msgstr "部署紧急热补丁并扩容带宽"
+
+msgid "EVENT_GLITCH_OPT_HOTFIX_DESC"
+msgstr "快速恢复并优化终端响应，缩短柜面平均办理时长。"
+
+msgid "EVENT_GLITCH_OPT_MANUAL"
+msgstr "启用人工复核应急预案"
+
+msgid "EVENT_GLITCH_OPT_MANUAL_DESC"
+msgstr "节省IT支出，但短期内柜面耗时增加且员工效率下降。"
+
+msgid "EVENT_COMPETITOR_POACHING_TITLE"
+msgstr "同业高薪挖角风波"
+
+msgid "EVENT_COMPETITOR_POACHING_DESC"
+msgstr "邻街竞争银行向本行多名资深柜员与信贷经理发出高薪邀约。"
+
+msgid "EVENT_POACHING_OPT_BONUS"
+msgstr "发放专项留任激励奖金"
+
+msgid "EVENT_POACHING_OPT_BONUS_DESC"
+msgstr "鼓舞团队士气，提升员工生产力与行业声誉。"
+
+msgid "EVENT_POACHING_OPT_IGNORE"
+msgstr "按既有薪酬制度自然竞争"
+
+msgid "EVENT_POACHING_OPT_IGNORE_DESC"
+msgstr "不额外增加开支，但团队短期工作积极性略受影响。"
+
+msgid "EVENT_COMMUNITY_SPONSORSHIP_TITLE"
+msgstr "科技园区金融节赞助邀请"
+
+msgid "EVENT_COMMUNITY_SPONSORSHIP_DESC"
+msgstr "星途分行所在的现代科技园举办年度创新峰会，邀请本行作为首席金融伙伴。"
+
+msgid "EVENT_COMMUNITY_OPT_SPONSOR"
+msgstr "冠名赞助并设立普惠金融展台"
+
+msgid "EVENT_COMMUNITY_OPT_SPONSOR_DESC"
+msgstr "提升星途品牌声誉，吸引园区企业与白领开户存款。"
+
+msgid "EVENT_COMMUNITY_OPT_DECLINE"
+msgstr "婉拒冠名，仅派代表参会"
+
+msgid "EVENT_COMMUNITY_OPT_DECLINE_DESC"
+msgstr "保持低调，不产生额外状态变动。"
+
+msgid "EVENT_REGULATORY_AUDIT_TITLE"
+msgstr "季度合规与风控巡检"
+
+msgid "EVENT_REGULATORY_AUDIT_DESC"
+msgstr "银行业审慎监管小组进驻分行，对近期放款档案与备付金覆盖率进行抽查。"
+
+msgid "EVENT_AUDIT_OPT_COOPERATE"
+msgstr "开放全量台账并配合整改"
+
+msgid "EVENT_AUDIT_OPT_COOPERATE_DESC"
+msgstr "规范授信档案，降低贷款违约风险并提升监管声誉。"
+
+msgid "EVENT_AUDIT_OPT_MINIMAL"
+msgstr "仅提交基础合规报表"
+
+msgid "EVENT_AUDIT_OPT_MINIMAL_DESC"
+msgstr "减少迎检工作量，但监管要求暂时提高流动性缓冲比例。"
+
+msgid "EVENT_FINTECH_PARTNERSHIP_TITLE"
+msgstr "金融科技智能风控联调"
+
+msgid "EVENT_FINTECH_PARTNERSHIP_DESC"
+msgstr "一家领先的金融科技服务商提议在本行试点自动化票据识别与智能叫号接口。"
+
+msgid "EVENT_FINTECH_OPT_INTEGRATE"
+msgstr "接入智能柜面加速组件"
+
+msgid "EVENT_FINTECH_OPT_INTEGRATE_DESC"
+msgstr "显著缩短柜员办理耗时并提升员工生产力。"
+
+msgid "EVENT_FINTECH_OPT_LEGACY"
+msgstr "保持既有稳健核验流程"
+
+msgid "EVENT_FINTECH_OPT_LEGACY_DESC"
+msgstr "坚持传统多级人工核验，小幅降低贷款违约风险。"
+
+msgid "EVENT_RATE_HIKE_RUMOR_TITLE"
+msgstr "基准利率上调传闻"
+
+msgid "EVENT_RATE_HIKE_RUMOR_DESC"
+msgstr "货币市场传出存款准备金与基准利率调整预期，储户与企业财务密切关注。"
+
+msgid "EVENT_RATE_RUMOR_OPT_BUFFER"
+msgstr "提前锁定同业流动性额度"
+
+msgid "EVENT_RATE_RUMOR_OPT_BUFFER_DESC"
+msgstr "优化短期资金调度，降低流动性备付缓冲要求。"
+
+msgid "EVENT_RATE_RUMOR_OPT_DEPOSITS"
+msgstr "推出阶梯锁利储蓄计划"
+
+msgid "EVENT_RATE_RUMOR_OPT_DEPOSITS_DESC"
+msgstr "把握利率预期窗口，加速吸收客户存款。"
+
+msgid "TRAIT_SALES_PRODIGY_NAME"
+msgstr "营销奇才"
+
+msgid "TRAIT_SALES_PRODIGY_DESC"
+msgstr "极具亲和力与产品推介技巧，显著提升客户存款转化。"
+
+msgid "TRAIT_RISK_EXPERT_NAME"
+msgstr "风控专家"
+
+msgid "TRAIT_RISK_EXPERT_DESC"
+msgstr "敏锐识别财务报表瑕疵，降低经手信贷业务的违约隐患。"
+
+msgid "TRAIT_WORKAHOLIC_NAME"
+msgstr "高效敬业"
+
+msgid "TRAIT_WORKAHOLIC_DESC"
+msgstr "专注度极高，在繁忙时段依然保持出色的业务吞吐效率。"
+
+msgid "TRAIT_DETAIL_ORIENTED_NAME"
+msgstr "严谨细致"
+
+msgid "TRAIT_DETAIL_ORIENTED_DESC"
+msgstr "票据录入与账务核对零差错，缩短单笔柜面业务耗时。"
+
+msgid "TRAIT_BANK_VETERAN_NAME"
+msgstr "银行业老兵"
+
+msgid "TRAIT_BANK_VETERAN_DESC"
+msgstr "拥有多年一线分行经验，专业度、管理力与忠诚度均衡出众。"
+
+msgid "TRAIT_TEAM_LEADER_NAME"
+msgstr "团队核心"
+
+msgid "TRAIT_TEAM_LEADER_DESC"
+msgstr "善于协调跨岗位配合，带动周边柜台整体工作效率提升。"
+
+msgid "CUSTOMER_REGULAR_NAME"
+msgstr "普通储户"
+
+msgid "CUSTOMER_REGULAR_DESC"
+msgstr "办理日常存取款与转账的社区居民，资金规模适中。"
+
+msgid "CUST_TYPE_REGULAR"
+msgstr "普通储户"
+
+msgid "CUSTOMER_SALARIED_NAME"
+msgstr "科技园白领"
+
+msgid "CUSTOMER_SALARIED_DESC"
+msgstr "收入稳定的工薪阶层，常办理工资存入、转账与消费信贷。"
+
+msgid "CUST_TYPE_SALARIED"
+msgstr "科技园白领"
+
+msgid "CUSTOMER_BORROWER_NAME"
+msgstr "个人按揭客户"
+
+msgid "CUSTOMER_BORROWER_DESC"
+msgstr "有明确购房或消费融资需求的借款客户，关注放款效率与利率。"
+
+msgid "CUST_TYPE_BORROWER"
+msgstr "个人按揭客户"
+
+msgid "CUSTOMER_SMB_NAME"
+msgstr "小微企业主"
+
+msgid "CUSTOMER_SMB_DESC"
+msgstr "周边商户与科技初创企业代表，单笔结算与经营贷款金额较高。"
+
+msgid "CUST_TYPE_SMB"
+msgstr "小微企业主"
+
+msgid "CUSTOMER_VIP_NAME"
+msgstr "财富贵宾客户"
+
+msgid "CUSTOMER_VIP_DESC"
+msgstr "高净值个人与企业高管，资金体量庞大但对等待时长较为敏感。"
+
+msgid "CUST_TYPE_VIP"
+msgstr "财富贵宾客户"
+
+msgid "CUSTOMER_SUSPICIOUS_NAME"
+msgstr "高风险投机客"
+
+msgid "CUSTOMER_SUSPICIOUS_DESC"
+msgstr "负债率偏高、信用历史存疑的投机申请者，需谨慎审查其贷款请求。"
+
+msgid "CUST_TYPE_SUSPICIOUS"
+msgstr "高风险投机客"
+
+msgid "SERVICE_CASH_DEPOSIT"
+msgstr "现金存款"
+
+msgid "SERVICE_CASH_WITHDRAWAL"
+msgstr "现金取款"
+
+msgid "SERVICE_TRANSFER"
+msgstr "转账结算"
+
+msgid "SERVICE_PERSONAL_LOAN_APPLICATION"
+msgstr "个人贷款申请"
+
+msgid "SERVICE_BUSINESS_MEETING"
+msgstr "企业信贷洽谈"
+
+msgid "SERVICE_COMPLAINT"
+msgstr "客户投诉处理"
+
+msgid "ROLE_TELLER"
+msgstr "综合柜员"
+
+msgid "ROLE_LOAN_OFFICER"
+msgstr "信贷专员"
+
+msgid "ROLE_MANAGER"
+msgstr "大堂经理"
+
+msgid "ROLE_ANALYST"
+msgstr "风控分析师"
+
+msgid "EMP_STATE_AVAILABLE"
+msgstr "在岗待命"
+
+msgid "EMP_STATE_MOVING"
+msgstr "移动中"
+
+msgid "EMP_STATE_WORKING"
+msgstr "办理业务"
+
+msgid "EMP_STATE_BREAK"
+msgstr "休息恢复"
+
+msgid "EMP_STATE_OVERLOADED"
+msgstr "疲劳过载"
+
+msgid "EMP_STATE_OFF_DUTY"
+msgstr "下班休整"
+
+msgid "CUST_STATE_SPAWNING"
+msgstr "步入大厅"
+
+msgid "CUST_STATE_FINDING_SERVICE"
+msgstr "取号分流"
+
+msgid "CUST_STATE_WAITING"
+msgstr "排队等候"
+
+msgid "CUST_STATE_IN_SERVICE"
+msgstr "正在办理"
+
+msgid "CUST_STATE_COMPLETED"
+msgstr "办理完成"
+
+msgid "CUST_STATE_LEAVING"
+msgstr "离开分行"
+
+msgid "PHASE_PRE_OPEN"
+msgstr "营业准备"
+
+msgid "PHASE_OPEN"
+msgstr "开门营业"
+
+msgid "PHASE_CLOSING"
+msgstr "日终清场"
+
+msgid "PHASE_SETTLED"
+msgstr "日终已结算"
+
+msgid "LIQUIDITY_SAFE"
+msgstr "流动性充裕"
+
+msgid "LIQUIDITY_CAUTION"
+msgstr "流动性预警"
+
+msgid "LIQUIDITY_DANGER"
+msgstr "流动性危机"
+
+msgid "RISK_GRADE_A"
+msgstr "A级（优质）"
+
+msgid "RISK_GRADE_B"
+msgstr "B级（良好）"
+
+msgid "RISK_GRADE_C"
+msgstr "C级（关注）"
+
+msgid "RISK_GRADE_D"
+msgstr "D级（高危）"
+
+msgid "QUEUE_PRIORITY_NORMAL"
+msgstr "普通号"
+
+msgid "QUEUE_PRIORITY_PRIORITY"
+msgstr "优先号"
+
+msgid "QUEUE_PRIORITY_VIP"
+msgstr "贵宾号"
+
+msgid "EMP_NAME_STARTER_1"
+msgstr "林知夏"
+
+msgid "EMP_NAME_STARTER_2"
+msgstr "周牧野"
+
+msgid "CAND_NAME_1"
+msgstr "苏晴岚"
+
+msgid "CAND_NAME_2"
+msgstr "陈嘉树"
+
+msgid "CAND_NAME_3"
+msgstr "许星河"
+
+msgid "PERSON_NAME_01"
+msgstr "陆明远"
+
+msgid "PERSON_NAME_02"
+msgstr "沈清欢"
+
+msgid "PERSON_NAME_03"
+msgstr "顾言深"
+
+msgid "PERSON_NAME_04"
+msgstr "叶知秋"
+
+msgid "PERSON_NAME_05"
+msgstr "程望舒"
+
+msgid "PERSON_NAME_06"
+msgstr "宋怀瑾"
+
+msgid "PERSON_NAME_07"
+msgstr "秦书瑶"
+
+msgid "PERSON_NAME_08"
+msgstr "江屿森"
+
+msgid "PERSON_NAME_09"
+msgstr "唐晚星"
+
+msgid "PERSON_NAME_10"
+msgstr "温景行"
+
+msgid "PERSON_NAME_11"
+msgstr "谢云舒"
+
+msgid "PERSON_NAME_12"
+msgstr "韩沐辰"
+
+msgid "PERSON_NAME_13"
+msgstr "白若溪"
+
+msgid "PERSON_NAME_14"
+msgstr "赵津南"
+
+msgid "PERSON_NAME_15"
+msgstr "孟昭华"
+
+msgid "PERSON_NAME_16"
+msgstr "裴季礼"
+
+msgid "PERSON_NAME_17"
+msgstr "纪星眠"
+
+msgid "PERSON_NAME_18"
+msgstr "钟意禾"
+
+msgid "PERSON_NAME_19"
+msgstr "方鹤鸣"
+
+msgid "PERSON_NAME_20"
+msgstr "夏清越"
+
+msgid "PERSON_NAME_21"
+msgstr "贺兰舟"
+
+msgid "PERSON_NAME_22"
+msgstr "姜南絮"
+
+msgid "PERSON_NAME_23"
+msgstr "严景泽"
+
+msgid "PERSON_NAME_24"
+msgstr "乔安然"
+
+msgid "PERSON_NAME_25"
+msgstr "魏长风"
+
+msgid "PERSON_NAME_26"
+msgstr "黎微光"
+
+msgid "PERSON_NAME_27"
+msgstr "傅庭深"
+
+msgid "PERSON_NAME_28"
+msgstr "阮清音"
+
+msgid "PERSON_NAME_29"
+msgstr "邵明轩"
+
+msgid "PERSON_NAME_30"
+msgstr "柳如眉"
+
+msgid "PERSON_NAME_31"
+msgstr "莫北辰"
+
+msgid "PERSON_NAME_32"
+msgstr "向晚晴"
+
+msgid "PERSON_NAME_33"
+msgstr "陶景明"
+
+msgid "PERSON_NAME_34"
+msgstr "宁初夏"
+
+msgid "PERSON_NAME_35"
+msgstr "庄严泽"
+
+msgid "PERSON_NAME_36"
+msgstr "洛清河"
+
+msgid "PERSON_NAME_37"
+msgstr "池宴礼"
+
+msgid "PERSON_NAME_38"
+msgstr "桑榆晚"
+
+msgid "PERSON_NAME_39"
+msgstr "凌云澈"
+
+msgid "PERSON_NAME_40"
+msgstr "闻人羽"
+
+msgid "LEDGER_INIT_CAPITAL"
+msgstr "分行初始注册资本金注入"
+
+msgid "LEDGER_DEPOSIT"
+msgstr "客户存款入账"
+
+msgid "LEDGER_WITHDRAWAL"
+msgstr "客户取款兑付"
+
+msgid "LEDGER_SERVICE_FEE"
+msgstr "中间业务手续费收入"
+
+msgid "LEDGER_LOAN_DISBURSEMENT"
+msgstr "贷款本金发放"
+
+msgid "LEDGER_LOAN_REPAYMENT"
+msgstr "贷款本金回收"
+
+msgid "LEDGER_CREDIT_LOSS"
+msgstr "不良贷款坏账核销损失"
+
+msgid "LEDGER_OPERATING_COST"
+msgstr "日常经营与部门管理支出"
+
+msgid "LEDGER_EVENT_EXPENSE"
+msgstr "特殊事件专项支出"
+
+msgid "LEDGER_DAILY_LOAN_INTEREST"
+msgstr "日终贷款利息收入结计"
+
+msgid "LEDGER_DAILY_DEPOSIT_INTEREST"
+msgstr "日终存款利息支出计提"
+
+msgid "LEDGER_DAILY_CLOSEOUT"
+msgstr "日终损益结转留存收益"
+
+msgid "ACCOUNT_CASH_RESERVES"
+msgstr "现金及备付金"
+
+msgid "ACCOUNT_LOAN_PRINCIPAL_OUTSTANDING"
+msgstr "贷款本金余额"
+
+msgid "ACCOUNT_CUSTOMER_DEPOSITS"
+msgstr "吸收客户存款"
+
+msgid "ACCOUNT_EQUITY_CAPITAL"
+msgstr "实收资本"
+
+msgid "ACCOUNT_RETAINED_EARNINGS"
+msgstr "留存收益"
+
+msgid "ACCOUNT_LOAN_INTEREST_INCOME"
+msgstr "贷款利息收入"
+
+msgid "ACCOUNT_FEE_INCOME"
+msgstr "手续费及佣金收入"
+
+msgid "ACCOUNT_DEPOSIT_INTEREST_EXPENSE"
+msgstr "存款利息支出"
+
+msgid "ACCOUNT_OPERATING_EXPENSE"
+msgstr "营业及管理费用"
+
+msgid "ACCOUNT_CREDIT_LOSS_EXPENSE"
+msgstr "信用减值损失"
+
+msgid "ACCOUNT_EVENT_EXPENSE"
+msgstr "事件营业外支出"
+
+msgid "REPORT_DRIVER_PROFIT_UP"
+msgstr "利差与手续费收入稳健增长，带动留存收益上升。"
+
+msgid "REPORT_DRIVER_PROFIT_DOWN"
+msgstr "当日经营净亏损，建议检查人员排班效率或提高生息贷款规模。"
+
+msgid "REPORT_DRIVER_CREDIT_LOSS"
+msgstr "发生信用违约核销损失，建议成立/升级风险管理部或审慎审批高风险贷款。"
+
+msgid "REPORT_DRIVER_LIQUIDITY_STRESS"
+msgstr "现金流动性缓冲承压，建议适当提高存款利率揽储或控制大额放款。"
+
+msgid "REPORT_DRIVER_PAYROLL_COST"
+msgstr "员工薪酬已按时结清，全体员工夜间恢复疲劳度。"
+
+msgid "ERR_UNKNOWN_ERROR"
+msgstr "发生未知系统错误"
+
+msgid "ERR_INVALID_CONTENT_ID"
+msgstr "无效的内容标识符：{id}"
+
+msgid "ERR_INVALID_BANK_STATE"
+msgstr "银行状态数据无效或尚未初始化"
+
+msgid "ERR_INVALID_LEDGER_DATA"
+msgstr "总账数据结构损坏"
+
+msgid "ERR_LEDGER_CORRUPTED_UNBALANCED"
+msgstr "会计总账借贷失衡，数据校验未通过"
+
+msgid "ERR_LEDGER_TOO_FEW_LINES"
+msgstr "会计分录至少需要两行借贷记录"
+
+msgid "ERR_LEDGER_MALFORMED_LINE"
+msgstr "会计分录行字段不完整"
+
+msgid "ERR_LEDGER_UNKNOWN_ACCOUNT"
+msgstr "未知的会计科目：{account}"
+
+msgid "ERR_LEDGER_INVALID_SIDE"
+msgstr "无效的借贷方向：{side}"
+
+msgid "ERR_LEDGER_INVALID_AMOUNT"
+msgstr "分录金额无效或超出安全上限"
+
+msgid "ERR_LEDGER_UNBALANCED"
+msgstr "复式记账借贷金额不相等"
+
+msgid "ERR_INVALID_AMOUNT"
+msgstr "交易金额必须为正整数"
+
+msgid "ERR_INSUFFICIENT_DEPOSITS"
+msgstr "客户存款余额不足以完成支取"
+
+msgid "ERR_INSUFFICIENT_CASH"
+msgstr "分行现金储备不足"
+
+msgid "ERR_INVALID_LOAN_TERMS"
+msgstr "贷款本金、利率或期限参数无效"
+
+msgid "ERR_LOAN_REPAYMENT_EXCEEDS_PRINCIPAL"
+msgstr "还款金额超过待偿还贷款本金"
+
+msgid "ERR_INVALID_LOAN"
+msgstr "贷款合同记录无效"
+
+msgid "ERR_LOAN_NOT_ACTIVE"
+msgstr "该笔贷款当前不处于正常存续状态"
+
+msgid "ERR_CREDIT_LOSS_EXCEEDS_LOANS"
+msgstr "核销金额超过存量贷款总本金"
+
+msgid "ERR_DAY_ALREADY_SETTLED"
+msgstr "第 {day} 天已完成日终结算，不可重复结算"
+
+msgid "ERR_INVALID_REPAYMENT_AMOUNT"
+msgstr "还款金额必须大于零"
+
+msgid "ERR_LOAN_ALREADY_CLOSED"
+msgstr "该笔贷款已结清或已核销"
+
+msgid "ERR_INVALID_LOAN_ID"
+msgstr "无效的贷款编号"
+
+msgid "ERR_INVALID_CUSTOMER_ID"
+msgstr "无效的客户编号"
+
+msgid "ERR_INVALID_CUSTOMER_STATE"
+msgstr "无效的客户状态值"
+
+msgid "ERR_ILLEGAL_CUSTOMER_TRANSITION"
+msgstr "非法的客户状态转换"
+
+msgid "ERR_INVALID_EMPLOYEE_ID"
+msgstr "无效的员工编号"
+
+msgid "ERR_INVALID_EMPLOYEE_STATE"
+msgstr "无效的员工状态值"
+
+msgid "ERR_ILLEGAL_EMPLOYEE_TRANSITION"
+msgstr "非法的员工状态转换"
+
+msgid "ERR_INVALID_REQUEST_ID"
+msgstr "无效的服务请求编号"
+
+msgid "ERR_EMPLOYEE_TASK_CONFLICT"
+msgstr "员工已有正在处理的业务请求"
+
+msgid "ERR_EMPLOYEE_ON_BREAK"
+msgstr "员工正在休息中，无法指派任务或调岗"
+
+msgid "ERR_EMPLOYEE_OFF_DUTY"
+msgstr "员工当前处于下班状态"
+
+msgid "ERR_EMPLOYEE_BUSY"
+msgstr "员工正在办理业务，请稍后操作"
+
+msgid "ERR_EMPLOYEE_NOT_FOUND"
+msgstr "未找到指定员工"
+
+msgid "ERR_CANDIDATE_NOT_FOUND"
+msgstr "未找到指定候选人"
+
+msgid "ERR_CANNOT_FIRE_BUSY_EMPLOYEE"
+msgstr "无法解雇正在办理业务的员工"
+
+msgid "ERR_CANNOT_FIRE_LAST_EMPLOYEE"
+msgstr "分行至少需保留一名在职员工"
+
+msgid "ERR_REQUEST_NOT_QUEUED"
+msgstr "该服务请求已不在排队队列中"
+
+msgid "ERR_REQUEST_ALREADY_ASSIGNED"
+msgstr "该服务请求已分配给其他柜员"
+
+msgid "ERR_INVALID_QUEUE_PRIORITY"
+msgstr "无效的队列优先级"
+
+msgid "ERR_REQUEST_NOT_FOUND"
+msgstr "未找到指定的服务请求"
+
+msgid "ERR_QUEUE_PRIORITY_LOCKED"
+msgstr "需将运营管理部升级至 Lv.2 解锁智能排队优先级"
+
+msgid "ERR_DEPT_NOT_FOUND"
+msgstr "未找到指定部门定义：{department_id}"
+
+msgid "ERR_DEPT_ALREADY_EXISTS"
+msgstr "该部门已成立，无需重复创建"
+
+msgid "ERR_DEPT_LOCKED"
+msgstr "尚未满足该部门的设立前置条件"
+
+msgid "ERR_DEPT_NOT_CREATED"
+msgstr "该部门尚未设立，无法升级"
+
+msgid "ERR_DEPT_MAX_LEVEL"
+msgstr "该部门已达到最高等级 Lv.{max_level}"
+
+msgid "ERR_POLICY_NOT_FOUND"
+msgstr "未找到指定政策定义：{policy_id}"
+
+msgid "ERR_POLICY_ALREADY_ADOPTED"
+msgstr "该项战略政策已采纳"
+
+msgid "ERR_POLICY_PREREQUISITE_MISSING"
+msgstr "需先采纳前置政策：{missing_prerequisite}"
+
+msgid "ERR_POLICY_BRANCH_CONFLICT"
+msgstr "与已采纳的经营路线互斥，无法跨路线采纳"
+
+msgid "ERR_POLICY_EXCLUSIVE_CONFLICT"
+msgstr "与同组互斥政策冲突：{conflicting_policy}"
+
+msgid "ERR_POLICY_CONDITION_UNMET"
+msgstr "尚未满足该政策的声誉或指标要求"
+
+msgid "ERR_INSUFFICIENT_STRATEGY_POINTS"
+msgstr "战略点不足（需要 {required}，当前 {available}）"
+
+msgid "ERR_EVENT_NOT_FOUND"
+msgstr "未找到指定事件定义：{event_id}"
+
+msgid "ERR_EVENT_INSTANCE_NOT_FOUND"
+msgstr "未找到待处理的事件实例"
+
+msgid "ERR_EVENT_OPTION_NOT_FOUND"
+msgstr "无效的事件决策选项"
+
+msgid "ERR_EVENT_OPTION_LOCKED"
+msgstr "当前条件不满足该事件选项要求"
+
+msgid "ERR_STATION_NOT_FOUND"
+msgstr "未找到指定工位：{station_id}"
+
+msgid "ERR_INVALID_ROLE"
+msgstr "无效的岗位角色：{role_id}"
+
+msgid "ERR_INVALID_SPEED"
+msgstr "无效的模拟倍速设置"
+
+msgid "ERR_INVALID_RATE"
+msgstr "利率参数无效"
+
+msgid "ERR_RATE_OUT_OF_RANGE"
+msgstr "利率超出监管允许范围"
+
+msgid "ERR_INVALID_PHASE"
+msgstr "当前营业阶段不允许执行此操作"
+
+msgid "ERR_BRANCH_ALREADY_OPEN"
+msgstr "分行今日已在营业中或已结束营业"
+
+msgid "ERR_BRANCH_NOT_SETTLED"
+msgstr "需先完成日终结算才可进入下一天"
+
+msgid "ERR_APPROVAL_NOT_FOUND"
+msgstr "未找到指定的贷款审批单"
+
+msgid "ERR_INVALID_SLOT_ID"
+msgstr "无效的存档槽位名称：{slot_id}"
+
+msgid "ERR_SAVE_WRITE_FAILED"
+msgstr "存档文件写入失败"
+
+msgid "ERR_SAVE_NOT_FOUND"
+msgstr "未找到指定的存档文件"
+
+msgid "ERR_SAVE_CORRUPTED"
+msgstr "存档文件与备份均已损坏，无法读取"
+
+msgid "ERR_UNSUPPORTED_SAVE_VERSION"
+msgstr "不支持的存档版本：{version}"
+
+msgid "ERR_NO_ACTIVE_SESSION"
+msgstr "当前没有正在进行的游戏会话"
+
+msgid "SIM_LOG_EVENT"
+msgstr "[{time}] 营业动态更新"
+
+msgid "SIM_LOG_DAY_STARTED"
+msgstr "[{time}] 第 {day} 天营业正式开始"
+
+msgid "SIM_LOG_PHASE_CHANGED"
+msgstr "[{time}] 营业阶段切换"
+
+msgid "SIM_LOG_CUSTOMER_ARRIVED"
+msgstr "[{time}] 新客户 ({customer_type}) 到达大厅"
+
+msgid "SIM_LOG_SERVICE_STARTED"
+msgstr "[{time}] 柜台 {station_id} 开始办理业务"
+
+msgid "SIM_LOG_SERVICE_COMPLETED"
+msgstr "[{time}] 柜台 {station_id} 完成业务 ({service_type})"
+
+msgid "SIM_LOG_CUSTOMER_LEFT_UNSERVED"
+msgstr "[{time}] 客户 {customer_id} 因等待超时离开"
+
+msgid "SIM_LOG_LOAN_APPROVAL_REQUESTED"
+msgstr "[{time}] 收到新的大额贷款审批申请 ({approval_id})"
+
+msgid "SIM_LOG_LOAN_APPROVED"
+msgstr "[{time}] 贷款审批通过并放款 ({loan_id})"
+
+msgid "SIM_LOG_LOAN_REJECTED"
+msgstr "[{time}] 贷款审批已拒绝 ({approval_id})"
+
+msgid "SIM_LOG_EMPLOYEE_HIRED"
+msgstr "[{time}] 新员工入职 ({employee_id})"
+
+msgid "SIM_LOG_EMPLOYEE_FIRED"
+msgstr "[{time}] 员工解聘完成 ({employee_id})"
+
+msgid "SIM_LOG_EMPLOYEE_ASSIGNED"
+msgstr "[{time}] 员工 {employee_id} 指派至岗位 {station_id}"
+
+msgid "SIM_LOG_EMPLOYEE_TRAINED"
+msgstr "[{time}] 员工 {employee_id} 完成专项培训"
+
+msgid "SIM_LOG_EMPLOYEE_RESTED"
+msgstr "[{time}] 员工 {employee_id} 进入休息恢复"
+
+msgid "SIM_LOG_STATION_TOGGLED"
+msgstr "[{time}] 柜台 {station_id} 营业状态已更新"
+
+msgid "SIM_LOG_DEPARTMENT_CREATED"
+msgstr "[{time}] 部门 {department_id} 正式设立"
+
+msgid "SIM_LOG_DEPARTMENT_UPGRADED"
+msgstr "[{time}] 部门 {department_id} 升级至 Lv.{level}"
+
+msgid "SIM_LOG_POLICY_ADOPTED"
+msgstr "[{time}] 采纳战略政策 {policy_id}"
+
+msgid "SIM_LOG_EVENT_TRIGGERED"
+msgstr "[{time}] 触发经营事件 {event_id}"
+
+msgid "SIM_LOG_EVENT_RESOLVED"
+msgstr "[{time}] 经营事件已决策 ({option_id})"
+
+msgid "SIM_LOG_DAILY_SETTLEMENT"
+msgstr "[{time}] 第 {day} 天日终财务结算完成"
+
+msgid "SIM_LOG_SPEED_CHANGED"
+msgstr "[{time}] 模拟速度切换为 {speed}x"
+
+msgid "SIM_LOG_RATES_CHANGED"
+msgstr "[{time}] 存贷基准利率已调整"
+
+msgid "SIM_LOG_ALERT"
+msgstr "[{time}] 风险提示"
+
+msgid "SIM_LOG_STATE_RELOADED"
+msgstr "[{time}] 存档状态已载入"
+
+msgid "WORLD_STATION_TELLER_TAG"
+msgstr "柜#{num}"
+
+msgid "WORLD_STATION_LOAN_TAG"
+msgstr "贷#{num}"
+
+msgid "WORLD_STATION_OPEN"
+msgstr "营业中"
+
+msgid "WORLD_STATION_CLOSED"
+msgstr "已关闭"
+
+msgid "WORLD_DEPT_OPS_SHORT"
+msgstr "运营部"
+
+msgid "WORLD_DEPT_HR_SHORT"
+msgstr "人事部"
+
+msgid "WORLD_DEPT_CREDIT_SHORT"
+msgstr "信贷部"
+
+msgid "WORLD_DEPT_RISK_SHORT"
+msgstr "风控部"
+
+msgid "WORLD_DEPT_LEVEL_BADGE"
+msgstr "Lv.{level}"
+
+msgid "WORLD_FX_SERVICE_DONE"
+msgstr "{amount}"
+
+msgid "WORLD_FX_SATISFACTION_UP"
+msgstr "服务完成"
+
+msgid "WORLD_FX_CUSTOMER_LEFT"
+msgstr "超时离开"
+
+msgid "WORLD_FX_LOAN_APPROVED"
+msgstr "放款通过"
+
+msgid "WORLD_FX_LOAN_REJECTED"
+msgstr "贷款拒绝"
+
+msgid "WORLD_FX_DEPT_UPGRADED"
+msgstr "部门升级 Lv.{level}"
+
+msgid "WORLD_ACTOR_STATE_WORKING"
+msgstr "办理中"
+
+msgid "WORLD_ACTOR_STATE_WAITING"
+msgstr "等候中"
+
+msgid "WORLD_ACTOR_STATE_BREAK"
+msgstr "休息"
+
+msgid "WORLD_ACTOR_STATE_OVERLOADED"
+msgstr "过载"
+
+msgid "UI_MAIN_MENU_LOAD_SAVE"
+msgstr "读取存档"
+
+msgid "UI_MAIN_MENU_VERSION"
+msgstr "星海银行核心系统 v0.1.0 · Godot 4.7.2"
+
+msgid "UI_TOPBAR_BANK_NAME"
+msgstr "星海银行"
+
+msgid "UI_TOPBAR_TODAY_PROFIT"
+msgstr "预计日净利"
+
+msgid "UI_TOPBAR_EMPLOYEES"
+msgstr "在职员工"
+
+msgid "UI_TOPBAR_SPEED_PAUSE"
+msgstr "暂停 0x"
+
+msgid "UI_TOPBAR_SPEED_1X"
+msgstr "1x"
+
+msgid "UI_TOPBAR_SPEED_2X"
+msgstr "2x"
+
+msgid "UI_TOPBAR_SPEED_3X"
+msgstr "3x"
+
+msgid "UI_TOPBAR_ACTION_OPEN_BRANCH"
+msgstr "开始今日营业"
+
+msgid "UI_TOPBAR_ACTION_IN_BUSINESS"
+msgstr "营业进行中"
+
+msgid "UI_TOPBAR_ACTION_CLOSING"
+msgstr "日终收尾中"
+
+msgid "UI_TOPBAR_ACTION_NEXT_DAY"
+msgstr "日终结算 / 下一天"
+
+msgid "UI_TOPBAR_BTN_SAVE_SETTINGS"
+msgstr "存档 / 设置"
+
+msgid "UI_PHASE_PRE_OPEN"
+msgstr "开门前准备"
+
+msgid "UI_PHASE_OPEN"
+msgstr "营业中"
+
+msgid "UI_PHASE_CLOSING"
+msgstr "收尾结算中"
+
+msgid "UI_PHASE_SETTLED"
+msgstr "今日已结算"
+
+msgid "UI_NAV_SETTINGS"
+msgstr "设置"
+
+msgid "UI_INSPECTOR_TITLE_OVERVIEW"
+msgstr "实时运营检视器"
+
+msgid "UI_INSPECTOR_TITLE_STATION"
+msgstr "柜台详情"
+
+msgid "UI_INSPECTOR_TITLE_EMPLOYEE"
+msgstr "员工详情"
+
+msgid "UI_INSPECTOR_TITLE_CUSTOMER"
+msgstr "客户详情"
+
+msgid "UI_INSPECTOR_BTN_BACK_OVERVIEW"
+msgstr "返回运营概览"
+
+msgid "UI_INSPECTOR_LIQUIDITY"
+msgstr "流动性比率"
+
+msgid "UI_INSPECTOR_NPL"
+msgstr "不良贷款率 (NPL)"
+
+msgid "UI_INSPECTOR_QUEUE_HEADER"
+msgstr "当前排队请求 ({count})"
+
+msgid "UI_INSPECTOR_QUEUE_EMPTY"
+msgstr "当前无排队请求"
+
+msgid "UI_INSPECTOR_STATIONS_HEADER"
+msgstr "服务柜台状态"
+
+msgid "UI_INSPECTOR_ALERTS_HEADER"
+msgstr "待办提醒"
+
+msgid "UI_INSPECTOR_PENDING_LOANS"
+msgstr "待审批贷款：{count} 笔"
+
+msgid "UI_INSPECTOR_ACTIVE_EVENTS"
+msgstr "待决策事件：{count} 项"
+
+msgid "UI_INSPECTOR_STATION_ID"
+msgstr "柜台编号：{id}"
+
+msgid "UI_INSPECTOR_STATION_TYPE"
+msgstr "柜台类型：{type}"
+
+msgid "UI_INSPECTOR_STATION_STATUS"
+msgstr "当前状态：{status}"
+
+msgid "UI_INSPECTOR_STATION_OPEN"
+msgstr "营业开放"
+
+msgid "UI_INSPECTOR_STATION_CLOSED"
+msgstr "暂停服务"
+
+msgid "UI_INSPECTOR_STATION_STAFF"
+msgstr "值守员工：{name}"
+
+msgid "UI_INSPECTOR_STATION_UNSTAFFED"
+msgstr "未指派员工"
+
+msgid "UI_INSPECTOR_BTN_TOGGLE_STATION"
+msgstr "开启 / 关闭柜台"
+
+msgid "UI_INSPECTOR_ASSIGN_STAFF_HEADER"
+msgstr "快捷指派员工"
+
+msgid "UI_INSPECTOR_ASSIGN_TO"
+msgstr "指派：{name}"
+
+msgid "UI_INSPECTOR_EMP_ROLE"
+msgstr "岗位：{role}"
+
+msgid "UI_INSPECTOR_EMP_STATE"
+msgstr "状态：{state}"
+
+msgid "UI_INSPECTOR_EMP_FATIGUE"
+msgstr "疲劳度：{fatigue}/100"
+
+msgid "UI_INSPECTOR_EMP_ADAPTATION"
+msgstr "岗位适应期：剩余 {days} 天"
+
+msgid "UI_INSPECTOR_EMP_SALARY"
+msgstr "日薪：{salary}"
+
+msgid "UI_INSPECTOR_EMP_STATION"
+msgstr "当前柜台：{station}"
+
+msgid "UI_INSPECTOR_BTN_TRAIN"
+msgstr "专业培训"
+
+msgid "UI_INSPECTOR_BTN_REST"
+msgstr "安排休息"
+
+msgid "UI_INSPECTOR_BTN_FIRE"
+msgstr "解雇员工"
+
+msgid "UI_INSPECTOR_CUST_TYPE"
+msgstr "客户类型：{type}"
+
+msgid "UI_INSPECTOR_CUST_SERVICE"
+msgstr "办理业务：{service}"
+
+msgid "UI_INSPECTOR_CUST_AMOUNT"
+msgstr "业务金额：{amount}"
+
+msgid "UI_INSPECTOR_CUST_PATIENCE"
+msgstr "剩余耐心：{cur}/{max}"
+
+msgid "UI_INSPECTOR_CUST_PRIORITY"
+msgstr "队列优先级：{priority}"
+
+msgid "UI_PRIORITY_NORMAL"
+msgstr "普通"
+
+msgid "UI_PRIORITY_PRIORITY"
+msgstr "优先"
+
+msgid "UI_PRIORITY_VIP"
+msgstr "VIP"
+
+msgid "UI_BOTTOM_LOG_TITLE"
+msgstr "实时运营动态"
+
+msgid "UI_BOTTOM_LOG_READY"
+msgstr "星海银行分行监控系统已就绪。"
+
+msgid "UI_BOTTOM_LOAN_BADGE"
+msgstr "待审批贷款 ({count})"
+
+msgid "UI_BOTTOM_EVENT_BADGE"
+msgstr "待决策事件 ({count})"
+
+msgid "UI_BOTTOM_ZOOM_LABEL"
+msgstr "视角"
+
+msgid "UI_BOTTOM_ZOOM_1X"
+msgstr "1x"
+
+msgid "UI_BOTTOM_ZOOM_2X"
+msgstr "2x"
+
+msgid "UI_BOTTOM_ZOOM_3X"
+msgstr "3x"
+
+msgid "UI_SETTINGS_TITLE"
+msgstr "系统设置与存档管理"
+
+msgid "UI_SETTINGS_LOCALE"
+msgstr "界面语言"
+
+msgid "UI_SETTINGS_PACE"
+msgstr "营业时间节奏"
+
+msgid "UI_SETTINGS_PACE_DEMO"
+msgstr "试玩快节奏 (0.25秒/分)"
+
+msgid "UI_SETTINGS_PACE_STANDARD"
+msgstr "标准模拟节奏 (1.0秒/分)"
+
+msgid "UI_SETTINGS_MASTER_VOL"
+msgstr "主音量 (Master)"
+
+msgid "UI_SETTINGS_BGM_VOL"
+msgstr "背景音乐 (BGM)"
+
+msgid "UI_SETTINGS_SFX_VOL"
+msgstr "界面与营业音效 (SFX)"
+
+msgid "UI_SETTINGS_MUTE"
+msgstr "全局静音"
+
+msgid "UI_SAVE_TITLE"
+msgstr "存档槽位管理"
+
+msgid "UI_SAVE_SLOT_EMPTY"
+msgstr "{slot} · 空槽位"
+
+msgid "UI_SAVE_SLOT_INFO"
+msgstr "{slot} · {bank} · 第 {day} 天 · 现金 {cash}"
+
+msgid "UI_SAVE_BTN_SAVE"
+msgstr "保存"
+
+msgid "UI_SAVE_BTN_LOAD"
+msgstr "读取"
+
+msgid "UI_SAVE_BTN_DELETE"
+msgstr "删除"
+
+msgid "UI_SAVE_BTN_RETURN_MENU"
+msgstr "返回主菜单"
+
+msgid "UI_COMMON_CLOSE"
+msgstr "关闭"
+
+msgid "UI_COMMON_CONFIRM"
+msgstr "确认"
+
+msgid "UI_COMMON_CANCEL"
+msgstr "取消"
+
+msgid "UI_TOAST_CMD_OK"
+msgstr "操作已执行：{action}"
+
+msgid "UI_TOAST_SAVE_OK"
+msgstr "存档已保存至 {slot}"
+
+msgid "UI_TOAST_LOAD_OK"
+msgstr "已读取存档 {slot}"
+
+msgid "UI_TOAST_AUTOSAVE_OK"
+msgstr "日终自动保存已完成 (autosave)"
+
+msgid "UI_DRAWER_OVERVIEW_TITLE"
+msgstr "分行经营总览"
+
+msgid "UI_DRAWER_OVERVIEW_SUBTITLE"
+msgstr "核心经营指标、风险预警与快捷管理入口"
+
+msgid "UI_DRAWER_FINANCE_TITLE"
+msgstr "财务与资产负债中心"
+
+msgid "UI_DRAWER_FINANCE_SUBTITLE"
+msgstr "严格复式记账账本、存贷利率调控与日终趋势图"
+
+msgid "UI_DRAWER_EMPLOYEES_TITLE"
+msgstr "员工管理与人才招聘"
+
+msgid "UI_DRAWER_EMPLOYEES_SUBTITLE"
+msgstr "在职员工排班、专业培训、疲劳恢复与人才池录用"
+
+msgid "UI_DRAWER_DEPARTMENTS_TITLE"
+msgstr "银行组织架构与部门升级"
+
+msgid "UI_DRAWER_DEPARTMENTS_SUBTITLE"
+msgstr "成立核心职能部门、解锁自动化能力并激活跨部门协同"
+
+msgid "UI_DRAWER_POLICIES_TITLE"
+msgstr "银行长期经营战略与国策树"
+
+msgid "UI_DRAWER_POLICIES_SUBTITLE"
+msgstr "消耗策略点选择稳健经营或激进扩张路线（路线互斥且不可逆）"
+
+msgid "UI_DRAWER_EVENTS_TITLE"
+msgstr "随机事件与信贷审批中心"
+
+msgid "UI_DRAWER_EVENTS_SUBTITLE"
+msgstr "处置宏观与分支行突发事件，审批大额与高风险贷款申请"
+
+msgid "UI_FINANCE_BS_HEADER"
+msgstr "实时资产负债表"
+
+msgid "UI_FINANCE_CASH"
+msgstr "现金及准备金 (资产)"
+
+msgid "UI_FINANCE_LOANS"
+msgstr "贷款本金余额 (资产)"
+
+msgid "UI_FINANCE_DEPOSITS"
+msgstr "客户存款余额 (负债)"
+
+msgid "UI_FINANCE_EQUITY_CAP"
+msgstr "初始股本 (权益)"
+
+msgid "UI_FINANCE_RETAINED"
+msgstr "留存收益 (权益)"
+
+msgid "UI_FINANCE_TOTAL_ASSETS"
+msgstr "总资产"
+
+msgid "UI_FINANCE_TOTAL_LIAB_EQ"
+msgstr "负债与权益合计"
+
+msgid "UI_FINANCE_BALANCED"
+msgstr "账平校验通过：资产 = 负债 + 权益"
+
+msgid "UI_FINANCE_UNBALANCED"
+msgstr "账务不平衡警告"
+
+msgid "UI_FINANCE_RATES_HEADER"
+msgstr "存贷款年化利率调节"
+
+msgid "UI_FINANCE_DEPOSIT_RATE"
+msgstr "存款年化利率：{rate}"
+
+msgid "UI_FINANCE_LOAN_RATE"
+msgstr "贷款基准年化利率：{rate}"
+
+msgid "UI_FINANCE_BTN_APPLY_RATES"
+msgstr "应用存贷利率"
+
+msgid "UI_FINANCE_CHART_HEADER"
+msgstr "每日收入 / 成本 / 净利润趋势图"
+
+msgid "UI_FINANCE_CHART_LEGEND"
+msgstr "青色：总收入 · 珊瑚红：总支出 · 金/绿：当日净利润"
+
+msgid "UI_EMP_ACTIVE_HEADER"
+msgstr "在职员工列表 ({count})"
+
+msgid "UI_EMP_CANDIDATES_HEADER"
+msgstr "待聘候选人人才池 ({count})"
+
+msgid "UI_EMP_CANDIDATES_EMPTY"
+msgstr "当前人才池已全部录用"
+
+msgid "UI_EMP_ATTR_PROF"
+msgstr "专业 {val}"
+
+msgid "UI_EMP_ATTR_EFF"
+msgstr "效率 {val}"
+
+msgid "UI_EMP_ATTR_SOC"
+msgstr "交际 {val}"
+
+msgid "UI_EMP_ATTR_RISK"
+msgstr "风控 {val}"
+
+msgid "UI_EMP_ATTR_MGMT"
+msgstr "管理 {val}"
+
+msgid "UI_EMP_ATTR_LOY"
+msgstr "忠诚 {val}"
+
+msgid "UI_EMP_ATTR_POT"
+msgstr "潜力 {val}"
+
+msgid "UI_EMP_BTN_HIRE_TELLER"
+msgstr "录用为柜员"
+
+msgid "UI_EMP_BTN_HIRE_LOAN"
+msgstr "录用为信贷专员"
+
+msgid "UI_EMP_BTN_HIRE_ANALYST"
+msgstr "录用为分析师"
+
+msgid "UI_DEPT_LEVEL_FORMAT"
+msgstr "当前等级：Lv.{level} / Lv.{max}"
+
+msgid "UI_DEPT_NOT_CREATED"
+msgstr "尚未成立 (Lv.0)"
+
+msgid "UI_DEPT_INIT_COST"
+msgstr "成立费用：{cost}"
+
+msgid "UI_DEPT_UPGRADE_COST"
+msgstr "升级费用：{cost}"
+
+msgid "UI_DEPT_DAILY_COST"
+msgstr "每日运营成本：{cost}"
+
+msgid "UI_DEPT_BTN_CREATE"
+msgstr "成立部门 ({cost})"
+
+msgid "UI_DEPT_BTN_UPGRADE"
+msgstr "升级至 Lv.{next} ({cost})"
+
+msgid "UI_DEPT_BTN_MAX_LEVEL"
+msgstr "已达最高等级"
+
+msgid "UI_DEPT_SYNERGY_HEADER"
+msgstr "跨部门协同状态"
+
+msgid "UI_DEPT_SYNERGY_HR_OPS"
+msgstr "人力 + 运营协同：全员生产力 +5%，新员工适应期缩短至 1 天"
+
+msgid "UI_DEPT_SYNERGY_CREDIT_RISK"
+msgstr "信贷 + 风控协同：贷款违约率 -5%，业务处理时长 -3%"
+
+msgid "UI_DEPT_SYNERGY_ACTIVE"
+msgstr "【已激活】"
+
+msgid "UI_DEPT_SYNERGY_INACTIVE"
+msgstr "【未激活】"
+
+msgid "UI_POLICY_POINTS"
+msgstr "可用策略点：{points}"
+
+msgid "UI_POLICY_BRANCH_CONSERVATIVE"
+msgstr "稳健经营路线"
+
+msgid "UI_POLICY_BRANCH_AGGRESSIVE"
+msgstr "激进扩张路线"
+
+msgid "UI_POLICY_BRANCH_MOD"
+msgstr "扩展策略分支"
+
+msgid "UI_POLICY_COST"
+msgstr "消耗策略点：{cost} 点"
+
+msgid "UI_POLICY_PREREQ"
+msgstr "前置政策：{prereq}"
+
+msgid "UI_POLICY_PREREQ_NONE"
+msgstr "前置政策：无（起始策略）"
+
+msgid "UI_POLICY_BTN_ADOPT"
+msgstr "采用政策 ({cost} 点)"
+
+msgid "UI_POLICY_ADOPTED"
+msgstr "已采用"
+
+msgid "UI_LOAN_MODAL_TITLE"
+msgstr "信贷审批工作台"
+
+msgid "UI_LOAN_EMPTY"
+msgstr "当前无待审批贷款申请"
+
+msgid "UI_LOAN_BORROWER"
+msgstr "申请人：{customer} ({type})"
+
+msgid "UI_LOAN_TERMS"
+msgstr "本金：{principal} · 年化利率：{rate} · 期限：{days} 天"
+
+msgid "UI_LOAN_RISK_EXACT"
+msgstr "信用评分：{score} 分 · 风险等级：{grade} · 预估违约率：{pd}"
+
+msgid "UI_LOAN_RISK_BAND"
+msgstr "风险评级区间：{grade} 级（成立风险管理部可解锁精确信用分）"
+
+msgid "UI_LOAN_BTN_APPROVE"
+msgstr "批准放款"
+
+msgid "UI_LOAN_BTN_REJECT"
+msgstr "拒绝申请"
+
+msgid "UI_EVENT_MODAL_TITLE"
+msgstr "随机事件决策中心"
+
+msgid "UI_EVENT_EMPTY"
+msgstr "当前无待处理的突发事件"
+
+msgid "UI_EVENT_HISTORY_HEADER"
+msgstr "近期已处置事件记录 ({count})"
+
+msgid "UI_REPORT_TITLE"
+msgstr "第 {day} 天 · 日终财务与经营结算报告"
+
+msgid "UI_REPORT_SUBTITLE"
+msgstr "复式记账损益结转完成 · 全行运营与风险指标汇总"
+
+msgid "UI_REPORT_PNL_HEADER"
+msgstr "当日损益表 (P&L)"
+
+msgid "UI_REPORT_LOAN_INT_INC"
+msgstr "贷款利息收入"
+
+msgid "UI_REPORT_FEE_INC"
+msgstr "中间业务手续费收入"
+
+msgid "UI_REPORT_DEP_INT_EXP"
+msgstr "客户存款利息支出"
+
+msgid "UI_REPORT_STAFF_COST"
+msgstr "员工日薪支出"
+
+msgid "UI_REPORT_FACILITY_COST"
+msgstr "场地与设施租金"
+
+msgid "UI_REPORT_DEPT_COST"
+msgstr "部门日常运营成本"
+
+msgid "UI_REPORT_CREDIT_LOSS"
+msgstr "不良贷款坏账核销损失"
+
+msgid "UI_REPORT_EVENT_EXP"
+msgstr "事件专项支出"
+
+msgid "UI_REPORT_NET_PROFIT"
+msgstr "当日净利润"
+
+msgid "UI_REPORT_BS_HEADER"
+msgstr "期末资产负债与风险健康度"
+
+msgid "UI_REPORT_DRIVERS_HEADER"
+msgstr "当日经营归因与明日建议"
+
+msgid "UI_REPORT_BTN_NEXT_DAY"
+msgstr "进入下一天（自动保存）"

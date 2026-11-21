@@ -1,0 +1,105 @@
+[
+  {
+    "id": "core:trait.sales_prodigy",
+    "name_key": "TRAIT_SALES_PRODIGY_NAME",
+    "description_key": "TRAIT_SALES_PRODIGY_DESC",
+    "attribute_bonuses": {
+      "sociability": 12,
+      "efficiency": 5
+    },
+    "effects": [
+      {
+        "target": "customer.deposit_growth_bps",
+        "operation": "add",
+        "value": 300,
+        "scope": "global"
+      }
+    ]
+  },
+  {
+    "id": "core:trait.risk_expert",
+    "name_key": "TRAIT_RISK_EXPERT_NAME",
+    "description_key": "TRAIT_RISK_EXPERT_DESC",
+    "attribute_bonuses": {
+      "risk_awareness": 15,
+      "professionalism": 6
+    },
+    "effects": [
+      {
+        "target": "loan.default_risk_bps",
+        "operation": "add",
+        "value": -300,
+        "scope": "global"
+      }
+    ]
+  },
+  {
+    "id": "core:trait.workaholic",
+    "name_key": "TRAIT_WORKAHOLIC_NAME",
+    "description_key": "TRAIT_WORKAHOLIC_DESC",
+    "attribute_bonuses": {
+      "efficiency": 14,
+      "loyalty": 5
+    },
+    "effects": [
+      {
+        "target": "staff.productivity_bps",
+        "operation": "add",
+        "value": 500,
+        "scope": "global"
+      }
+    ]
+  },
+  {
+    "id": "core:trait.detail_oriented",
+    "name_key": "TRAIT_DETAIL_ORIENTED_NAME",
+    "description_key": "TRAIT_DETAIL_ORIENTED_DESC",
+    "attribute_bonuses": {
+      "professionalism": 12,
+      "risk_awareness": 8
+    },
+    "effects": [
+      {
+        "target": "service.teller_duration_bps",
+        "operation": "add",
+        "value": -250,
+        "scope": "global"
+      }
+    ]
+  },
+  {
+    "id": "core:trait.bank_veteran",
+    "name_key": "TRAIT_BANK_VETERAN_NAME",
+    "description_key": "TRAIT_BANK_VETERAN_DESC",
+    "attribute_bonuses": {
+      "professionalism": 10,
+      "management": 10,
+      "loyalty": 10
+    },
+    "effects": [
+      {
+        "target": "staff.productivity_bps",
+        "operation": "add",
+        "value": 400,
+        "scope": "global"
+      }
+    ]
+  },
+  {
+    "id": "core:trait.team_leader",
+    "name_key": "TRAIT_TEAM_LEADER_NAME",
+    "description_key": "TRAIT_TEAM_LEADER_DESC",
+    "attribute_bonuses": {
+      "management": 15,
+      "sociability": 8
+    },
+    "effects": [
+      {
+        "target": "staff.productivity_bps",
+        "operation": "add",
+        "value": 350,
+        "scope": "global"
+      }
+    ]
+  }
+]
