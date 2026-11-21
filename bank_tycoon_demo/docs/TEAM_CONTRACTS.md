@@ -146,9 +146,50 @@ tokens `TOP_BAR_HEIGHT=56, LEFT_NAV_WIDTH=76, RIGHT_INSPECTOR_WIDTH=300, BOTTOM_
 `PanelCard, PanelHeader, PanelLarge, PanelBar, LabelTitle, LabelHero, LabelMuted, LabelGold, LabelPositive,
 LabelNegative, LabelValue, ButtonPrimary, ButtonDanger, ButtonGold, ButtonGhost`. Icons in `res://assets/icons/`.
 
-`scenes/gameplay/game_root.tscn` (hud): `GameRoot` (Node) → `SimulationHost`, `World` (instance of bank_world.tscn),
-`UI` (CanvasLayer) → `TopBar`, `LeftNavigation`, `RightInspector`, `BottomBar`, `DrawerHost`, `ModalHost`,
-`DailyReportOverlay`, `Toast`. On `_ready`: `host.bind_session(GameSession.bank_state, ContentRegistry.get_content_defs())`.
+`scenes/gameplay/game_root.tscn` (hud), actual tree after the input fix:
+`GameRoot` (Control, `mouse_filter=IGNORE`) → `SimulationHost` (Node), `WorldHost` (Node2D) → `BankWorld`
+(instance of bank_world.tscn), `HUDLayer` (CanvasLayer, layer=10) → `TopBar`, `LeftNavigation`, `RightInspector`,
+`BottomBar`, `DrawerContainer` (IGNORE) → `*Drawer`, `ModalContainer` (IGNORE) → `ModalShield`, `LoanApprovalModal`,
+`EventModal`, `PauseSaveSettingsModal`, `DailyReportOverlay`, `ToastBar` (IGNORE).
+On `_ready`: `host.bind_session(GameSession.bank_state, ContentRegistry.get_content_defs())`, then `_wire_signals()`.
+`bind_session()` rebuilds the `DomainEventBus`, so `GameRoot._wire_event_bus()` re-connects `event_published` after
+every bind (initial boot **and** save reload) with an `is_connected` guard.
+
+### 7.1 HUD input hit-testing rules (mandatory — regression: "top bar buttons unclickable")
+
+Godot GUI picking takes the **topmost non-IGNORE Control** under the pointer and then bubbles the event up that
+control's **parent chain only**. `MOUSE_FILTER_PASS` never falls through to a lower *sibling*, so a full-screen PASS
+container is a click black hole for everything drawn beneath it (this silently killed TopBar / LeftNavigation /
+BottomBar / drawer buttons; GUI picking is what the regression proves — the world's `_unhandled_input` path is a
+separate channel and was not claimed as verified-in-broken-state).
+
+1. Full-screen layout-only Controls **must** be `mouse_filter = 2` (IGNORE) and state it explicitly in the `.tscn`:
+   `GameRoot`, `DrawerContainer`, `ModalContainer`, `ToastBar`.
+2. **PASS is forbidden** on any overlapping/full-screen HUD container. Only real panels are `STOP` (default), and
+   they are hidden (`visible = false`) when inactive — a hidden Control never participates in picking.
+3. Modal blocking is owned by exactly one node: `ModalShield` (first child of `ModalContainer`, full-rect, `STOP`,
+   default hidden). `GameRoot._sync_modal_shield()` toggles it from the three modals' `visibility_changed` (not only
+   `closed`), so every close path — close button, `open_pause_modal()` toggle, direct `visible = false` — restores
+   click-through. Keep `ModalShield` **before** the modal siblings (reverse picking order gives panels priority).
+4. `DailyReportOverlay` is intentionally **not** part of the shield set (non-modal report card). Revisit as a product
+   decision before changing it.
+5. Any new full-screen HUD node must come with a `gui_get_hovered_control()` assertion in
+   `tests/e2e/test_tier5_ui_input.gd`; `godot.ps1 --script res://tests/run_tests.gd` must stay green.
+
+### 7.2 Known follow-ups from the HUD input fix (NOT part of that task)
+
+- `DailyReportOverlay` is intentionally non-modal; if product wants "report locks the HUD", add it to
+  `GameRoot._any_modal_open()`. Do not change silently — it changes the interaction contract.
+- `GameRoot._on_next_day_requested()` discards both `Result`s (`advance_to_next_day`, `save_to_slot`) and always
+  toasts `UI_TOAST_AUTOSAVE_OK`. Reuse `ToastBar.show_command_result()` so a failed save does not report success.
+- `GameRoot._exit_tree()` writes `SimulationHost.command_service/simulation/event_bus` directly; those fields are
+  owned by `scripts/app/*`, and `SimulationHost._notification` already clears them. Candidate for removal.
+- `GameRoot._bind_runtime_session()` silently creates a starter branch when `GameSession.bank_state == null`,
+  producing a half-started session (`is_active == false`) that can still be saved. Prefer `push_error` + main menu.
+- Deferred test coverage: Tier 5 proves GUI picking (`gui_get_hovered_control`). Arrival of clicks/wheel at
+  `BankWorld._unhandled_input` and `PixelCamera2D._unhandled_input` should get its own cases once those channels
+  expose an observable signal; do not assert it today without instrumentation.
+
 
 Panels contract (panels implements; hud instantiates by path):
 - Drawers `scenes/ui/drawers/{finance,employees,departments,policies,events}_drawer.tscn`; root Control script
