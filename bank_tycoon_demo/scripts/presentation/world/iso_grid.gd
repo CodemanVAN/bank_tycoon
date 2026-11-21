@@ -1,10 +1,19 @@
 class_name IsoGrid
 extends RefCounted
 
-## 2:1 isometric logical grid (18x12, 32x16 tiles) with AStarGrid2D 4-way navigation.
+## 2:1 isometric logical grid (32x16 tiles) with AStarGrid2D 4-way navigation.
+## GRID_WIDTH x GRID_HEIGHT is the initial lobby; the navigable site extends SITE_MARGIN
+## cells in every direction so departments can be built outside the current floor plan.
 
 const GRID_WIDTH: int = 18
 const GRID_HEIGHT: int = 12
+const SITE_MARGIN: int = 6
+const SITE_REGION: Rect2i = Rect2i(
+	-SITE_MARGIN,
+	-SITE_MARGIN,
+	GRID_WIDTH + SITE_MARGIN * 2,
+	GRID_HEIGHT + SITE_MARGIN * 2
+)
 const TILE_WIDTH: int = 32
 const TILE_HEIGHT: int = 16
 const HALF_TILE_W: float = 16.0
@@ -18,7 +27,7 @@ var _astar: AStarGrid2D = null
 func _init(p_origin_offset: Vector2 = DEFAULT_ORIGIN_OFFSET) -> void:
 	origin_offset = p_origin_offset
 	_astar = AStarGrid2D.new()
-	_astar.region = Rect2i(0, 0, GRID_WIDTH, GRID_HEIGHT)
+	_astar.region = SITE_REGION
 	_astar.cell_size = Vector2(1.0, 1.0)
 	_astar.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_NEVER
 	_astar.default_compute_heuristic = AStarGrid2D.HEURISTIC_MANHATTAN
@@ -27,13 +36,17 @@ func _init(p_origin_offset: Vector2 = DEFAULT_ORIGIN_OFFSET) -> void:
 
 
 func is_in_bounds(cell: Vector2i) -> bool:
+	return SITE_REGION.has_point(cell)
+
+
+func is_lobby_cell(cell: Vector2i) -> bool:
 	return cell.x >= 0 and cell.x < GRID_WIDTH and cell.y >= 0 and cell.y < GRID_HEIGHT
 
 
 func clamp_to_bounds(cell: Vector2i) -> Vector2i:
 	return Vector2i(
-		clampi(cell.x, 0, GRID_WIDTH - 1),
-		clampi(cell.y, 0, GRID_HEIGHT - 1)
+		clampi(cell.x, SITE_REGION.position.x, SITE_REGION.end.x - 1),
+		clampi(cell.y, SITE_REGION.position.y, SITE_REGION.end.y - 1)
 	)
 
 

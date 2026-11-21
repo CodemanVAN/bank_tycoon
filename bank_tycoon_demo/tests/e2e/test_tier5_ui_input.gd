@@ -957,15 +957,20 @@ func _case_10_department_placement() -> void:
 	_h.assert_false(drawer.visible, "进入建造模式后抽屉应关闭，露出大厅")
 	_h.assert_true(bool(world.call("is_department_placement_active")), "点击“选择位置成立”后应进入房间建造模式")
 
-	var room_start := Vector2i(11, 0)
-	var room_end := Vector2i(13, 2)
+	# Expand outside the current lobby: east of x=17, sharing the west edge.
+	var room_start := Vector2i(18, 3)
+	var room_end := Vector2i(20, 5)
 	var room_rect := Rect2i(room_start, room_end - room_start + Vector2i.ONE)
 	if not _h.assert_true(
 		bool(world.call("is_valid_department_room", room_rect, place_dept)),
-		"北侧建房带 (11,0)-(13,2) 应可建造 3x3 房间"
+		"大厅东侧边界外 (18,3)-(20,5) 应可扩建 3x3 房间"
 	):
 		_end_case()
 		return
+	_h.assert_false(
+		bool(world.call("is_valid_department_room", Rect2i(Vector2i(4, 4), Vector2i(3, 3)), place_dept)),
+		"大厅内部已有地板，不得在其上直接建房"
+	)
 
 	await _drag_room(world, room_start, room_end)
 	await _settle(3)
@@ -983,11 +988,11 @@ func _case_10_department_placement() -> void:
 	if _h.assert_true(dept_nodes.has(dept_id), "世界层应为新部门生成房间节点"):
 		var info: Dictionary = dept_nodes[dept_id] as Dictionary
 		var room_root: Node = info.get("root") as Node
-		_h.assert_true(room_root != null and room_root.get_node_or_null("Wall_11_0") != null, "房间应有北侧墙体")
-		_h.assert_true(room_root != null and room_root.get_node_or_null("RoomSign") != null, "房间应有部门招牌")
+		_h.assert_true(room_root != null and room_root.get_node_or_null("Wall_18_3") != null, "房间应有外墙")
+		_h.assert_true(room_root != null and room_root.get_node_or_null("RoomSign") != null and room_root.get_node_or_null("DoorFrame") != null, "房间应有部门招牌与自动门")
 	var iso: Variant = world.get("iso_grid")
-	_h.assert_true(iso != null and not bool((iso as Object).call("is_solid", Vector2i(12, 2))), "房间正面开口必须保持可通行")
-	_h.assert_true(iso != null and bool((iso as Object).call("is_solid", Vector2i(11, 0))), "房间北墙应阻挡寻路")
+	_h.assert_true(iso != null and not bool((iso as Object).call("is_solid", Vector2i(18, 4))), "房间正面开口必须保持可通行")
+	_h.assert_true(iso != null and bool((iso as Object).call("is_solid", Vector2i(18, 3))), "房间北墙应阻挡寻路")
 
 	# --- 10b. right click cancels without building ---
 	await _click(nav_btn)
@@ -997,7 +1002,7 @@ func _case_10_department_placement() -> void:
 	if cancel_btn != null:
 		await _click(cancel_btn)
 		_h.assert_true(bool(world.call("is_department_placement_active")), "前置状态：应再次进入建造模式")
-		await _drag_room(world, Vector2i(15, 3), Vector2i(17, 5), true)
+		await _drag_room(world, Vector2i(18, 8), Vector2i(20, 10), true)
 		_h.assert_false(bool(world.call("is_department_placement_active")), "右键应取消房间建造")
 		_h.assert_false((bs as Object).get("departments").has(cancel_dept), "取消建造不得成立部门")
 	else:

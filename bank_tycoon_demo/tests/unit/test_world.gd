@@ -86,10 +86,16 @@ static func _test_iso_grid_coords() -> void:
 			var back: Vector2i = grid.screen_to_grid(screen_pos)
 			_check_eq(back, c, "Roundtrip grid_to_screen -> screen_to_grid for (%d,%d)" % [x, y])
 
-	_check(not grid.is_in_bounds(Vector2i(-1, 0)), "(-1,0) out of bounds")
-	_check(not grid.is_in_bounds(Vector2i(0, -1)), "(0,-1) out of bounds")
-	_check(not grid.is_in_bounds(Vector2i(18, 0)), "(18,0) out of bounds")
-	_check(not grid.is_in_bounds(Vector2i(0, 12)), "(0,12) out of bounds")
+	# The lobby is 18x12, but the buildable site extends by SITE_MARGIN so departments
+	# can be constructed outside the current floor plan.
+	_check(grid.is_in_bounds(Vector2i(-1, 0)), "(-1,0) inside the buildable site")
+	_check(grid.is_in_bounds(Vector2i(0, -1)), "(0,-1) inside the buildable site")
+	_check(grid.is_in_bounds(Vector2i(18, 0)), "(18,0) inside the buildable site")
+	_check(grid.is_in_bounds(Vector2i(0, 12)), "(0,12) inside the buildable site")
+	var margin: int = IsoGrid.SITE_MARGIN
+	_check(not grid.is_in_bounds(Vector2i(-margin - 1, 0)), "Beyond west margin is out of bounds")
+	_check(not grid.is_in_bounds(Vector2i(IsoGrid.GRID_WIDTH + margin, 0)), "Beyond east margin is out of bounds")
+	_check(not grid.is_in_bounds(Vector2i(0, IsoGrid.GRID_HEIGHT + margin)), "Beyond south margin is out of bounds")
 
 
 static func _test_iso_grid_navigation() -> void:
@@ -104,14 +110,18 @@ static func _test_iso_grid_navigation() -> void:
 		var manhattan: int = absi(diff.x) + absi(diff.y)
 		_check_eq(manhattan, 1, "Step %d is strictly 4-directional (no diagonals)" % i)
 
-	# Out-of-bounds checks
+	# Paths may enter the expansion margin (free land until a room is built there).
+	var expand_path: Array[Vector2i] = grid.find_path(Vector2i(1, 1), Vector2i(-1, -1))
+	_check(not expand_path.is_empty(), "Path into the expansion margin exists")
+
+	# Out-of-bounds checks (outside the whole site, not just the lobby)
 	for mname in ["find_path", "compute_path", "get_grid_path"]:
-		var oob1: Array[Vector2i] = grid.call(mname, Vector2i(1, 1), Vector2i(-1, -1))
-		_check(oob1.is_empty(), "%s OOB (-1,-1) returns empty array" % mname)
-		var oob2: Array[Vector2i] = grid.call(mname, Vector2i(1, 1), Vector2i(18, 12))
-		_check(oob2.is_empty(), "%s OOB (18,12) returns empty array" % mname)
-		var oob3: Array[Vector2i] = grid.call(mname, Vector2i(-2, 0), Vector2i(2, 2))
-		_check(oob3.is_empty(), "%s OOB start (-2,0) returns empty array" % mname)
+		var oob1: Array[Vector2i] = grid.call(mname, Vector2i(1, 1), Vector2i(-7, -7))
+		_check(oob1.is_empty(), "%s OOB (-7,-7) returns empty array" % mname)
+		var oob2: Array[Vector2i] = grid.call(mname, Vector2i(1, 1), Vector2i(24, 18))
+		_check(oob2.is_empty(), "%s OOB (24,18) returns empty array" % mname)
+		var oob3: Array[Vector2i] = grid.call(mname, Vector2i(-7, 0), Vector2i(2, 2))
+		_check(oob3.is_empty(), "%s OOB start (-7,0) returns empty array" % mname)
 
 	# Surrounded target cell (5,5)
 	for dx in [-1, 0, 1]:

@@ -336,35 +336,76 @@ func cancel_department_placement() -> void:
 	department_placement_cancelled.emit()
 
 
-## Rooms line the hall like the master reference: north wing on both sides of the
-## brand wall, plus west / east wings. The open centre stays free for the lobby.
-func room_band_zone(cell: Vector2i) -> StringName:
-	if iso_grid == null or not iso_grid.is_in_bounds(cell):
-		return &""
-	if cell.y <= 2 and ((cell.x >= 0 and cell.x <= 7) or (cell.x >= 10 and cell.x <= 17)):
-		return &"north"
-	if cell.x <= 2 and cell.y >= 3 and cell.y <= 8:
-		return &"west"
-	if cell.x >= 15 and cell.y >= 3 and cell.y <= 8:
-		return &"east"
-	return &""
+## The initial building is the lobby; departments extend the floor plan outward.
+const LOBBY_RECT: Rect2i = Rect2i(0, 0, IsoGrid.GRID_WIDTH, IsoGrid.GRID_HEIGHT)
 
 
-func _room_zone_of_rect(rect: Rect2i) -> StringName:
-	var zone: StringName = &""
+## True when `cell` already belongs to the bank floor (lobby or an existing room).
+func is_built_cell(cell: Vector2i) -> bool:
+	if LOBBY_RECT.has_point(cell):
+		return true
+	var bs: Variant = _get_bank_state()
+	if bs is Object:
+		var depts: Variant = (bs as Object).get("departments")
+		if depts is Dictionary:
+			for did: Variant in (depts as Dictionary).keys():
+				var r: Rect2i = _read_dept_rect((depts as Dictionary)[did])
+				if r.size.x > 0 and r.has_point(cell):
+					return true
+	return false
+
+
+func _rect_has_built_cell(rect: Rect2i) -> bool:
 	for y in range(rect.position.y, rect.position.y + rect.size.y):
 		for x in range(rect.position.x, rect.position.x + rect.size.x):
-			var z: StringName = room_band_zone(Vector2i(x, y))
-			if z == &"":
-				return &""
-			if zone == &"":
-				zone = z
-			elif zone != z:
-				return &""
-	return zone
+			if is_built_cell(Vector2i(x, y)):
+				return true
+	return false
 
 
-## Whole-room validation: every cell must be free floor inside one build band.
+## Built cells directly next to each side of the rect (used to pick the door side).
+func _built_neighbours(rect: Rect2i) -> Dictionary:
+	var counts: Dictionary = {&"north": 0, &"south": 0, &"west": 0, &"east": 0}
+	for x in range(rect.position.x, rect.position.x + rect.size.x):
+		if is_built_cell(Vector2i(x, rect.position.y - 1)):
+			counts[&"north"] = int(counts[&"north"]) + 1
+		if is_built_cell(Vector2i(x, rect.position.y + rect.size.y)):
+			counts[&"south"] = int(counts[&"south"]) + 1
+	for y in range(rect.position.y, rect.position.y + rect.size.y):
+		if is_built_cell(Vector2i(rect.position.x - 1, y)):
+			counts[&"west"] = int(counts[&"west"]) + 1
+		if is_built_cell(Vector2i(rect.position.x + rect.size.x, y)):
+			counts[&"east"] = int(counts[&"east"]) + 1
+	return counts
+
+
+## The door is auto-generated at the middle of the side touching the existing building.
+func room_door_cell(rect: Rect2i) -> Vector2i:
+	if rect.size.x <= 0 or rect.size.y <= 0:
+		return Vector2i(-1, -1)
+	var counts: Dictionary = _built_neighbours(rect)
+	var best_side: StringName = &""
+	var best_count: int = 0
+	for side: StringName in [&"north", &"south", &"west", &"east"]:
+		var c: int = int(counts.get(side, 0))
+		if c > best_count:
+			best_count = c
+			best_side = side
+	if best_side == &"":
+		return Vector2i(-1, -1)
+	match best_side:
+		&"north":
+			return Vector2i(rect.position.x + rect.size.x / 2, rect.position.y)
+		&"south":
+			return Vector2i(rect.position.x + rect.size.x / 2, rect.position.y + rect.size.y - 1)
+		&"west":
+			return Vector2i(rect.position.x, rect.position.y + rect.size.y / 2)
+		_:
+			return Vector2i(rect.position.x + rect.size.x - 1, rect.position.y + rect.size.y / 2)
+
+
+## Whole-room validation: free land inside the site, outside every built cell, and
+## touching the current building so it can be connected with a door.
 func is_valid_department_room(rect: Rect2i, dept_id: String = "") -> bool:
 	if iso_grid == null:
 		return false
@@ -372,19 +413,21 @@ func is_valid_department_room(rect: Rect2i, dept_id: String = "") -> bool:
 		return false
 	if rect.size.x > MAX_ROOM_SIZE.x or rect.size.y > MAX_ROOM_SIZE.y:
 		return false
-	if _room_zone_of_rect(rect) == &"":
-		return false
 	for y in range(rect.position.y, rect.position.y + rect.size.y):
 		for x in range(rect.position.x, rect.position.x + rect.size.x):
 			var cell := Vector2i(x, y)
 			if not iso_grid.is_in_bounds(cell):
 				return false
-			if cell == ENTRANCE_CELL:
+			if is_built_cell(cell):
 				return false
-			if QUEUE_WAIT_CELLS.has(cell) or PLACEMENT_EXTRA_RESERVED_CELLS.has(cell):
-				return false
-			if iso_grid.is_solid(cell):
-				return false
+	var counts: Dictionary = _built_neighbours(rect)
+	var touching: bool = false
+	for side: StringName in counts.keys():
+		if int(counts[side]) > 0:
+			touching = true
+			break
+	if not touching:
+		return false
 	var bs: Variant = _get_bank_state()
 	if bs is Object:
 		if not DepartmentService.is_room_free(bs as BankState, rect, dept_id):
@@ -397,39 +440,20 @@ func is_valid_department_plot(cell: Vector2i, dept_id: String = "") -> bool:
 	return is_valid_department_room(Rect2i(cell, Vector2i.ONE), dept_id)
 
 
-## Centre of the open front edge (the side that faces the lobby).
-func room_opening_cell(rect: Rect2i) -> Vector2i:
-	if rect.size.x <= 0 or rect.size.y <= 0:
-		return Vector2i(-1, -1)
-	var zone: StringName = _room_zone_of_rect(rect)
-	if zone == &"west":
-		return Vector2i(rect.position.x + rect.size.x - 1, rect.position.y + rect.size.y / 2)
-	if zone == &"east":
-		return Vector2i(rect.position.x, rect.position.y + rect.size.y / 2)
-	return Vector2i(rect.position.x + rect.size.x / 2, rect.position.y + rect.size.y - 1)
-
-
-## Solid walls: back edge + both side partitions. The front edge stays open (doorway).
+## Solid walls: the whole perimeter except the auto-generated door cell.
 func room_wall_cells(rect: Rect2i) -> Array[Vector2i]:
 	var out: Array[Vector2i] = []
-	var zone: StringName = _room_zone_of_rect(rect)
-	if zone == &"":
+	if rect.size.x <= 0 or rect.size.y <= 0:
 		return out
+	var door: Vector2i = room_door_cell(rect)
 	var min_x: int = rect.position.x
 	var max_x: int = rect.position.x + rect.size.x - 1
 	var min_y: int = rect.position.y
 	var max_y: int = rect.position.y + rect.size.y - 1
 	for y in range(min_y, max_y + 1):
 		for x in range(min_x, max_x + 1):
-			var solid: bool = false
-			match zone:
-				&"north":
-					solid = (y == min_y) or (x == min_x) or (x == max_x)
-				&"west":
-					solid = (x == min_x) or (y == min_y) or (y == max_y)
-				&"east":
-					solid = (x == max_x) or (y == min_y) or (y == max_y)
-			if solid:
+			var edge: bool = (x == min_x or x == max_x or y == min_y or y == max_y)
+			if edge and Vector2i(x, y) != door:
 				out.append(Vector2i(x, y))
 	return out
 
@@ -462,8 +486,8 @@ func _normalize_room_rect(a: Vector2i, b: Vector2i) -> Rect2i:
 		clampi(max_y - min_y + 1, 1, MAX_ROOM_SIZE.y)
 	)
 	var origin := Vector2i(
-		clampi(min_x, 0, IsoGrid.GRID_WIDTH - size.x),
-		clampi(min_y, 0, IsoGrid.GRID_HEIGHT - size.y)
+		clampi(min_x, IsoGrid.SITE_REGION.position.x, IsoGrid.SITE_REGION.end.x - size.x),
+		clampi(min_y, IsoGrid.SITE_REGION.position.y, IsoGrid.SITE_REGION.end.y - size.y)
 	)
 	return Rect2i(origin, size)
 
@@ -472,8 +496,8 @@ func _normalize_room_rect(a: Vector2i, b: Vector2i) -> Rect2i:
 func _default_room_at(cell: Vector2i) -> Rect2i:
 	var size: Vector2i = MIN_ROOM_SIZE
 	var origin := Vector2i(
-		clampi(cell.x - size.x / 2, 0, IsoGrid.GRID_WIDTH - size.x),
-		clampi(cell.y - size.y / 2, 0, IsoGrid.GRID_HEIGHT - size.y)
+		clampi(cell.x - size.x / 2, IsoGrid.SITE_REGION.position.x, IsoGrid.SITE_REGION.end.x - size.x),
+		clampi(cell.y - size.y / 2, IsoGrid.SITE_REGION.position.y, IsoGrid.SITE_REGION.end.y - size.y)
 	)
 	return Rect2i(origin, size)
 
@@ -540,7 +564,7 @@ func _rebuild_ghost_tiles(rect: Rect2i, valid: bool) -> void:
 		return
 	_clear_ghost_tiles()
 	var col: Color = Color("#35C978") if valid else Color("#E74C3C")
-	var opening: Vector2i = room_opening_cell(rect)
+	var door_cell: Vector2i = room_door_cell(rect)
 	for y in range(rect.position.y, rect.position.y + rect.size.y):
 		for x in range(rect.position.x, rect.position.x + rect.size.x):
 			var cell := Vector2i(x, y)
@@ -560,7 +584,7 @@ func _rebuild_ghost_tiles(rect: Rect2i, valid: bool) -> void:
 			edge.default_color = Color(col.r, col.g, col.b, 0.70)
 			edge.position = tile.position
 			_ghost_tiles.add_child(edge)
-			if cell == opening:
+			if cell == door_cell:
 				var opening_tile := Polygon2D.new()
 				opening_tile.polygon = PackedVector2Array([
 					Vector2(0.0, -6.0), Vector2(12.0, 0.0), Vector2(0.0, 6.0), Vector2(-12.0, 0.0),
@@ -835,7 +859,7 @@ func _create_department_room(dept_id: String, rect: Rect2i) -> void:
 	var wall_set: Dictionary = {}
 	for wc: Vector2i in walls:
 		wall_set[wc] = true
-	var opening: Vector2i = room_opening_cell(rect)
+	var door_cell: Vector2i = room_door_cell(rect)
 	for y in range(rect.position.y, rect.position.y + rect.size.y):
 		for x in range(rect.position.x, rect.position.x + rect.size.x):
 			var cell := Vector2i(x, y)
@@ -844,7 +868,7 @@ func _create_department_room(dept_id: String, rect: Rect2i) -> void:
 			tile.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 			tile.texture = tex_floor
 			tile.centered = true
-			tile.modulate = Color(1.0, 1.0, 1.0, 1.0) if cell != opening else Color(1.15, 1.1, 0.85, 1.0)
+			tile.modulate = Color(1.0, 1.0, 1.0, 1.0) if cell != door_cell else Color(1.15, 1.1, 0.85, 1.0)
 			tile.position = iso_grid.grid_to_screen(cell).round() - root.position
 			root.add_child(tile)
 
@@ -857,6 +881,27 @@ func _create_department_room(dept_id: String, rect: Rect2i) -> void:
 				wall.offset = Vector2(0.0, -22.0)
 				wall.position = tile.position
 				root.add_child(wall)
+
+	# Auto-generated door at the connection with the existing building.
+	if door_cell.x >= 0:
+		var door_pos: Vector2 = iso_grid.grid_to_screen(door_cell).round() - root.position
+		var door_mark := Polygon2D.new()
+		door_mark.name = "DoorMark"
+		door_mark.polygon = PackedVector2Array([
+			Vector2(0.0, -7.0), Vector2(13.0, 0.0), Vector2(0.0, 7.0), Vector2(-13.0, 0.0),
+		])
+		door_mark.color = Color(1.0, 0.78, 0.34, 0.55)
+		door_mark.position = door_pos
+		root.add_child(door_mark)
+		var door_frame := Line2D.new()
+		door_frame.name = "DoorFrame"
+		door_frame.points = PackedVector2Array([
+			Vector2(0.0, -7.0), Vector2(13.0, 0.0), Vector2(0.0, 7.0), Vector2(-13.0, 0.0), Vector2(0.0, -7.0),
+		])
+		door_frame.width = 1.5
+		door_frame.default_color = Color("#FFC857")
+		door_frame.position = door_pos
+		root.add_child(door_frame)
 
 	var sign_anchor := Vector2i(rect.position.x + rect.size.x / 2, rect.position.y)
 	var sign_pos: Vector2 = iso_grid.grid_to_screen(sign_anchor).round() - root.position + Vector2(-64.0, -50.0)
@@ -986,6 +1031,27 @@ func _sync_navigation_solids(bs_obj: Object) -> void:
 	iso_grid.clear_solids()
 	for cell in STATIC_SOLID_CELLS:
 		iso_grid.set_solid(cell, true)
+
+	# Everything outside the current floor plan is empty land: not walkable.
+	var room_rects: Array[Rect2i] = []
+	var raw_built_depts: Variant = bs_obj.get("departments")
+	if raw_built_depts is Dictionary:
+		for did_b: Variant in (raw_built_depts as Dictionary).keys():
+			var r_b: Rect2i = _read_dept_rect((raw_built_depts as Dictionary)[did_b])
+			if r_b.size.x > 0:
+				room_rects.append(r_b)
+	for y in range(IsoGrid.SITE_REGION.position.y, IsoGrid.SITE_REGION.end.y):
+		for x in range(IsoGrid.SITE_REGION.position.x, IsoGrid.SITE_REGION.end.x):
+			var c := Vector2i(x, y)
+			if LOBBY_RECT.has_point(c):
+				continue
+			var in_room: bool = false
+			for r: Rect2i in room_rects:
+				if r.has_point(c):
+					in_room = true
+					break
+			if not in_room:
+				iso_grid.set_solid(c, true)
 	var raw_stations: Variant = bs_obj.get("stations")
 	if raw_stations is Dictionary:
 		var st_dict: Dictionary = raw_stations as Dictionary

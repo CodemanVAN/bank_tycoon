@@ -7,7 +7,7 @@ const MIN_ZOOM_STEP: int = 1
 const MAX_ZOOM_STEP: int = 3
 const DEFAULT_CENTER: Vector2 = Vector2(604.0, 338.0)
 const PAN_SPEED_PX: float = 220.0
-const PAN_BOUNDS: Rect2 = Rect2(180.0, 80.0, 840.0, 520.0)
+const PAN_BOUNDS: Rect2 = Rect2(110.0, 55.0, 920.0, 570.0)
 
 var zoom_step: int = 2
 var _dragging: bool = false

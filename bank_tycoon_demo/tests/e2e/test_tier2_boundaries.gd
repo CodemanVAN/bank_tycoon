@@ -98,10 +98,14 @@ func _t2_f1_02_unreachable_and_oob_grid_navigation(h: Variant) -> void:
 	for mname in ["find_path", "compute_path", "get_grid_path"]:
 		if obj.has_method(mname):
 			checked = true
-			var res_oob: Variant = obj.call(mname, Vector2i(1, 1), Vector2i(-1, -1))
-			_assert_invalid_path_result(h, res_oob, "OOB (-1,-1)")
-			var res_oob2: Variant = obj.call(mname, Vector2i(1, 1), Vector2i(18, 12))
-			_assert_invalid_path_result(h, res_oob2, "OOB (18,12)")
+			# The lobby is 18x12, but the site extends by IsoGrid.SITE_MARGIN so
+			# departments can be built outside it; OOB now means outside the site.
+			var res_oob: Variant = obj.call(mname, Vector2i(1, 1), Vector2i(-7, -7))
+			_assert_invalid_path_result(h, res_oob, "OOB (-7,-7)")
+			var res_oob2: Variant = obj.call(mname, Vector2i(1, 1), Vector2i(24, 18))
+			_assert_invalid_path_result(h, res_oob2, "OOB (24,18)")
+			h.assert_true(bool(obj.call("is_in_bounds", Vector2i(-1, -1))), "Expansion cell (-1,-1) must be inside the buildable site")
+			h.assert_true(bool(obj.call("is_in_bounds", Vector2i(18, 12))), "Expansion cell (18,12) must be inside the buildable site")
 			if obj.has_method("set_solid") or obj.has_method("set_cell_solid"):
 				var solid_fn: String = "set_solid" if obj.has_method("set_solid") else "set_cell_solid"
 				for dx in [-1, 0, 1]:

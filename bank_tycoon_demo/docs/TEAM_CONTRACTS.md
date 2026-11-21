@@ -200,41 +200,52 @@ Rows are rebuilt from `snapshot_changed`, which fires several times per second. 
 3. Clear rows with `UiListRefresh.clear_children` (`queue_free`), never `free()` inside a signal handler.
 4. Command handlers refresh via `refresh.call_deferred()`, not synchronously inside `pressed`.
 
-### 7.3 Department rooms (construction flow, matches the master reference)
+### 7.3 Department rooms (expand the building outward)
 
-Departments are **rooms**, not single-tile markers. The reference layout is: north wing of rooms on both
-sides of the central brand wall, plus west / east wings; the open centre stays free for the fountain, stations
-and customers.
+At game start the bank is only the 18x12 lobby. A new department is a **room attached to the outside of the
+current floor plan**, not a tile inside it; the connection between room and building gets an auto-generated door.
 
-- `departments_drawer.gd` emits `placement_requested(dept_id)`; it never calls `create_department` itself.
-- `GameRoot` closes the drawer and calls `BankWorld.begin_department_placement(dept_id)`. The player then
-  **drags a rectangle** on the floor (press = anchor, move = preview, release = build). A single click builds the
-  minimum room centred on that cell. Right click / Esc cancels.
-- `BankWorld` emits `department_placement_confirmed(dept_id, room: Rect2i)`; `GameRoot` calls
-  `BankCommandService.create_department(dept_id, room.position, room.size)` and reports the `Result` via `ToastBar`.
-- Build bands (`BankWorld.room_band_zone`): `north` = y<=2 and x 0..7 or 10..17 (the 8..9 gap keeps the brand
-  wall), `west` = x<=2 and y 3..8, `east` = x>=15 and y 3..8. A room rectangle must lie entirely inside one band.
-  Size is clamped to `MIN_ROOM_SIZE (3,3)` .. `MAX_ROOM_SIZE (5,4)`.
-- `BankWorld.is_valid_department_room(rect, dept_id)` rejects: out of bounds, entrance / queue lanes, solid cells
-  (walls, stations, existing rooms) and rectangles overlapping another room or a station
-  (`DepartmentService.is_room_free`).
-- Room rendering: floor tile per cell, cutaway wall sprites on the back edge and both partitions, an open front
-  edge (doorway) centred on the hall side, a department nameplate above, desk/banner/level badge inside.
-  `room_wall_cells(rect)` is the single source of truth for which cells become navigation solids and which stay
-  walkable; `room_opening_cell(rect)` is the front centre.
-- Data: `DepartmentInstance.grid_pos` (top-left) + `room_size` (w,h). `room_size == (1,1)` is the legacy single-tile
-  marker used by old saves; it renders via `_create_legacy_department_node` at `DEPT_ZONES[*].cell`.
-- World input uses the event position (`cell_from_screen_position`, camera-aware), never `get_global_mouse_position()`
-  polling — the latter is not updated by `Viewport.push_input` and makes construction untestable headless.
-- `STATIC_SOLID_CELLS` only contains permanent architecture (the fountain). Plants / ATMs / sofas are decorative and
-  may end up inside a room when it is built over them.
+- `IsoGrid` keeps `GRID_WIDTH/HEIGHT` = lobby (18x12) and adds `SITE_REGION` = lobby grown by `SITE_MARGIN` (6)
+  cells on every side. `is_in_bounds` uses the site; `is_lobby_cell` still identifies the original hall. The
+  AStarGrid2D region is the site, so actors can path into built rooms but not into empty land.
+- Built area = `LOBBY_RECT` + every `DepartmentInstance` rect. `BankWorld.is_built_cell` / `_rect_has_built_cell`
+  are the single source of truth; rebuilds happen from `BankState`, never from a static list.
+- `departments_drawer.gd` emits `placement_requested(dept_id)`; `GameRoot` closes the drawer and calls
+  `BankWorld.begin_department_placement(dept_id)`.
+- Build gesture: press = anchor, drag = live room preview (green/red), release = build; a single click builds the
+  minimum 3x3 room; right click / Esc cancels. Size is clamped to `MIN_ROOM_SIZE (3,3)` .. `MAX_ROOM_SIZE (5,4)`.
+- `is_valid_department_room` requires: every cell inside the site, **no cell already built**, and at least one
+  side sharing an edge with the current building. `DepartmentService.is_room_free` still vetoes overlap with
+  another room rect or a station.
+- `room_door_cell(rect)` picks the side with the most built neighbours and returns the middle cell of that side;
+  `room_wall_cells(rect)` returns the rest of the perimeter. The door cell stays walkable and gets a gold
+  `DoorFrame`; every other perimeter cell becomes a navigation solid.
+- Rendering: floor tile per cell, cutaway wall sprites on the perimeter, a door frame at the connection, a
+  department nameplate above and desk/banner/level badge inside.
+- Navigation: all site cells outside the built area are solid. `_sync_navigation_solids` carves the lobby, marks
+  stations, then applies `room_wall_cells` per room. Empty land is therefore never walkable.
+- Data: `DepartmentInstance.grid_pos` (top-left) + `room_size` (w,h). `room_size == (1,1)` is the legacy
+  single-tile marker from old saves and still renders at `DEPT_ZONES[*].cell`.
+- World input uses the event position (`cell_from_screen_position`, camera-aware), never
+  `get_global_mouse_position()` polling — the latter is not updated by `Viewport.push_input` and makes construction
+  untestable headless.
+- `STATIC_SOLID_CELLS` only contains permanent architecture (the fountain). Plants / ATMs / sofas are decorative.
 
-### 7.4 Known follow-ups (still open)
+### 7.4 Display / resolution
 
-- Rooms are single-floor rectangles on the 18x12 branch grid; building **outside** the current floor plan
-  (expanding the site, new exterior walls, larger A* region) is a separate world-gen task.
+`project.godot` keeps a 1280x720 **design canvas** (all layout constants stay in that space) and opens a
+**1920x1080 window** by default (`window_width_override` / `window_height_override`), with
+`stretch/mode="canvas_items"` and `stretch/aspect="expand"`. Consequences:
+
+- 1920x1080 renders at exactly 1.5x, 2560x1440 (2K) at 2x, 3840x2160 at 3x — never blurrier than the design canvas.
+- The window is resizable with a 1280x720 minimum; `expand` gives extra canvas area on non-16:9 windows.
+- Do not scale individual layout constants to "look bigger": raise the window size instead, otherwise every
+  anchored offset in `game_root.tscn` has to be re-tuned.
+
+### 7.5 Known follow-ups (still open)
+
 - `DEPT_ZONES[*].cell` now only serves unplaced legacy saves; remove it once a save migration has run.
-- Mod-added departments have no `DEPT_ZONES` style entry: they get the default accent, the id as sign text and the
-  fallback cell for legacy saves.
-- `room_band_zone` and `PLACEMENT_EXTRA_RESERVED_CELLS` encode the floor plan manually; update them together with
-  any lobby layout change.
+- Mod-added departments have no `DEPT_ZONES` style entry: they get the default accent and the id as sign text.
+- The lobby's exterior wall art (north wall / south glass) is static; a room attached there gets a door frame but
+  the old wall sprite may still be visible behind it. Replacing lobby walls with a dynamic built-boundary pass is
+  the next visual step.
