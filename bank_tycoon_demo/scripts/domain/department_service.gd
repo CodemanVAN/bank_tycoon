@@ -9,8 +9,13 @@ class DepartmentInstance extends RefCounted:
 	var created_day: int = 1
 	var daily_cost_minor: int = 0
 	var staff_ids: Array[String] = []
-	## Logical lobby cell chosen by the player. (-1, -1) = legacy/unplaced department.
+	## Top-left logical lobby cell of the room. (-1, -1) = legacy/unplaced department.
 	var grid_pos: Vector2i = Vector2i(-1, -1)
+	## Room footprint in cells (width, height). (1, 1) = legacy single-tile marker.
+	var room_size: Vector2i = Vector2i(1, 1)
+
+	func get_room_rect() -> Rect2i:
+		return Rect2i(grid_pos, room_size)
 
 	func to_dict() -> Dictionary:
 		var staff_copy: Array[String] = []
@@ -23,6 +28,7 @@ class DepartmentInstance extends RefCounted:
 			"daily_cost_minor": daily_cost_minor,
 			"staff_ids": staff_copy,
 			"grid_pos": [grid_pos.x, grid_pos.y],
+			"room_size": [room_size.x, room_size.y],
 		}
 
 	static func from_dict(data: Dictionary) -> DepartmentInstance:
@@ -32,12 +38,19 @@ class DepartmentInstance extends RefCounted:
 		inst.created_day = maxi(1, int(data.get("created_day", 1)))
 		inst.daily_cost_minor = maxi(0, int(data.get("daily_cost_minor", 0)))
 		inst.grid_pos = _parse_grid_pos(data.get("grid_pos", null))
+		inst.room_size = _parse_room_size(data.get("room_size", null))
 		inst.staff_ids = []
 		var raw_staff: Variant = data.get("staff_ids", [])
 		if raw_staff is Array:
 			for sid in (raw_staff as Array):
 				inst.staff_ids.append(str(sid))
 		return inst
+
+	static func _parse_room_size(raw: Variant) -> Vector2i:
+		var parsed: Vector2i = _parse_grid_pos(raw)
+		if parsed == Vector2i(-1, -1):
+			return Vector2i(1, 1)
+		return Vector2i(maxi(1, parsed.x), maxi(1, parsed.y))
 
 	static func _parse_grid_pos(raw: Variant) -> Vector2i:
 		if raw is Vector2i:
@@ -132,7 +145,8 @@ func create_department(
 	dept_id: String,
 	content_defs: Dictionary,
 	finance_engine: FinanceEngine = null,
-	grid_pos: Vector2i = Vector2i(-1, -1)
+	grid_pos: Vector2i = Vector2i(-1, -1),
+	room_size: Vector2i = Vector2i(1, 1)
 ) -> Result:
 	if bank_state == null or bank_state.ledger == null:
 		return Result.fail(&"INVALID_BANK_STATE", "ERR_INVALID_BANK_STATE", {})
@@ -149,8 +163,11 @@ func create_department(
 	var has_plot: bool = grid_pos.x >= 0 and grid_pos.y >= 0
 	if (grid_pos.x >= 0) != (grid_pos.y >= 0):
 		return Result.fail(&"DEPT_PLOT_INVALID", "ERR_DEPT_PLOT_INVALID", {"x": grid_pos.x, "y": grid_pos.y})
-	if has_plot and not is_plot_free(bank_state, grid_pos, dept_id):
-		return Result.fail(&"DEPT_PLOT_OCCUPIED", "ERR_DEPT_PLOT_OCCUPIED", {"x": grid_pos.x, "y": grid_pos.y})
+	var room: Vector2i = Vector2i(maxi(1, room_size.x), maxi(1, room_size.y))
+	if has_plot and not is_room_free(bank_state, Rect2i(grid_pos, room), dept_id):
+		return Result.fail(&"DEPT_PLOT_OCCUPIED", "ERR_DEPT_PLOT_OCCUPIED", {
+			"x": grid_pos.x, "y": grid_pos.y, "w": room.x, "h": room.y,
+		})
 
 	if not _check_unlock_conditions(dept_def.get("unlock_conditions", []), bank_state):
 		return Result.fail(&"DEPT_LOCKED", "ERR_DEPT_LOCKED", {"department_id": dept_id})
@@ -178,6 +195,7 @@ func create_department(
 	inst.created_day = bank_state.current_day
 	inst.daily_cost_minor = maxi(0, int(dept_def.get("daily_cost_minor", 0)))
 	inst.grid_pos = grid_pos if has_plot else Vector2i(-1, -1)
+	inst.room_size = room if has_plot else Vector2i(1, 1)
 	bank_state.departments[dept_id] = inst
 
 	return Result.succeed({
@@ -185,6 +203,7 @@ func create_department(
 		"level": 1,
 		"cost_minor": cost,
 		"grid_pos": [inst.grid_pos.x, inst.grid_pos.y],
+		"room_size": [inst.room_size.x, inst.room_size.y],
 	})
 
 
@@ -197,22 +216,54 @@ static func get_department_grid_pos(bank_state: BankState, dept_id: String) -> V
 	return _entry_grid_pos(bank_state.departments[dept_id])
 
 
-## True when no station and no other department occupies `cell`.
-static func is_plot_free(bank_state: BankState, cell: Vector2i, ignore_dept_id: String = "") -> bool:
+## Returns the room rect of a department, or an empty rect when unplaced / unknown.
+static func get_department_room_rect(bank_state: BankState, dept_id: String) -> Rect2i:
+	if bank_state == null or not bank_state.departments.has(dept_id):
+		return Rect2i()
+	return _entry_room_rect(bank_state.departments[dept_id])
+
+
+## True when no station and no other department room overlaps the whole `rect`.
+static func is_room_free(bank_state: BankState, rect: Rect2i, ignore_dept_id: String = "") -> bool:
 	if bank_state == null:
+		return false
+	if rect.size.x <= 0 or rect.size.y <= 0:
 		return false
 	for sid: Variant in bank_state.stations.keys():
 		var st: Variant = bank_state.stations[sid]
 		if st is Dictionary:
 			var gp: Variant = (st as Dictionary).get("grid_pos", null)
-			if gp is Vector2i and (gp as Vector2i) == cell:
+			if gp is Vector2i and rect.has_point(gp as Vector2i):
 				return false
 	for did: Variant in bank_state.departments.keys():
 		if str(did) == ignore_dept_id:
 			continue
-		if _entry_grid_pos(bank_state.departments[did]) == cell:
+		var other: Rect2i = _entry_room_rect(bank_state.departments[did])
+		if other.size.x <= 0:
+			continue
+		if other.intersects(rect):
 			return false
 	return true
+
+
+## Convenience wrapper for a single cell (kept for callers/tests).
+static func is_plot_free(bank_state: BankState, cell: Vector2i, ignore_dept_id: String = "") -> bool:
+	return is_room_free(bank_state, Rect2i(cell, Vector2i.ONE), ignore_dept_id)
+
+
+static func _entry_room_rect(entry: Variant) -> Rect2i:
+	var origin: Vector2i = _entry_grid_pos(entry)
+	if origin.x < 0 or origin.y < 0:
+		return Rect2i()
+	var size := Vector2i(1, 1)
+	if entry is Object:
+		var raw_size: Variant = (entry as Object).get("room_size")
+		if raw_size is Vector2i:
+			size = raw_size as Vector2i
+	elif entry is Dictionary:
+		size = DepartmentInstance._parse_room_size((entry as Dictionary).get("room_size", null))
+	size = Vector2i(maxi(1, size.x), maxi(1, size.y))
+	return Rect2i(origin, size)
 
 
 static func _entry_grid_pos(entry: Variant) -> Vector2i:

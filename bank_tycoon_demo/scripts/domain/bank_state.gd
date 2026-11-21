@@ -244,6 +244,10 @@ func to_dict() -> Dictionary:
 			if gp is Vector2i:
 				var gp_cell: Vector2i = gp as Vector2i
 				dept_copy["grid_pos"] = [gp_cell.x, gp_cell.y]
+			var rs: Variant = dept_copy.get("room_size", null)
+			if rs is Vector2i:
+				var rs_cell: Vector2i = rs as Vector2i
+				dept_copy["room_size"] = [rs_cell.x, rs_cell.y]
 			ser_depts[str(did)] = dept_copy
 
 	var ser_stations: Dictionary = {}
@@ -440,6 +444,10 @@ static func from_dict(data: Dictionary) -> Result:
 					"daily_cost_minor": maxi(0, int(dd.get("daily_cost_minor", 0))),
 					"staff_ids": staff_arr,
 					"grid_pos": _parse_vec2i(dd.get("grid_pos", null), Vector2i(-1, -1)),
+					"room_size": Vector2i(
+						maxi(1, _parse_vec2i(dd.get("room_size", null), Vector2i(1, 1)).x),
+						maxi(1, _parse_vec2i(dd.get("room_size", null), Vector2i(1, 1)).y)
+					),
 				}
 
 	state.adopted_policies = []

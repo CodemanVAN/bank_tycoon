@@ -443,6 +443,43 @@ static func _test_department_and_policy() -> void:
 	var bs_legacy := BankState.create_starter_branch("DeptLegacy", 204)
 	_check(ds.create_department(bs_legacy, "core:department.hr", defs).ok, "Unplaced legacy call (no grid_pos) still allowed")
 	_check_eq(DepartmentService.get_department_grid_pos(bs_legacy, "core:department.hr"), Vector2i(-1, -1), "Unplaced department keeps (-1, -1)")
+	_check_eq(DepartmentService.get_department_room_rect(bs_legacy, "core:department.hr"), Rect2i(), "Unplaced department has no room rect")
+
+	# Whole-room footprint (construction-game style): stored, non-overlapping, save-safe
+	var bs_room := BankState.create_starter_branch("DeptRoom", 205)
+	var room_rect := Rect2i(Vector2i(2, 0), Vector2i(3, 3))
+	_check(
+		ds.create_department(bs_room, "core:department.operations", defs, null, room_rect.position, room_rect.size).ok,
+		"Create a 3x3 department room"
+	)
+	_check_eq(
+		DepartmentService.get_department_room_rect(bs_room, "core:department.operations"),
+		room_rect,
+		"Room rectangle is stored as a whole"
+	)
+	_check(
+		not ds.create_department(bs_room, "core:department.hr", defs, null, Vector2i(3, 1), Vector2i(3, 3)).ok,
+		"Reject a room overlapping an existing room"
+	)
+	bs_room.stations["t5_test_desk"] = {
+		"station_id": "t5_test_desk",
+		"station_type": "teller",
+		"is_open": true,
+		"grid_pos": Vector2i(6, 1),
+	}
+	_check(
+		not ds.create_department(bs_room, "core:department.credit", defs, null, Vector2i(5, 0), Vector2i(3, 3)).ok,
+		"Reject a room overlapping a service station footprint"
+	)
+	var room_json: Variant = JSON.parse_string(JSON.stringify(bs_room.to_dict()))
+	var room_rt: Result = BankState.from_dict(room_json as Dictionary)
+	_check(room_rt.ok, "Room save round-trip parsed")
+	if room_rt.ok:
+		_check_eq(
+			DepartmentService.get_department_room_rect(room_rt.data as BankState, "core:department.operations"),
+			room_rect,
+			"Room rectangle survives JSON save/load"
+		)
 
 	var plot_json: Variant = JSON.parse_string(JSON.stringify(bs_plot.to_dict()))
 	var plot_rt: Result = BankState.from_dict(plot_json as Dictionary)

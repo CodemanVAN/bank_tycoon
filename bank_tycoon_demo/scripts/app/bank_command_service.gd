@@ -510,8 +510,14 @@ func rest_employee(employee_id: String) -> Result:
 	return Result.succeed({"employee_id": employee_id, "state": emp.state})
 
 
-func create_department(dept_id: String, grid_pos: Vector2i = Vector2i(-1, -1)) -> Result:
-	var res: Result = dept_service.create_department(bank_state, dept_id, content_defs, finance_engine, grid_pos)
+func create_department(
+	dept_id: String,
+	grid_pos: Vector2i = Vector2i(-1, -1),
+	room_size: Vector2i = Vector2i(1, 1)
+) -> Result:
+	var res: Result = dept_service.create_department(
+		bank_state, dept_id, content_defs, finance_engine, grid_pos, room_size
+	)
 	if not res.ok:
 		return res
 
