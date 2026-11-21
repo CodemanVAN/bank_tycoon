@@ -332,13 +332,13 @@ func _on_department_placement_requested(dept_id: String) -> void:
 		show_toast("ERR_DEPT_PLOT_INVALID", {}, Enums.EventSeverity.WARNING)
 
 
-func _on_department_placement_confirmed(dept_id: String, cell: Vector2i) -> void:
+func _on_department_placement_confirmed(dept_id: String, room: Rect2i) -> void:
 	if _sim_host == null:
 		return
 	var cmd: Variant = _sim_host.get("command_service")
 	if cmd == null or not (cmd as Object).has_method("create_department"):
 		return
-	var res: Variant = (cmd as Object).call("create_department", dept_id, cell)
+	var res: Variant = (cmd as Object).call("create_department", dept_id, room.position, room.size)
 	if _toast_bar != null and _toast_bar.has_method("show_command_result"):
 		_toast_bar.call("show_command_result", res, "UI_NAV_DEPARTMENTS")
 	refresh_all()

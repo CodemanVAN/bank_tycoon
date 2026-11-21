@@ -200,42 +200,41 @@ Rows are rebuilt from `snapshot_changed`, which fires several times per second. 
 3. Clear rows with `UiListRefresh.clear_children` (`queue_free`), never `free()` inside a signal handler.
 4. Command handlers refresh via `refresh.call_deferred()`, not synchronously inside `pressed`.
 
-### 7.3 Department placement (new construction flow)
+### 7.3 Department rooms (construction flow, matches the master reference)
+
+Departments are **rooms**, not single-tile markers. The reference layout is: north wing of rooms on both
+sides of the central brand wall, plus west / east wings; the open centre stays free for the fountain, stations
+and customers.
 
 - `departments_drawer.gd` emits `placement_requested(dept_id)`; it never calls `create_department` itself.
-- `GameRoot` closes the drawer and calls `BankWorld.begin_department_placement(dept_id)`. `BankWorld` emits
-  `department_placement_confirmed(dept_id, cell)` or `department_placement_cancelled()`; `GameRoot` then calls
-  `BankCommandService.create_department(dept_id, cell)` and reports the `Result` via `ToastBar`.
-- `BankWorld.is_valid_department_plot(cell, dept_id)` rejects: out of bounds, entrance / queue lanes
-  (`PLACEMENT_EXTRA_RESERVED_CELLS`), solid cells (walls, stations, existing dept rooms) and plots occupied according
-  to `DepartmentService.is_plot_free` (domain-owned uniqueness).
-- `DepartmentInstance.grid_pos` is the single source of truth; `(-1, -1)` means "unplaced legacy save" and renders at
-  the old `DEPT_ZONES` cell. Rooms are created/removed from `BankState`, not from a fixed list.
+- `GameRoot` closes the drawer and calls `BankWorld.begin_department_placement(dept_id)`. The player then
+  **drags a rectangle** on the floor (press = anchor, move = preview, release = build). A single click builds the
+  minimum room centred on that cell. Right click / Esc cancels.
+- `BankWorld` emits `department_placement_confirmed(dept_id, room: Rect2i)`; `GameRoot` calls
+  `BankCommandService.create_department(dept_id, room.position, room.size)` and reports the `Result` via `ToastBar`.
+- Build bands (`BankWorld.room_band_zone`): `north` = y<=2 and x 0..7 or 10..17 (the 8..9 gap keeps the brand
+  wall), `west` = x<=2 and y 3..8, `east` = x>=15 and y 3..8. A room rectangle must lie entirely inside one band.
+  Size is clamped to `MIN_ROOM_SIZE (3,3)` .. `MAX_ROOM_SIZE (5,4)`.
+- `BankWorld.is_valid_department_room(rect, dept_id)` rejects: out of bounds, entrance / queue lanes, solid cells
+  (walls, stations, existing rooms) and rectangles overlapping another room or a station
+  (`DepartmentService.is_room_free`).
+- Room rendering: floor tile per cell, cutaway wall sprites on the back edge and both partitions, an open front
+  edge (doorway) centred on the hall side, a department nameplate above, desk/banner/level badge inside.
+  `room_wall_cells(rect)` is the single source of truth for which cells become navigation solids and which stay
+  walkable; `room_opening_cell(rect)` is the front centre.
+- Data: `DepartmentInstance.grid_pos` (top-left) + `room_size` (w,h). `room_size == (1,1)` is the legacy single-tile
+  marker used by old saves; it renders via `_create_legacy_department_node` at `DEPT_ZONES[*].cell`.
 - World input uses the event position (`cell_from_screen_position`, camera-aware), never `get_global_mouse_position()`
-  polling — the latter is not updated by `Viewport.push_input` and makes placement untestable headless.
+  polling — the latter is not updated by `Viewport.push_input` and makes construction untestable headless.
+- `STATIC_SOLID_CELLS` only contains permanent architecture (the fountain). Plants / ATMs / sofas are decorative and
+  may end up inside a room when it is built over them.
 
 ### 7.4 Known follow-ups (still open)
 
-- Department rooms are one tile. A multi-tile footprint needs an occupancy set shared with `is_plot_free`.
-- `DEPT_ZONES[*].cell` now only serves unplaced legacy saves and mod departments without a style entry; remove it once
-  a save migration has run.
-- Mod-added departments get the default accent and the id as display name until the mod supplies `WORLD_DEPT_*` keys.
-- `PLACEMENT_EXTRA_RESERVED_CELLS` tracks the lobby layout manually; update it together with any floor-plan change.
-
-
-
-Panels contract (panels implements; hud instantiates by path):
-- Drawers `scenes/ui/drawers/{finance,employees,departments,policies,events}_drawer.tscn`; root Control script
-  provides `bind(host: SimulationHost) -> void`, `refresh() -> void`, `signal close_requested`. DrawerHost area:
-  x=76..980, y=56..656 (between nav and inspector, above bottom bar). `refresh()` on `snapshot_changed` while visible.
-- Modals `scenes/ui/modals/loan_approval_modal.tscn`, `scenes/ui/modals/event_modal.tscn`:
-  `bind(host)`, `open_with(data: Dictionary)` (loan: `{approval_id}`; event: `{event_instance_id}`), `signal closed`.
-- `scenes/ui/daily_report_overlay.tscn`: `bind(host)`, `show_report(report: Dictionary)`,
-  `signal next_day_requested`. GameRoot handles it: `advance_to_next_day()` → `GameSession.save_to_slot("autosave")`
-  → toast.
-- Right inspector "selected employee" actions and bottom bar badges call the same commands / open the modals via
-  GameRoot methods: `open_drawer(id: StringName)`, `close_drawer()`, `open_loan_modal(approval_id)`,
-  `open_event_modal(event_instance_id)`, `show_toast(key, params, severity)`.
-- SFX: hud's `audio_feedback.gd` subscribes to the event bus and plays SFX (cash on service_completed with
-  amount, bell on customer_arrived (throttled), approve/reject, alert on event_triggered, day_complete, upgrade).
-  UI buttons play `sfx_ui_click` via a shared helper `UiSfx.click()` (hud owns `scripts/presentation/ui/ui_sfx.gd`).
+- Rooms are single-floor rectangles on the 18x12 branch grid; building **outside** the current floor plan
+  (expanding the site, new exterior walls, larger A* region) is a separate world-gen task.
+- `DEPT_ZONES[*].cell` now only serves unplaced legacy saves; remove it once a save migration has run.
+- Mod-added departments have no `DEPT_ZONES` style entry: they get the default accent, the id as sign text and the
+  fallback cell for legacy saves.
+- `room_band_zone` and `PLACEMENT_EXTRA_RESERVED_CELLS` encode the floor plan manually; update them together with
+  any lobby layout change.

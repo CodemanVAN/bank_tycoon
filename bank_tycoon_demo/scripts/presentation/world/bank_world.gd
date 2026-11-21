@@ -4,7 +4,7 @@ extends Node2D
 ## 2.5D Isometric Bank Lobby World presentation root (18x12 IsoGrid, Y-Sorted props/stations/actors, PixelCamera2D).
 
 signal entity_selected(entity_type: StringName, entity_id: String)
-signal department_placement_confirmed(dept_id: String, cell: Vector2i)
+signal department_placement_confirmed(dept_id: String, room: Rect2i)
 signal department_placement_cancelled()
 
 const FOUNTAIN_CELL: Vector2i = Vector2i(9, 7)
@@ -42,16 +42,10 @@ const DEPT_ZONES: Dictionary = {
 	},
 }
 
+## Only permanent architecture blocks navigation. Corner plants / ATMs / sofas are
+## decorative: a department room may be built over them (they become room decor).
 const STATIC_SOLID_CELLS: Array[Vector2i] = [
-	Vector2i(9, 7),
-	Vector2i(3, 8),
-	Vector2i(14, 8),
-	Vector2i(1, 1),
-	Vector2i(16, 1),
-	Vector2i(1, 10),
-	Vector2i(16, 10),
-	Vector2i(1, 5),
-	Vector2i(1, 7),
+	Vector2i(9, 7),  # central fountain
 ]
 
 const QUEUE_WAIT_CELLS: Array[Vector2i] = [
@@ -87,14 +81,18 @@ var _fountain_timer: float = 0.0
 var _fountain_frame: int = 0
 var _static_built: bool = false
 
-# Department placement mode
+# Department room construction (drag a rectangle along the hall perimeter)
+const MIN_ROOM_SIZE: Vector2i = Vector2i(3, 3)
+const MAX_ROOM_SIZE: Vector2i = Vector2i(5, 4)
+
 var _placement_dept_id: String = ""
 var _placement_short_key: String = ""
-var _placement_cell: Vector2i = Vector2i(-1, -1)
+var _placement_anchor: Vector2i = Vector2i(-1, -1)
+var _placement_rect: Rect2i = Rect2i()
 var _placement_valid: bool = false
+var _placement_dragging: bool = false
 var _placement_ghost: Node2D = null
-var _ghost_fill: Polygon2D = null
-var _ghost_border: Line2D = null
+var _ghost_tiles: Node2D = null
 var _ghost_label: Label = null
 
 var _station_views: Dictionary = {}
@@ -303,8 +301,12 @@ func is_department_placement_active() -> bool:
 	return not _placement_dept_id.is_empty()
 
 
+func get_placement_rect() -> Rect2i:
+	return _placement_rect
+
+
 func get_placement_cell() -> Vector2i:
-	return _placement_cell
+	return _placement_rect.position
 
 
 func begin_department_placement(dept_id: String) -> bool:
@@ -318,8 +320,11 @@ func begin_department_placement(dept_id: String) -> bool:
 	_placement_dept_id = dept_id
 	var cfg: Dictionary = DEPT_ZONES.get(dept_id, {}) as Dictionary
 	_placement_short_key = str(cfg.get("short_key", dept_id))
-	_placement_cell = Vector2i(-1, -1)
+	_placement_anchor = Vector2i(-1, -1)
+	_placement_rect = Rect2i()
 	_placement_valid = false
+	_placement_dragging = false
+	_clear_ghost_tiles()
 	_placement_ghost.visible = false
 	return true
 
@@ -331,37 +336,146 @@ func cancel_department_placement() -> void:
 	department_placement_cancelled.emit()
 
 
-func is_valid_department_plot(cell: Vector2i, dept_id: String = "") -> bool:
+## Rooms line the hall like the master reference: north wing on both sides of the
+## brand wall, plus west / east wings. The open centre stays free for the lobby.
+func room_band_zone(cell: Vector2i) -> StringName:
+	if iso_grid == null or not iso_grid.is_in_bounds(cell):
+		return &""
+	if cell.y <= 2 and ((cell.x >= 0 and cell.x <= 7) or (cell.x >= 10 and cell.x <= 17)):
+		return &"north"
+	if cell.x <= 2 and cell.y >= 3 and cell.y <= 8:
+		return &"west"
+	if cell.x >= 15 and cell.y >= 3 and cell.y <= 8:
+		return &"east"
+	return &""
+
+
+func _room_zone_of_rect(rect: Rect2i) -> StringName:
+	var zone: StringName = &""
+	for y in range(rect.position.y, rect.position.y + rect.size.y):
+		for x in range(rect.position.x, rect.position.x + rect.size.x):
+			var z: StringName = room_band_zone(Vector2i(x, y))
+			if z == &"":
+				return &""
+			if zone == &"":
+				zone = z
+			elif zone != z:
+				return &""
+	return zone
+
+
+## Whole-room validation: every cell must be free floor inside one build band.
+func is_valid_department_room(rect: Rect2i, dept_id: String = "") -> bool:
 	if iso_grid == null:
 		return false
-	if not iso_grid.is_in_bounds(cell):
+	if rect.size.x <= 0 or rect.size.y <= 0:
 		return false
-	if cell == ENTRANCE_CELL:
+	if rect.size.x > MAX_ROOM_SIZE.x or rect.size.y > MAX_ROOM_SIZE.y:
 		return false
-	if QUEUE_WAIT_CELLS.has(cell) or PLACEMENT_EXTRA_RESERVED_CELLS.has(cell):
+	if _room_zone_of_rect(rect) == &"":
 		return false
-	if iso_grid.is_solid(cell):
-		return false
+	for y in range(rect.position.y, rect.position.y + rect.size.y):
+		for x in range(rect.position.x, rect.position.x + rect.size.x):
+			var cell := Vector2i(x, y)
+			if not iso_grid.is_in_bounds(cell):
+				return false
+			if cell == ENTRANCE_CELL:
+				return false
+			if QUEUE_WAIT_CELLS.has(cell) or PLACEMENT_EXTRA_RESERVED_CELLS.has(cell):
+				return false
+			if iso_grid.is_solid(cell):
+				return false
 	var bs: Variant = _get_bank_state()
 	if bs is Object:
-		if not DepartmentService.is_plot_free(bs as BankState, cell, dept_id):
+		if not DepartmentService.is_room_free(bs as BankState, rect, dept_id):
 			return false
 	return true
+
+
+## Single-cell wrapper kept for tests / callers that only have a point.
+func is_valid_department_plot(cell: Vector2i, dept_id: String = "") -> bool:
+	return is_valid_department_room(Rect2i(cell, Vector2i.ONE), dept_id)
+
+
+## Centre of the open front edge (the side that faces the lobby).
+func room_opening_cell(rect: Rect2i) -> Vector2i:
+	if rect.size.x <= 0 or rect.size.y <= 0:
+		return Vector2i(-1, -1)
+	var zone: StringName = _room_zone_of_rect(rect)
+	if zone == &"west":
+		return Vector2i(rect.position.x + rect.size.x - 1, rect.position.y + rect.size.y / 2)
+	if zone == &"east":
+		return Vector2i(rect.position.x, rect.position.y + rect.size.y / 2)
+	return Vector2i(rect.position.x + rect.size.x / 2, rect.position.y + rect.size.y - 1)
+
+
+## Solid walls: back edge + both side partitions. The front edge stays open (doorway).
+func room_wall_cells(rect: Rect2i) -> Array[Vector2i]:
+	var out: Array[Vector2i] = []
+	var zone: StringName = _room_zone_of_rect(rect)
+	if zone == &"":
+		return out
+	var min_x: int = rect.position.x
+	var max_x: int = rect.position.x + rect.size.x - 1
+	var min_y: int = rect.position.y
+	var max_y: int = rect.position.y + rect.size.y - 1
+	for y in range(min_y, max_y + 1):
+		for x in range(min_x, max_x + 1):
+			var solid: bool = false
+			match zone:
+				&"north":
+					solid = (y == min_y) or (x == min_x) or (x == max_x)
+				&"west":
+					solid = (x == min_x) or (y == min_y) or (y == max_y)
+				&"east":
+					solid = (x == max_x) or (y == min_y) or (y == max_y)
+			if solid:
+				out.append(Vector2i(x, y))
+	return out
 
 
 func _end_department_placement() -> void:
 	_placement_dept_id = ""
 	_placement_short_key = ""
-	_placement_cell = Vector2i(-1, -1)
+	_placement_anchor = Vector2i(-1, -1)
+	_placement_rect = Rect2i()
 	_placement_valid = false
+	_placement_dragging = false
+	_clear_ghost_tiles()
 	if _placement_ghost != null and is_instance_valid(_placement_ghost):
 		_placement_ghost.visible = false
 
 
-func _confirm_department_placement(cell: Vector2i) -> void:
+func _confirm_department_placement(rect: Rect2i) -> void:
 	var dept_id: String = _placement_dept_id
 	_end_department_placement()
-	department_placement_confirmed.emit(dept_id, cell)
+	department_placement_confirmed.emit(dept_id, rect)
+
+
+func _normalize_room_rect(a: Vector2i, b: Vector2i) -> Rect2i:
+	var min_x: int = mini(a.x, b.x)
+	var max_x: int = maxi(a.x, b.x)
+	var min_y: int = mini(a.y, b.y)
+	var max_y: int = maxi(a.y, b.y)
+	var size := Vector2i(
+		clampi(max_x - min_x + 1, 1, MAX_ROOM_SIZE.x),
+		clampi(max_y - min_y + 1, 1, MAX_ROOM_SIZE.y)
+	)
+	var origin := Vector2i(
+		clampi(min_x, 0, IsoGrid.GRID_WIDTH - size.x),
+		clampi(min_y, 0, IsoGrid.GRID_HEIGHT - size.y)
+	)
+	return Rect2i(origin, size)
+
+
+## A single click still builds the minimum room, centred on the clicked cell.
+func _default_room_at(cell: Vector2i) -> Rect2i:
+	var size: Vector2i = MIN_ROOM_SIZE
+	var origin := Vector2i(
+		clampi(cell.x - size.x / 2, 0, IsoGrid.GRID_WIDTH - size.x),
+		clampi(cell.y - size.y / 2, 0, IsoGrid.GRID_HEIGHT - size.y)
+	)
+	return Rect2i(origin, size)
 
 
 func _ensure_placement_ghost() -> void:
@@ -375,27 +489,13 @@ func _ensure_placement_ghost() -> void:
 	_placement_ghost.visible = false
 	_ysort_layer.add_child(_placement_ghost)
 
-	_ghost_fill = Polygon2D.new()
-	_ghost_fill.name = "GhostFill"
-	_ghost_fill.polygon = PackedVector2Array([
-		Vector2(0.0, -8.0), Vector2(16.0, 0.0), Vector2(0.0, 8.0), Vector2(-16.0, 0.0),
-	])
-	_ghost_fill.color = Color(0.21, 0.79, 0.47, 0.30)
-	_placement_ghost.add_child(_ghost_fill)
-
-	_ghost_border = Line2D.new()
-	_ghost_border.name = "GhostBorder"
-	_ghost_border.points = PackedVector2Array([
-		Vector2(0.0, -8.0), Vector2(16.0, 0.0), Vector2(0.0, 8.0), Vector2(-16.0, 0.0), Vector2(0.0, -8.0),
-	])
-	_ghost_border.width = 1.5
-	_ghost_border.default_color = Color(0.21, 0.79, 0.47, 0.95)
-	_placement_ghost.add_child(_ghost_border)
+	_ghost_tiles = Node2D.new()
+	_ghost_tiles.name = "GhostTiles"
+	_placement_ghost.add_child(_ghost_tiles)
 
 	_ghost_label = Label.new()
 	_ghost_label.name = "GhostLabel"
-	_ghost_label.position = Vector2(-44.0, -36.0)
-	_ghost_label.size = Vector2(88.0, 16.0)
+	_ghost_label.size = Vector2(200.0, 16.0)
 	_ghost_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_ghost_label.add_theme_font_size_override("font_size", 11)
 	_ghost_label.add_theme_color_override("font_color", Color("#FFFFFF"))
@@ -404,29 +504,70 @@ func _ensure_placement_ghost() -> void:
 	_placement_ghost.add_child(_ghost_label)
 
 
-func _update_placement_preview(cell: Vector2i) -> void:
+func _clear_ghost_tiles() -> void:
+	if _ghost_tiles == null or not is_instance_valid(_ghost_tiles):
+		return
+	for child in _ghost_tiles.get_children():
+		_ghost_tiles.remove_child(child)
+		child.queue_free()
+
+
+func _update_placement_preview(rect: Rect2i) -> void:
 	if _placement_dept_id.is_empty():
 		return
 	if _placement_ghost == null or not is_instance_valid(_placement_ghost):
 		return
 	if iso_grid == null:
 		return
-	if not iso_grid.is_in_bounds(cell):
+	if rect.size.x <= 0 or rect.size.y <= 0:
 		_placement_ghost.visible = false
 		return
-	var valid: bool = is_valid_department_plot(cell, _placement_dept_id)
-	if cell != _placement_cell or valid != _placement_valid:
-		_placement_cell = cell
-		_placement_valid = valid
-		_placement_ghost.position = iso_grid.grid_to_screen(cell).round()
-		var col: Color = Color("#35C978") if valid else Color("#E74C3C")
-		if _ghost_fill != null:
-			_ghost_fill.color = Color(col.r, col.g, col.b, 0.30)
-		if _ghost_border != null:
-			_ghost_border.default_color = Color(col.r, col.g, col.b, 0.95)
+	var valid: bool = is_valid_department_room(rect, _placement_dept_id)
+	var changed: bool = rect != _placement_rect or valid != _placement_valid
+	_placement_rect = rect
+	_placement_valid = valid
+	if changed:
+		_rebuild_ghost_tiles(rect, valid)
 		if _ghost_label != null:
 			_ghost_label.text = _tr("WORLD_DEPT_PLACE_GHOST", {"name": _tr(_placement_short_key)})
+			var top_pos: Vector2 = iso_grid.grid_to_screen(rect.position).round()
+			_ghost_label.position = top_pos + Vector2(-100.0, -38.0)
 	_placement_ghost.visible = true
+
+
+func _rebuild_ghost_tiles(rect: Rect2i, valid: bool) -> void:
+	if _ghost_tiles == null:
+		return
+	_clear_ghost_tiles()
+	var col: Color = Color("#35C978") if valid else Color("#E74C3C")
+	var opening: Vector2i = room_opening_cell(rect)
+	for y in range(rect.position.y, rect.position.y + rect.size.y):
+		for x in range(rect.position.x, rect.position.x + rect.size.x):
+			var cell := Vector2i(x, y)
+			var tile := Polygon2D.new()
+			tile.polygon = PackedVector2Array([
+				Vector2(0.0, -8.0), Vector2(16.0, 0.0), Vector2(0.0, 8.0), Vector2(-16.0, 0.0),
+			])
+			tile.color = Color(col.r, col.g, col.b, 0.30)
+			tile.position = iso_grid.grid_to_screen(cell).round()
+			_ghost_tiles.add_child(tile)
+
+			var edge := Line2D.new()
+			edge.points = PackedVector2Array([
+				Vector2(0.0, -8.0), Vector2(16.0, 0.0), Vector2(0.0, 8.0), Vector2(-16.0, 0.0), Vector2(0.0, -8.0),
+			])
+			edge.width = 1.0
+			edge.default_color = Color(col.r, col.g, col.b, 0.70)
+			edge.position = tile.position
+			_ghost_tiles.add_child(edge)
+			if cell == opening:
+				var opening_tile := Polygon2D.new()
+				opening_tile.polygon = PackedVector2Array([
+					Vector2(0.0, -6.0), Vector2(12.0, 0.0), Vector2(0.0, 6.0), Vector2(-12.0, 0.0),
+				])
+				opening_tile.color = Color("#FFC857") if valid else Color(col.r, col.g, col.b, 0.55)
+				opening_tile.position = tile.position
+				_ghost_tiles.add_child(opening_tile)
 
 
 ## Converts a viewport-space input position to a logical grid cell (camera-aware).
@@ -672,17 +813,126 @@ func _add_prop_sprite(tex_path: String, cell: Vector2i, offset_px: Vector2) -> S
 	return spr
 
 
-func _create_department_node(dept_id: String, cell: Vector2i) -> void:
+func _create_department_room(dept_id: String, rect: Rect2i) -> void:
 	var cfg: Dictionary = DEPT_ZONES.get(dept_id, {}) as Dictionary
-	var accent: Color = cfg.get("accent", Color("#00C6FF")) as Color
+	var accent: Color = cfg.get("accent", Color("#00C6FF"))
 	var short_key: String = str(cfg.get("short_key", dept_id))
+	var tex_desk: Texture2D = _load_tex("res://assets/environment/prop_desk_office.png")
+	var tex_banner: Texture2D = _load_tex("res://assets/environment/prop_dept_banner.png")
+	var tex_floor: Texture2D = _load_tex("res://assets/environment/tile_floor_carpet_blue.png")
+	var tex_wall: Texture2D = _load_tex("res://assets/environment/wall_section_back.png")
 
+	var front_center := Vector2i(
+		rect.position.x + rect.size.x / 2,
+		rect.position.y + rect.size.y - 1
+	)
+	var root := Node2D.new()
+	root.name = "DeptRoom_" + dept_id.replace("core:department.", "").replace(":", "_")
+	root.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	root.position = iso_grid.grid_to_screen(front_center).round()
+
+	var walls: Array[Vector2i] = room_wall_cells(rect)
+	var wall_set: Dictionary = {}
+	for wc: Vector2i in walls:
+		wall_set[wc] = true
+	var opening: Vector2i = room_opening_cell(rect)
+	for y in range(rect.position.y, rect.position.y + rect.size.y):
+		for x in range(rect.position.x, rect.position.x + rect.size.x):
+			var cell := Vector2i(x, y)
+			var tile := Sprite2D.new()
+			tile.name = "Floor_%d_%d" % [x, y]
+			tile.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			tile.texture = tex_floor
+			tile.centered = true
+			tile.modulate = Color(1.0, 1.0, 1.0, 1.0) if cell != opening else Color(1.15, 1.1, 0.85, 1.0)
+			tile.position = iso_grid.grid_to_screen(cell).round() - root.position
+			root.add_child(tile)
+
+			if wall_set.has(cell):
+				var wall := Sprite2D.new()
+				wall.name = "Wall_%d_%d" % [x, y]
+				wall.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+				wall.texture = tex_wall
+				wall.centered = true
+				wall.offset = Vector2(0.0, -22.0)
+				wall.position = tile.position
+				root.add_child(wall)
+
+	var sign_anchor := Vector2i(rect.position.x + rect.size.x / 2, rect.position.y)
+	var sign_pos: Vector2 = iso_grid.grid_to_screen(sign_anchor).round() - root.position + Vector2(-64.0, -50.0)
+	var sign_bg := ColorRect.new()
+	sign_bg.name = "RoomSignBg"
+	sign_bg.color = Color(0.03, 0.09, 0.16, 0.85)
+	sign_bg.size = Vector2(128.0, 18.0)
+	sign_bg.position = sign_pos
+	root.add_child(sign_bg)
+	var sign_label := Label.new()
+	sign_label.name = "RoomSign"
+	sign_label.text = _tr(short_key)
+	sign_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	sign_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	sign_label.size = Vector2(128.0, 18.0)
+	sign_label.position = sign_pos
+	sign_label.add_theme_font_size_override("font_size", 11)
+	sign_label.add_theme_color_override("font_color", accent)
+	root.add_child(sign_label)
+
+	var desk_cell := Vector2i(
+		rect.position.x + rect.size.x / 2,
+		rect.position.y + rect.size.y / 2
+	)
+	var desk := Sprite2D.new()
+	desk.name = "OfficeDesk"
+	desk.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	desk.texture = tex_desk
+	desk.centered = true
+	desk.offset = Vector2(0.0, -9.0)
+	desk.position = iso_grid.grid_to_screen(desk_cell).round() - root.position
+	root.add_child(desk)
+
+	var banner := Sprite2D.new()
+	banner.name = "DeptBanner"
+	banner.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	banner.texture = tex_banner
+	banner.centered = true
+	banner.offset = Vector2(15.0, -15.0)
+	banner.position = iso_grid.grid_to_screen(Vector2i(rect.position.x, rect.position.y)).round() - root.position
+	root.add_child(banner)
+
+	var badge := Label.new()
+	badge.name = "LevelBadge"
+	badge.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	badge.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	badge.size = Vector2(96.0, 14.0)
+	badge.scale = Vector2(0.75, 0.75)
+	badge.add_theme_font_size_override("font_size", 11)
+	badge.add_theme_color_override("font_color", accent)
+	badge.position = iso_grid.grid_to_screen(Vector2i(rect.position.x, rect.position.y)).round() - root.position + Vector2(-48.0, -34.0)
+	root.add_child(badge)
+
+	_departments_container.add_child(root)
+	_dept_nodes[dept_id] = {
+		"root": root,
+		"desk": desk,
+		"banner": banner,
+		"badge": badge,
+		"short_key": short_key,
+		"accent": accent,
+		"cell": rect.position,
+		"rect": rect,
+		"level": 0,
+	}
+
+
+func _create_legacy_department_node(dept_id: String, cell: Vector2i) -> void:
+	var cfg: Dictionary = DEPT_ZONES.get(dept_id, {}) as Dictionary
+	var accent: Color = cfg.get("accent", Color("#00C6FF"))
+	var short_key: String = str(cfg.get("short_key", dept_id))
 	var root := Node2D.new()
 	root.name = "DeptRoom_" + dept_id.replace("core:department.", "").replace(":", "_")
 	root.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	root.position = iso_grid.grid_to_screen(cell).round()
 
-	# Floor mat marks the chosen plot (2:1 diamond).
 	var mat := Polygon2D.new()
 	mat.name = "FloorMat"
 	mat.polygon = PackedVector2Array([
@@ -690,15 +940,6 @@ func _create_department_node(dept_id: String, cell: Vector2i) -> void:
 	])
 	mat.color = Color(accent.r, accent.g, accent.b, 0.16)
 	root.add_child(mat)
-
-	var border := Line2D.new()
-	border.name = "FloorBorder"
-	border.points = PackedVector2Array([
-		Vector2(0.0, -8.0), Vector2(16.0, 0.0), Vector2(0.0, 8.0), Vector2(-16.0, 0.0), Vector2(0.0, -8.0),
-	])
-	border.width = 1.0
-	border.default_color = Color(accent.r, accent.g, accent.b, 0.55)
-	root.add_child(border)
 
 	var desk := Sprite2D.new()
 	desk.name = "OfficeDesk"
@@ -736,6 +977,7 @@ func _create_department_node(dept_id: String, cell: Vector2i) -> void:
 		"short_key": short_key,
 		"accent": accent,
 		"cell": cell,
+		"rect": Rect2i(cell, Vector2i.ONE),
 		"level": 0,
 	}
 
@@ -757,10 +999,14 @@ func _sync_navigation_solids(bs_obj: Object) -> void:
 	if raw_depts is Dictionary:
 		for did: Variant in (raw_depts as Dictionary).keys():
 			var d_entry: Variant = (raw_depts as Dictionary)[did]
-			var d_cell: Vector2i = _read_dept_cell(d_entry)
-			if d_cell.x < 0 or d_cell.y < 0:
-				d_cell = _fallback_dept_cell(str(did))
-			iso_grid.set_solid(d_cell, true)
+			var d_rect: Rect2i = _read_dept_rect(d_entry)
+			if d_rect.size.x <= 0:
+				d_rect = Rect2i(_fallback_dept_cell(str(did)), Vector2i.ONE)
+			if d_rect.size == Vector2i.ONE:
+				iso_grid.set_solid(d_rect.position, true)
+			else:
+				for wall_cell: Vector2i in room_wall_cells(d_rect):
+					iso_grid.set_solid(wall_cell, true)
 
 
 func _read_dept_cell(entry: Variant) -> Vector2i:
@@ -796,11 +1042,32 @@ func _fallback_dept_cell(dept_id: String) -> Vector2i:
 	return raw as Vector2i if raw is Vector2i else Vector2i(2, 2)
 
 
+func _read_dept_rect(entry: Variant) -> Rect2i:
+	var cell: Vector2i = _read_dept_cell(entry)
+	if cell.x < 0 or cell.y < 0:
+		return Rect2i()
+	var size := Vector2i(1, 1)
+	if entry is Object:
+		var raw_o: Variant = (entry as Object).get("room_size")
+		if raw_o is Vector2i:
+			size = raw_o as Vector2i
+	elif entry is Dictionary:
+		var raw: Variant = (entry as Dictionary).get("room_size", null)
+		if raw is Vector2i:
+			size = raw as Vector2i
+		elif raw is Array and (raw as Array).size() >= 2:
+			var arr: Array = raw as Array
+			size = Vector2i(int(arr[0]), int(arr[1]))
+		elif raw is Dictionary:
+			var d: Dictionary = raw as Dictionary
+			size = Vector2i(int(d.get("x", 1)), int(d.get("y", 1)))
+	return Rect2i(cell, Vector2i(maxi(1, size.x), maxi(1, size.y)))
+
+
 func _sync_departments(bs_obj: Object) -> void:
 	var raw_depts: Variant = bs_obj.get("departments")
 	var depts_dict: Dictionary = raw_depts as Dictionary if raw_depts is Dictionary else {}
 
-	# Drop rooms whose department no longer exists (new game / state reload).
 	for dept_id: String in _dept_nodes.keys().duplicate():
 		if not depts_dict.has(dept_id):
 			var stale: Dictionary = _dept_nodes[dept_id] as Dictionary
@@ -813,24 +1080,26 @@ func _sync_departments(bs_obj: Object) -> void:
 		var dept_id: String = str(dept_id_v)
 		var entry: Variant = depts_dict[dept_id]
 		var lvl: int = _read_dept_level(entry)
-		var cell: Vector2i = _read_dept_cell(entry)
-		if cell.x < 0 or cell.y < 0:
-			cell = _fallback_dept_cell(dept_id)
+		var rect: Rect2i = _read_dept_rect(entry)
+		if rect.size.x <= 0:
+			rect = Rect2i(_fallback_dept_cell(dept_id), Vector2i.ONE)
 
 		var info: Dictionary = {}
 		if _dept_nodes.has(dept_id):
 			var existing: Dictionary = _dept_nodes[dept_id] as Dictionary
-			var existing_cell: Vector2i = existing.get("cell", Vector2i(-1, -1)) as Vector2i
-			if existing_cell == cell:
+			var existing_rect: Rect2i = existing.get("rect", Rect2i()) as Rect2i
+			if existing_rect == rect:
 				info = existing
 			else:
-				# The saved plot differs from the rendered one: rebuild that room.
 				var old_root: Node = existing.get("root") as Node
 				if old_root != null and is_instance_valid(old_root):
 					old_root.queue_free()
 				_dept_nodes.erase(dept_id)
 		if info.is_empty():
-			_create_department_node(dept_id, cell)
+			if rect.size == Vector2i.ONE:
+				_create_legacy_department_node(dept_id, rect.position)
+			else:
+				_create_department_room(dept_id, rect)
 			info = _dept_nodes[dept_id] as Dictionary
 
 		info["level"] = lvl
@@ -1217,22 +1486,31 @@ func _handle_placement_input(event: InputEvent) -> bool:
 		return true
 	if event is InputEventMouseMotion:
 		var mm: InputEventMouseMotion = event as InputEventMouseMotion
-		_update_placement_preview(cell_from_screen_position(mm.position))
+		if _placement_dragging:
+			_update_placement_preview(_normalize_room_rect(_placement_anchor, cell_from_screen_position(mm.position)))
 		return false
 	if event is InputEventMouseButton:
 		var mb: InputEventMouseButton = event as InputEventMouseButton
-		if not mb.pressed:
-			return false
-		if mb.button_index == MOUSE_BUTTON_RIGHT:
+		if mb.button_index == MOUSE_BUTTON_RIGHT and mb.pressed:
 			cancel_department_placement()
 			_consume_input()
 			return true
 		if mb.button_index == MOUSE_BUTTON_LEFT:
 			var cell: Vector2i = cell_from_screen_position(mb.position)
-			if is_valid_department_plot(cell, _placement_dept_id):
-				_confirm_department_placement(cell)
-			else:
-				_placement_cell = Vector2i(-1, -1)  # force the ghost to refresh its colour
+			if mb.pressed:
+				_placement_anchor = cell
+				_placement_dragging = true
+				_update_placement_preview(Rect2i(cell, Vector2i.ONE))
+			elif _placement_dragging:
+				_placement_dragging = false
+				var rect: Rect2i = _normalize_room_rect(_placement_anchor, cell)
+				if rect.size.x < MIN_ROOM_SIZE.x or rect.size.y < MIN_ROOM_SIZE.y:
+					rect = _default_room_at(_placement_anchor)
+				rect = _normalize_room_rect(rect.position, rect.position + rect.size - Vector2i.ONE)
+				if is_valid_department_room(rect, _placement_dept_id):
+					_confirm_department_placement(rect)
+				else:
+					_update_placement_preview(rect)
 			_consume_input()
 			return true
 	return false

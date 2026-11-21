@@ -47,7 +47,7 @@
 	"UI_DEPT_DAILY_COST": "Daily Operating Cost: {cost}",
 	"UI_DEPT_BTN_CREATE": "Establish Dept ({cost})",
 	"UI_DEPT_BTN_CHOOSE_PLOT": "Choose a Plot ({cost})",
-	"UI_DEPT_PLACE_PROMPT": "Click an empty lobby tile to place the department. Right-click or Esc to cancel.",
+	"UI_DEPT_PLACE_PROMPT": "Drag a room outline along the hall perimeter, release to build. Right-click or Esc to cancel.",
 	"UI_DEPT_PLACE_CANCELLED": "Department placement cancelled",
 	"UI_DEPT_BTN_UPGRADE": "Upgrade to Lv.{next} ({cost})",
 	"UI_DEPT_BTN_MAX_LEVEL": "Max Level Reached",

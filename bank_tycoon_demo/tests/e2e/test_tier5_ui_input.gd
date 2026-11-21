@@ -310,6 +310,10 @@ func _reset_ui_state() -> void:
 		return
 	if _game.has_method("close_drawer"):
 		_game.call("close_drawer")
+	var world: Node = _game.get("_bank_world") as Node
+	if world != null and world.has_method("is_department_placement_active"):
+		if bool(world.call("is_department_placement_active")):
+			world.call("cancel_department_placement")
 	for modal: Variant in [_loan_modal, _event_modal, _pause_modal]:
 		if modal is Control:
 			(modal as Control).visible = false
@@ -933,7 +937,7 @@ func _case_10_department_placement() -> void:
 		_end_case()
 		return
 
-	# --- 10a. choose a plot, then confirm it with a real lobby click ---
+	# --- 10a. drag a whole room in the north build band, release to build ---
 	var nav_btn: Button = _nav_button(&"departments")
 	if not _h.assert_not_null(nav_btn, "LeftNavigation 缺少 departments 按钮"):
 		_end_case()
@@ -950,31 +954,40 @@ func _case_10_department_placement() -> void:
 		_end_case()
 		return
 	await _click(choose_btn)
-	_h.assert_false(drawer.visible, "进入放置模式后抽屉应关闭，露出大厅")
-	_h.assert_true(bool(world.call("is_department_placement_active")), "点击“选择位置成立”后应进入部门放置模式")
+	_h.assert_false(drawer.visible, "进入建造模式后抽屉应关闭，露出大厅")
+	_h.assert_true(bool(world.call("is_department_placement_active")), "点击“选择位置成立”后应进入房间建造模式")
 
-	var target_cell: Vector2i = _find_valid_plot(world, place_dept)
-	if not _h.assert_true(target_cell.x >= 0, "找不到可用于放置部门的合法空地（放置校验过严？）"):
+	var room_start := Vector2i(11, 0)
+	var room_end := Vector2i(13, 2)
+	var room_rect := Rect2i(room_start, room_end - room_start + Vector2i.ONE)
+	if not _h.assert_true(
+		bool(world.call("is_valid_department_room", room_rect, place_dept)),
+		"北侧建房带 (11,0)-(13,2) 应可建造 3x3 房间"
+	):
 		_end_case()
 		return
-	var screen_pos: Vector2 = _cell_to_screen(world, target_cell)
-	_move_mouse(screen_pos)
-	await _settle()
-	_last_hovered = _hovered()
-	_press_release(screen_pos)
+
+	await _drag_room(world, room_start, room_end)
 	await _settle(3)
 
 	var dept_id: String = place_dept
-	_h.assert_false(bool(world.call("is_department_placement_active")), "确认放置后应退出放置模式")
+	_h.assert_false(bool(world.call("is_department_placement_active")), "松开鼠标确认后应退出建造模式")
 	_h.assert_true((bs as Object).get("departments").has(dept_id), "确认后应真正成立部门")
 	if (bs as Object).get("departments").has(dept_id):
 		_h.assert_eq(
-			DepartmentService.get_department_grid_pos(bs as BankState, dept_id),
-			target_cell,
-			"部门必须记录玩家点击的格子坐标"
+			DepartmentService.get_department_room_rect(bs as BankState, dept_id),
+			room_rect,
+			"部门必须记录玩家拖出的整间房矩形（不是单个格子）"
 		)
 	var dept_nodes: Dictionary = world.get("_dept_nodes") as Dictionary
-	_h.assert_true(dept_nodes.has(dept_id), "世界层应为新部门生成房间节点")
+	if _h.assert_true(dept_nodes.has(dept_id), "世界层应为新部门生成房间节点"):
+		var info: Dictionary = dept_nodes[dept_id] as Dictionary
+		var room_root: Node = info.get("root") as Node
+		_h.assert_true(room_root != null and room_root.get_node_or_null("Wall_11_0") != null, "房间应有北侧墙体")
+		_h.assert_true(room_root != null and room_root.get_node_or_null("RoomSign") != null, "房间应有部门招牌")
+	var iso: Variant = world.get("iso_grid")
+	_h.assert_true(iso != null and not bool((iso as Object).call("is_solid", Vector2i(12, 2))), "房间正面开口必须保持可通行")
+	_h.assert_true(iso != null and bool((iso as Object).call("is_solid", Vector2i(11, 0))), "房间北墙应阻挡寻路")
 
 	# --- 10b. right click cancels without building ---
 	await _click(nav_btn)
@@ -983,23 +996,38 @@ func _case_10_department_placement() -> void:
 	var cancel_btn: Button = _find_dept_card_button(drawer, cancel_dept, "UI_DEPT_BTN_CHOOSE_PLOT")
 	if cancel_btn != null:
 		await _click(cancel_btn)
-		_h.assert_true(bool(world.call("is_department_placement_active")), "前置状态：应再次进入放置模式")
-		var cancel_pos: Vector2 = _cell_to_screen(world, _find_valid_plot(world, cancel_dept))
-		var right_click := InputEventMouseButton.new()
-		right_click.button_index = MOUSE_BUTTON_RIGHT
-		right_click.pressed = true
-		right_click.position = cancel_pos
-		right_click.global_position = cancel_pos
-		_root.push_input(right_click, true)
-		await _settle(2)
-		_h.assert_false(bool(world.call("is_department_placement_active")), "右键应取消部门放置")
-		_h.assert_false((bs as Object).get("departments").has(cancel_dept), "取消放置不得成立部门")
+		_h.assert_true(bool(world.call("is_department_placement_active")), "前置状态：应再次进入建造模式")
+		await _drag_room(world, Vector2i(15, 3), Vector2i(17, 5), true)
+		_h.assert_false(bool(world.call("is_department_placement_active")), "右键应取消房间建造")
+		_h.assert_false((bs as Object).get("departments").has(cancel_dept), "取消建造不得成立部门")
 	else:
-		_h.fail_test("信贷部应仍可进入放置模式")
+		_h.fail_test("信贷部应仍可进入建造模式")
 
 	_game.call("close_drawer")
 	await _settle()
 	_end_case()
+
+
+## Real drag: press on the start cell, move across the rectangle, release on the end cell.
+func _drag_room(world: Node, start_cell: Vector2i, end_cell: Vector2i, cancel_with_right: bool = false) -> void:
+	var start_pos: Vector2 = _cell_to_screen(world, start_cell)
+	var end_pos: Vector2 = _cell_to_screen(world, end_cell)
+	_move_mouse(start_pos)
+	await _settle()
+	_press_release_press_only(start_pos)
+	await _settle(1)
+	_move_mouse(end_pos)
+	await _settle(1)
+	if cancel_with_right:
+		var right_click := InputEventMouseButton.new()
+		right_click.button_index = MOUSE_BUTTON_RIGHT
+		right_click.pressed = true
+		right_click.position = end_pos
+		right_click.global_position = end_pos
+		_root.push_input(right_click, true)
+	else:
+		_press_release_release_only(end_pos)
+	await _settle(2)
 
 
 func _find_dept_card_button(drawer: Control, dept_id: String, key: String) -> Button:
@@ -1024,19 +1052,6 @@ func _find_dept_card_button(drawer: Control, dept_id: String, key: String) -> Bu
 	return null
 
 
-func _find_valid_plot(world: Node, dept_id: String) -> Vector2i:
-	var candidates: Array[Vector2i] = [
-		Vector2i(2, 5), Vector2i(3, 3), Vector2i(12, 6), Vector2i(15, 5),
-		Vector2i(2, 9), Vector2i(16, 3), Vector2i(4, 2), Vector2i(13, 2),
-	]
-	for cell: Vector2i in candidates:
-		if bool(world.call("is_valid_department_plot", cell, dept_id)):
-			var pos: Vector2 = _cell_to_screen(world, cell)
-			if pos.x > 100.0 and pos.x < 940.0 and pos.y > 90.0 and pos.y < 1150.0:
-				return cell
-	return Vector2i(-1, -1)
-
-
 func _cell_to_screen(world: Node, cell: Vector2i) -> Vector2:
 	var world_obj: Object = world as Object
 	var iso: Variant = world_obj.get("iso_grid")
@@ -1048,12 +1063,6 @@ func _cell_to_screen(world: Node, cell: Vector2i) -> Vector2:
 		return world_pos as Vector2
 	return canvas_item.get_global_transform_with_canvas() * (world_pos as Vector2)
 
-
-# ---------------------------------------------------------------------------
-# E2E_T5_11 / T5_12 — the world layer still receives unhandled input.
-# Tier 5 up to here proves GUI picking only; these two prove that a click and a wheel
-# event that no Control consumed actually arrive at BankWorld / PixelCamera2D.
-# ---------------------------------------------------------------------------
 
 func _case_11_world_click_reaches_entity() -> void:
 	_begin_case("E2E_T5_11")

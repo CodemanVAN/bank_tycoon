@@ -1592,7 +1592,7 @@ msgid "UI_DEPT_BTN_CHOOSE_PLOT"
 msgstr "Choose a Plot ({cost})"
 
 msgid "UI_DEPT_PLACE_PROMPT"
-msgstr "Click an empty lobby tile to place the department. Right-click or Esc to cancel."
+msgstr "Drag a room outline along the hall perimeter, release to build. Right-click or Esc to cancel."
 
 msgid "UI_DEPT_PLACE_CANCELLED"
 msgstr "Department placement cancelled"

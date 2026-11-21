@@ -527,7 +527,7 @@
   "UI_DEPT_DAILY_COST": "日次運営コスト：{cost}",
   "UI_DEPT_BTN_CREATE": "部門を設立 ({cost})",
   "UI_DEPT_BTN_CHOOSE_PLOT": "設置場所を選んで設立 ({cost})",
-  "UI_DEPT_PLACE_PROMPT": "ロビーの空きマスをクリックして部門を配置します。右クリックまたは Esc でキャンセル。",
+  "UI_DEPT_PLACE_PROMPT": "ロビー外周でドラッグして部屋の範囲を決め、離して建設します。右クリックまたは Esc でキャンセル。",
   "UI_DEPT_PLACE_CANCELLED": "部門の配置をキャンセルしました",
   "UI_DEPT_BTN_UPGRADE": "Lv.{next} へ強化 ({cost})",
   "UI_DEPT_BTN_MAX_LEVEL": "最大レベル到達済",

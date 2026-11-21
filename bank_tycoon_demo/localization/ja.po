@@ -1592,7 +1592,7 @@ msgid "UI_DEPT_BTN_CHOOSE_PLOT"
 msgstr "設置場所を選んで設立 ({cost})"
 
 msgid "UI_DEPT_PLACE_PROMPT"
-msgstr "ロビーの空きマスをクリックして部門を配置します。右クリックまたは Esc でキャンセル。"
+msgstr "ロビー外周でドラッグして部屋の範囲を決め、離して建設します。右クリックまたは Esc でキャンセル。"
 
 msgid "UI_DEPT_PLACE_CANCELLED"
 msgstr "部門の配置をキャンセルしました"
